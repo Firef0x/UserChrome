@@ -28,7 +28,7 @@ rules = [
 	// 	regex: true
 	// },
 	{
-		name: "userscripts:8080",
+		name: "userscripts重定向",
 		from: /^https?:\/\/userscripts\.org\/(.*)/i,
 		to: "http:\/\/userscripts.org:8080/$1",
 		regex: true
