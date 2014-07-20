@@ -7,7 +7,7 @@
 // @compatibility  Firefox 17
 // @charset        UTF-8
 // @version        0.3.0
-// @update         2014-06-08
+// @update         2014-07-15
 // @homepageURL    https://github.com/ywzhaiqi/userChromeJS/tree/master/uAutoPagerize2
 // @reviewURL      http://bbs.kafan.cn/thread-1555846-1-1.html
 // @optionsURL     about:config?filter=uAutoPagerize.
@@ -269,6 +269,7 @@ const ToolbarManager = (function() {
 
 if (typeof window.uAutoPagerize != 'undefined') {
     window.uAutoPagerize.destroy();
+    delete window.uAutoPagerize;
     // 补上 siteinfo_writer 菜单
     if (window.siteinfo_writer && !document.getElementById("sw-popup-menuitem")) {
         var menuitem = $C("menuitem", {
@@ -561,7 +562,7 @@ var ns = window.uAutoPagerize = {
         if(!ns.loadSetting_CN()){
             requestSITEINFO_CN();
         } else {  // 检查是否更新规则
-            if (Config.UPDATE_CN_SITEINFO_DAYS > 0 && 
+            if (Config.UPDATE_CN_SITEINFO_DAYS > 0 &&
                     (Date.now() - ns.lastCheckTime * 1000) > Config.UPDATE_CN_SITEINFO_DAYS * 24 * 3600 * 1000) {
                 requestSITEINFO_CN();
             }
@@ -667,7 +668,7 @@ var ns = window.uAutoPagerize = {
             let str = ns.prefs.getCharPref("EXCLUDE");
             ns.EXCLUDE = str.split(/,| |[\n\r]+/);
         }catch(e){}
-        
+
         if(!ns.EXCLUDE){
             ns.EXCLUDE = EXCLUDE;
         }
@@ -704,7 +705,7 @@ var ns = window.uAutoPagerize = {
             ns.INCLUDE = sandbox.INCLUDE;
         // if (sandbox.EXCLUDE)
         //  ns.EXCLUDE = sandbox.EXCLUDE;
-        
+
         if (sandbox.prefs)
             prefs = sandbox.prefs;
         if (sandbox.HashchangeSites)
@@ -761,8 +762,8 @@ var ns = window.uAutoPagerize = {
             ['name', 'exampleUrl'].forEach(function(n){
                 if (!newInfo[n]) delete newInfo[n];
             });
-            
-            ["enable", "pageElement", "useiframe", "newIframe", "iloaded", "itimeout", "documentFilter", "filter", 
+
+            ["enable", "pageElement", "useiframe", "newIframe", "iloaded", "itimeout", "documentFilter", "filter",
                 "startFilter", "stylish", 'replaceE', 'lazyImgSrc', 'separatorReal', 'maxpage', 'ipages'].forEach(function(name){
                 if(info.autopager[name] != undefined){
                     newInfo[name] = info.autopager[name];
@@ -771,12 +772,6 @@ var ns = window.uAutoPagerize = {
 
             if (newInfo.ipages == undefined) {
                 newInfo.ipages = prefs.ipages;
-            }
-
-            if (info.autopager.uAutoPagerize2) {
-                for (var name in info.autopager.uAutoPagerize2) {
-                    newInfo[name] = info.autopager.uAutoPagerize2[name];
-                }
             }
 
             newList.push(newInfo);
@@ -798,11 +793,6 @@ var ns = window.uAutoPagerize = {
         if (locationHref.indexOf('http') !== 0 ||
            !ns.INCLUDE_REGEXP.test(locationHref)){
             return updateIcon("不包含的页面");
-        }
-        for(let [index, reg] in Iterator(ns.EXCLUDE_REGEXP)){
-            if(reg.test(locationHref)){
-                return updateIcon("排除列表, " + ns.EXCLUDE[index]);
-            }
         }
 
         if (!/html|xml/i.test(doc.contentType) ||
@@ -826,6 +816,13 @@ var ns = window.uAutoPagerize = {
             // uAutoPagerize original
             win.fragmentFilters = [];
         }
+
+        for(let [index, reg] in Iterator(ns.EXCLUDE_REGEXP)){
+            if(reg.test(locationHref)){
+                return updateIcon("排除列表, " + ns.EXCLUDE[index]);
+            }
+        }
+
         var ev = doc.createEvent('Event');
         ev.initEvent('GM_AutoPagerizeLoaded', true, false);
         doc.dispatchEvent(ev);
@@ -843,33 +840,33 @@ var ns = window.uAutoPagerize = {
         var index = -1, info, nextLink;
         var hashchange = false;
 
-
         function reStartAutoPager() {
             debug("触发 Hashchang 或 pjax:success 事件" + locationHref);
-                if (!win.ap) {
-                    win.setTimeout(function(){
-                        let [index, info] = [-1, null];
-                        if (!info) [, info] = ns.getInfo(ns.MY_SITEINFO, win);
-                        if (!info) [, info] = ns.getInfo(null, win);
-                        if (info) win.ap = new AutoPager(win.document, info);
-                        updateIcon();
-                    }, timer);
-                    return;
-                }
-                let info = win.ap.info;
-                win.ap.destroy(true);
+            if (!win.ap) {
                 win.setTimeout(function(){
-                    win.ap = new AutoPager(win.document, info);
+                    let [index, info] = [-1, null];
+                    if (!info) [, info] = ns.getInfo(ns.MY_SITEINFO, win);
+                    if (!info) [, info] = ns.getInfo(null, win);
+                    if (info) win.ap = new AutoPager(win.document, info);
                     updateIcon();
                 }, timer);
+                return;
+            }
+            let info = win.ap.info;
+            win.ap.destroy(true);
+            win.setTimeout(function(){
+                win.ap = new AutoPager(win.document, info);
+                updateIcon();
+            }, timer);
         }
+
         // 页面不刷新的站点
         var hashSite = _.find(ns.HashchangeSites, function(x){ return toRE(x.url).test(locationHref); });
         if (hashSite) {
             timer = hashSite.timer;
             hashchange = true;
             debug('当前是页面不刷新的站点');
-        } else if (locationHost == 'github.com') {
+        } else if (locationHost == 'github.com' && Services.appinfo.version < 33) {
             // github 需要在加载页面后重新启用
             // 直接引用 unsafeWindow.jQuery 的方式无法成功，只能采用下面的方式。
             var github_addListener = function(win){
@@ -889,9 +886,11 @@ var ns = window.uAutoPagerize = {
                 sandbox.run          = reStartAutoPager;
                 Cu.evalInSandbox(script, sandbox);
             };
+
             github_addListener(win);
             debug('github.com 成功添加 pjax:success 事件')
         }
+
         if(hashchange){
             win.addEventListener("hashchange", reStartAutoPager, false);
         }
@@ -913,7 +912,7 @@ var ns = window.uAutoPagerize = {
                     win.requestFilters.push(info.requestFilter.bind(win));
                 if (info.responseFilter)
                     win.responseFilters.push(info.responseFilter.bind(win));
-                if (info.documentFilter)    
+                if (info.documentFilter)
                     win.documentFilters.push(info.documentFilter.bind(win));
                 if (info.filter && typeof(info.filter) === "function")
                     win.filters.push(info.filter.bind(win));
@@ -933,8 +932,9 @@ var ns = window.uAutoPagerize = {
             //debug(index + 'th/' + (Date.now() - s) + 'ms');
             if (!info) [, info, nextLink] = ns.getInfo(ns.MICROFORMAT, win);
             if (info) {
-                if (info.enable == false) {
+                if (info.enable === false) {
                     debug('找到规则：', info, '但默认禁用');
+                    updateIcon("找到规则，但默认禁用");
                 } else {
                     win.ap = new AutoPager(win.document, info, nextLink);
                 }
@@ -1124,13 +1124,14 @@ var ns = window.uAutoPagerize = {
 
                 if (info.startFilter)
                     info.startFilter.call(win, win, doc);
+
                 var nextLink = getElementMix(info.nextLink, doc);
                 if (!nextLink) {
                     // FIXME microformats case detection.
                     // limiting greater than 12 to filter microformats like SITEINFOs.
                     if (info.url.length > 12) {
                         debug('nextLink not found.', info.nextLink);
-                    } 
+                    }
                     // else if (info.url.length == undefined) {
                     //     console.log('[uAutoPagerize] ', 'nextLink not found.', info.nextLink)
                     // }
@@ -1324,7 +1325,7 @@ var ns = window.uAutoPagerize = {
         try {
             editor = Services.prefs.getComplexValue("view_source.editor.path", Ci.nsILocalFile);
         } catch(e) {}
-        
+
         if (!editor || !editor.exists()) {
             if (showError) {
                 alert("编辑器的路径未设置!!!\n请设置 view_source.editor.path");
@@ -1396,7 +1397,6 @@ AutoPager.prototype = {
         this.iframeMode = Config.USE_IFRAME && this.info.useiframe || false;
         this.ipagesMode = this.info.ipages ? this.info.ipages[0] : false;
         this.ipagesNumber = this.info.ipages ?  this.info.ipages[1] : 0;
-        
         this.lastPageURL = doc.location.href.replace(/#.*$/, ''); // url 去掉hash;
         this.C = this.win.wrappedJSObject.console;
 
@@ -1519,7 +1519,7 @@ AutoPager.prototype = {
         });
 
         var Sctimeout;
-        
+
         function pausehandler(e) {
             if (e[button_1] && e[button_2] && e[button_3]) {
                 if (e.type == 'mousedown') {
@@ -1687,7 +1687,11 @@ AutoPager.prototype = {
             htmlDoc = res.response;
         }
 
-        this.win.documentFilters.forEach(function(i) { i(htmlDoc, this.requestURL, this.info) }, this);
+        try {
+           this.win.documentFilters.forEach(function(i) { i(htmlDoc, this.requestURL, this.info) }, this);
+        } catch (ex) {
+            debug('执行 documentFilters 错误 ', ex);
+        }
 
         this.beforeLoad(htmlDoc);
     },
@@ -1744,7 +1748,12 @@ AutoPager.prototype = {
             this.setRemainHeight();
         }
         page = this.addPage(htmlDoc, page, url);
-        this.win.filters.forEach(function(i) { i(page) });
+
+        try {
+           this.win.filters.forEach(function(i) { i(page) });
+        } catch(ex) {
+            debug('执行 filters 错误', ex);
+        }
 
         if(ns.ADD_TO_HISTORY){  // 添加到历史记录
             this.doc.title = htmlDoc.title;
@@ -1769,7 +1778,12 @@ AutoPager.prototype = {
     addPage : function(htmlDoc, page, nextPageUrl){
         var fragment = this.doc.createDocumentFragment();
         page.forEach(function(i) { fragment.appendChild(i); });
-        this.win.fragmentFilters.forEach(function(i) { i(fragment, htmlDoc, page) }, this);
+
+        try {
+            this.win.fragmentFilters.forEach(function(i) { i(fragment, htmlDoc, page) }, this);
+        } catch (ex) {
+            debug('执行 fragmentFilters 错误', ex);
+        }
 
         // 移除部分内容
         if (typeof(this.info.filter) == 'string') { //功能未完善.
@@ -1795,7 +1809,7 @@ AutoPager.prototype = {
                     if (newSrc && newSrc != img.src) {
                         img.setAttribute("src", newSrc);
                         img.removeAttribute(attr);
-                    } 
+                    }
                 });
             });
         }
@@ -1813,8 +1827,8 @@ AutoPager.prototype = {
             fragment = this.doc.createDocumentFragment();
             fragment.appendChild(div);
         }
-        var ralativePageStr = (this.info.separatorReal === false) ? 
-                '' : 
+        var ralativePageStr = (this.info.separatorReal === false) ?
+                '' :
                 getRalativePageStr(this.lastPageURL, this.requestURL, nextPageUrl);
 
         this.lastPageURL = this.requestURL;
@@ -2073,7 +2087,7 @@ function launchAutoPager_org(list, win) {
 }
 
 var SP = (function() { // 来自 NLF 的 Super_preloader
-    var nextPageKey = [ //下一页关键字
+    var nextPageKey = [ // 下一页关键字
         '下一页', '下一頁', '下1页', '下1頁', '下页', '下頁',
         '翻页', '翻頁', '翻下頁', '翻下页',
         '下一张', '下一張', '下一幅', '下一章', '下一节', '下一節', '下一篇',
@@ -2081,17 +2095,17 @@ var SP = (function() { // 来自 NLF 的 Super_preloader
         '前进', '下篇', '后页', '往后', 'Next', 'Next Page', '次へ'
     ];
     var autoMatch = {
-        digitalCheck: true, //对数字连接进行检测,从中找出下一页的链接
-        cases: false, //关键字区分大小写....
-        pfwordl: { //关键字前面的字符限定.
-            next: { //下一页关键字前面的字符
+        digitalCheck: true, // 对数字连接进行检测,从中找出下一页的链接
+        cases: false, // 关键字区分大小写....
+        pfwordl: { // 关键字前面的字符限定.
+            next: { // 下一页关键字前面的字符
                 enable: true,
                 maxPrefix: 2,
                 character: [' ', '　', '[', '［', '『', '「', '【', '(']
             }
         },
-        sfwordl: { //关键字后面的字符限定.
-            next: { //下一页关键字后面的字符
+        sfwordl: { // 关键字后面的字符限定.
+            next: { // 下一页关键字后面的字符
                 enable: true,
                 maxSubfix: 3,
                 character: [' ', '　', ']', '］', '>', '﹥', '›', '»', '>>', '』', '」', '】', ')', '→']
@@ -2201,9 +2215,9 @@ var SP = (function() { // 来自 NLF 的 Super_preloader
                                 if (aP) {
                                     preS1 = aP.previousSibling;
                                     preS2 = aP.previousElementSibling;
-                                };
+                                }
                                 initSD++;
-                            };
+                            }
                             searchedD = initSD > 0 ? true : false;
 
                             if (preS1 || preS2) {
@@ -2229,7 +2243,7 @@ var SP = (function() { // 来自 NLF 的 Super_preloader
                         }
 
                         continue;
-                    };
+                    }
                 }
             } else {
                 atext = a.title;
