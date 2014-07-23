@@ -19,16 +19,15 @@
   // 要移动的菜单列表，按找到的顺序排序
    var movedMenus = [
 	"addMenu-rebuild",
-	"toolsbar_KeyChanger_rebuild",
-	"ucjsMouseGestures",
+	//"toolsbar_KeyChanger_rebuild",
+	//"ucjsMouseGestures",
 	"organizeBookmarksSeparator",
+	"sanitizeSeparator",
 	"UpdateLocal",
 	"BackupProfiles",
 	//"abp-menuitem",
 	"refererChangerToggle",
-	"RedirectorToggle",
-	"mason-show",
-	"wordhighlight-toolbar-menuitem"
+	//"wordhighlight-toolbar-menuitem",
   ];
 if (window.userChromejs) {
 	window.userChromejs.uninit();
@@ -56,7 +55,7 @@ if (window.userChromejs) {
 	  this.menuBtn.setAttribute("label", "userChromeJs管理器");
 	  this.menuBtn.setAttribute("tooltiptext", "UC 脚本管理器");
 	  this.menuBtn.setAttribute("type", "menu");
-      this.menuBtn.setAttribute("image","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABeSURBVDhPY6AKSCms+x+SkPMfREOFwACXOAYYNQBVITrGJQ7CUO0IA0jFUO0QA3BhkEJs4iAM1Y4bgBTBDIAKkQYGlwHYMFQZbgBSBDIAF4Yqww3QbUTHUGWUAAYGAEyi7ERKirMnAAAAAElFTkSuQmCC");
+      this.menuBtn.setAttribute("image","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABRSURBVDhPzYwxCsAwDMT87UCG/jyFcAXDWYNphghuEbLjCGM+65vUhrxBIXmDQvIGheQNCskbOexM5zc8IFpxxV0PqiljqqM8ZUx1lKfsDxEv5IgBpDGa1Z4AAAAASUVORK5CYII=");
 	  
 	  if (isUrlbar) {
 		  document.getElementById("urlbar-icons").appendChild(this.menuBtn);

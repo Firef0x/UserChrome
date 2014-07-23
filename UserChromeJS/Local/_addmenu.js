@@ -22,6 +22,13 @@ page([
 		insertBefore:"context-selectall"
 	},
 	// {
+	// 	label: "弹窗翻译所选文本",
+	// 	condition: "select",
+	// 	oncommand: "gTranslator.selectionTranslation();",
+	// 	insertBefore: "context-selectall",
+	// 	image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFCSURBVDhPnZExSwNBEEZPESStP8PKP2Fnr1hYiI2dkEoQJKWCnVXEIpDGQsRGJGKhFsKBHpEIFokJ4VQkpFMLm5E3OsvcmRBx4XG3e/u9md2LGB9vPfH0e+3A6/OD6KZhIx+u1Y5kb383I3h5uh8uIURgfaOoLC0vKjaHtNv4m8AHvWikAK7jCw0kjVgDq6UtWYslMH8pMnf2LjMnIlMHn4oK/IVZRTravumPFKjEC7hAaz0fPm+mCpKBgsfWbebshAy6sb/Bu4UL5VQiPnDuiWJT74EumFvLQGXbR6FfAsIGFwicFRBQ+TBOtDoC1girwIcNAiYghHDzNNEgAmRBwPBh5mMLx6FN+60EDdamKx2Z3Kl/C8ZXrjTMExCArzhbvVPoBAHPjCAfNhAQtJaBy4YgYAySsAF82NaMn/h/RxR9Ab4TXij6pKP0AAAAAElFTkSuQmCC"
+	// },
+	// {
 	// 	label:"发送到 OneNote",
 	// 	condition: "nolink nomailto noimage nomedia noinput",
 	// 	image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHCSURBVDhPrVNJL0NRFO7/EMTC/AvE1i+wsENjHn+A2JAYFhJaMeyI2IlFB68W5hZ92pKUV1NiClFp8Z56nuG1+dx71FyCOMmXfPe9c7977jnfNfxLOLIGwGFP64U1qQf2VDNsX4D+JZspP76dCWQPsI8mTOcPw1sjYKXMBk+5HZ6KBKi0w1fvgJDe9ypgSzFjrmAU+yN+BKf2cL0vQz2UcbUZJkR2znFzpBAPu0+w1bUMfmh8OxNgZUltToRcR+BxuRaEFrwmziP2EMXVVpi4rj1go2UeQmb/myvkDCLQuYh7+ZaSXIVjmMobQkyP0poLikYL8bsLDVLrwoceMAGpw4l75UnA3zQDT9UElcpD9p/BWycQ/1Ig0OF6qcDXMAn1QIa7xEKlq+z+vxLgk9BOI1BY00SjFZHdc6w2TtK/n1VQ44ASb9p2t5vGt948S+sfCYjFFshSiHgsGiN/LBWN0zqhgMBmKrU7Eb3TKUkJhGjjc9yeqWwSp8R1TU8wxtxBbJtEZpJjKOxk9ZCZhl2Bcw5uLG4kzsPLx5+NJGT0w1crQCy1QmSd/xYsx1s98d7KvBz+FujBMFt/i0SP6e9hMDwCEXZqhPWpJdgAAAAASUVORK5CYII=",
@@ -49,13 +56,6 @@ page([
 	// 		process.run(false, args, args.length);
 	// 	}
 	// },
-	// {
-	// 	label: "翻译所选文本",
-	// 	condition: "select",
-	// 	oncommand: "gTranslator.selectionTranslation();",
-	// 	insertBefore: "context-selectall",
-	// 	image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFCSURBVDhPnZExSwNBEEZPESStP8PKP2Fnr1hYiI2dkEoQJKWCnVXEIpDGQsRGJGKhFsKBHpEIFokJ4VQkpFMLm5E3OsvcmRBx4XG3e/u9md2LGB9vPfH0e+3A6/OD6KZhIx+u1Y5kb383I3h5uh8uIURgfaOoLC0vKjaHtNv4m8AHvWikAK7jCw0kjVgDq6UtWYslMH8pMnf2LjMnIlMHn4oK/IVZRTravumPFKjEC7hAaz0fPm+mCpKBgsfWbebshAy6sb/Bu4UL5VQiPnDuiWJT74EumFvLQGXbR6FfAsIGFwicFRBQ+TBOtDoC1girwIcNAiYghHDzNNEgAmRBwPBh5mMLx6FN+60EDdamKx2Z3Kl/C8ZXrjTMExCArzhbvVPoBAHPjCAfNhAQtJaBy4YgYAySsAF82NaMn/h/RxR9Ab4TXij6pKP0AAAAAElFTkSuQmCC"
-	// },
 ]);
 
 //当前页面
@@ -74,7 +74,7 @@ new function () {
 	{},
 	{
 		label:"在隐私窗打开此页",
-		oncommand: "openLinkIn(content.location, 'window',{private:true});"
+		oncommand: "privateTab.readyToOpenTab(true); gBrowser.selectedTab=gBrowser.addTab(content.location);"
 	},
 	{
 		label:"在侧栏中打开此页",
@@ -118,6 +118,15 @@ new function () {
 		url: "javascript:(function(p)%7Bopen('','',p).document.write('%3Cbody%20id=1%3E%3Cnobr%20id=2%3E%3C/nobr%3E%3Chr%3E%3Cnobr%20id=3%3E%3C/nobr%3E%3Chr%3E%3Ca%20href=%22#%22onclick=%22return!(c=t)%22%3E%E7%82%B9%E5%87%BB%E5%BC%BA%E5%88%B6%E5%88%B7%E6%96%B0%3C/a%3E%3Cscript%3Efunction%20i(n)%7Breturn%20d.getElementById(n)%7Dfunction%20z()%7Bc+=0.2;if(c%3E=t)%7Bc=0;e.location=u;r++%7Dx()%7Dfunction%20x()%7Bs=t-Math.floor(c);m=Math.floor(s/60);s-=m*60;i(1).style.backgroundColor=(r==0%7C%7Cc/t%3E2/3?%22fcc%22:c/t%3C1/3?%22cfc%22:%22ffc%22);i(2).innerHTML=%22%E5%88%B7%E6%96%B0%E8%AE%A1%E6%95%B0:%20%22+r;i(3).innerHTML=%22%E5%88%B7%E6%96%B0%E5%80%92%E8%AE%A1%E6%97%B6:%20%22+m+%22:%22+(s%3C10?%220%22+s:s)%7Dc=r=0;d=document;e=opener.top;u=prompt(%22%E9%93%BE%E6%8E%A5%E5%9C%B0%E5%9D%80%22,e.location.href);t=u?prompt(%22%E5%88%B7%E6%96%B0%E9%97%B4%E9%9A%94/%E7%A7%92%EF%BC%9A%22,300):0;setInterval(%22z()%22,200);if(!t)%7Bwindow.close()%7D%3C/script%3E%3C/body%3E')%7D)('status=0,scrollbars=0,width=240,height=160,left=1,top=1')",
 		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAK2SURBVDhPY0AGq/6HMs9/YFo794Hp8oUPrTIWP3Aymn/fXqC+noEJqoQwmHpT2nvybZlPU24p/pl0Tft130Xzox1n7YKg0vjBkmde8vMemkycekvu28Qb0v87Lyn8rzuu9q/ysG4DUJoRogoHWPLE3mD2PZ3DU27J/Zl8S+p/3zXZ/63nlP5XHtL4VLRP0xmqDDuY/9JUYvY97b2Tb0n/m3Jb6v+E69L/Oi/J/qg/qfKvdJ/WueKdemJQpWDwH+iaVaGhzFAuA8Os+zoZQH//mnRTCmTAvUk3ZTrazymmVB1Re160R2ti6CoGhGIgOCYjw3lYWVkbzJn535h1+h2lVZNuSnyfckNq6dS70nqr/jMw11/RYivZp92Wv0vPHawQCZy1sFA5qKraeMbYmJVh5lNJLmDIb5h8W7Jy4i0hPqgaMKifry+wONcMRey8u7vCUX39tfvl5HZukpTkYph5xph10i3J5CkvRXmgauDgsIGB/hETk/pjFhac++3tWU47OFgf1tU9sFdO7u9eaelVYBeAwJyH6lKrViEFChRsU1FJ2qqg8GafqWneAVPTtu1KSk+2SEn93ywp+WublFQmVBl2AAxppjVyctNXiIn9XyMl9XO1pOTfVUD2SjGxf2tERfevFRGRhCrFDlYpKfEvlpA4Ol9Y+D8ILwDihcLCfxeKiJxaKiJiDFWGG8yWl9ecLir6dKqg4P9pQDwdRAsJbZ8jLKwOlMafKoGAcaKoqHKvgMD+bn7+V718fD97+Pn/dfPwbAeyhaBqIGDlypWiixcvNl24cKH7okWLgoF0FJBOXrJwYeq87u7y2cXFk6bHx2+e7ONzo9/a+vn0zMxqkFqQHpBeBqBixSVLlgQB6WygYBWQ3QKkO4D0JKDYVBAGsRcvWNC5aN689oXz51eD1EL0LFIEAGnEJwptdKj6AAAAAElFTkSuQmCC"
 	}, {
+	    label: "GBK <-> UTF-8",
+	    image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC3SURBVDhPY6AKmGs//z85GKp9WBlwtP/Yf2RwY/PN/xeXX4Ly/v+/f/D+/9XRa7EbsDV/O1gRSNNCj8X/T886A+aDAEhuV+UeMBtkCFYD0DFMw/OLz+FiMACyAMSHakcYALL1/aMPUGW4wYbUTZgG7G8+CJYE2QhSAPMSspPRMVQ7xABYAILoZYErwAbBACjgQGIgw0AAqxdAgjAFIAAyABQOyAaB2CCXYXUBORiqfTAYQD5gYAAArhcq19H6/18AAAAASUVORK5CYII=",
+	    oncommand: function() {
+	        var charset = gBrowser.mCurrentBrowser._docShell.charset;
+	        BrowserSetForcedCharacterSet(charset == "UTF-8" ? "GBK" : "UTF-8");
+	    }
+	},
+	{},
+	{
 		label:"全页面截图",
 		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABISURBVDhPY6AOWPnmPwpGBuhy6PJggE8Buhy6PBjglEADA2/AMAAUhwHtDUDGyACbPAjDAV5JIMAmD8IkA7I1wgDFBmAABgYA9oelARp3ZZ4AAAAASUVORK5CYII=",
 		oncommand: function () {
@@ -136,29 +145,28 @@ new function () {
 		label: "破解右键防复制",
 		url: "javascript:alert(document.body.oncontextmenu=document.body.onmouseup=document.body.onmousemove=document.body.onclick=document.body.onselectstart%20=document.body.oncopy=document.onmousedown%20=%20document.onkeydown%20=null)",
 		image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEZSURBVDhPjZExisJQEIYfrIW4HsBOq8VLLCoiKjYeQNAykHZBRQW9gPZewkJBiwVLL7B3sBRLC2c2M5mJL9FH/OEneZP//5L3Ykjj6Rxd5kCaXhVtS8wtDSb1NsQG2KWkJf4sDaQByFKJSx/aANjvEQYDnpFodqjVcdPuPEOSgNloglAoYJBEWK14vu71eX37yODS8+OQJIDvj8cQkM0i7HZ4/czzettoRhmpOwCBfr8r0VsZ1u3yXDNSdwNIUCyG5VwO8XLhmWak7gbovu8ECEyfT9KM1B8A23g+Pw7S98MrncfpFGWk/hoA1SqX/r7KvNbzgFIJFz9Dnkk9LnrAv9HzOKz7JhEUWq10gFqDrrVU4rIDaTbGmH8Vxu1dx2qGHAAAAABJRU5ErkJggg==",
-    }, {},
+   	},
+	{},
 	{
 		label:"编辑当前网页",
 		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAK1SURBVDhPY6AGYHn14fOqt2+/3MaHQWoYGCS5GLi5xRgY+BUYGHhEgXpZQQbwPH/z8Ty3pPIzRi6xx4w8oo9QMFCMTUju1cNnby4ANets3L53xa0HT3/NWLB6DgOPpAjIAKEnL9+dAip+6M8edguGmXhET/lHJYNpkEH7j5y6uGL1pi33n775f+LS7f9N05Z+YWDgUwYZIPz01bsTDFySd5i4xA5hYvHDIMNX7zrxY9aK7f93HTv/v2fu2v8dU2bvhhvw8NX7Y4xc4jcZeST2RgfIXYRhIH8/v1PM9aaeSV+Xbzn43zeu6H/HnDX/y5t6LzLxiKUC9cqADXj0/P0RBk7Rq4w84jsQWGIX0AUHW3snvoQ5G6RZN7f9NQOHRDUDt7gDMDAFwAY8fvHhEAOHyGVGLolNCUHKJ2ND5E/5ecpemDlr2nuYZpCzkyra7jDwSNUyMIu5MHBxSQD1soANePry436gqReA3ljLyC2+npFHbHvnxCnPkDU390//wsgp0YauGQSEH738sJeJX/IM0Nkrov0Uj02fNfN99+w1/5ds3AvWnJJT/S01p+QuA5tEELpmEBB+9OrdbiZu0ZMMfCKLgS5Y1zhh0S/v+ML/aX1L/2eUVL0HpYVpC5aeZWCQ0ASqR9EMAsKPX73bycgtcTwjp2QPv6z2Vp+E4v8xrbP/miRXfgJ65ywwgK+dOHPlAAMw5KB6UIDwk+fvtwMD8AQDn8R8bhGljVwSqkeBMXEOJAaKEZD3Hjx5vQOkFqIFFQg/ffF+q4SK/kURGY29glJqB3hEVU7xiiueAybvk3zSKodFFHSugNSA1EK0oAKhq3ceTnn17vOJd+8+nwQl68s37p69dP3uuXuPX5x5+e7dKZAcSA1ILUQLKuABJggloPe0GXiENbBiBh4tsBqwWmTAwAAAYo9bM5woFn0AAAAASUVORK5CYII=",
 		oncommand: 'content.document.body.contentEditable = content.document.body.contentEditable == "true" ? "false" : "true";'
 	}, {
-		label:"复制扩展清单",
-		image:"chrome://mozapps/skin/extensions/extensionGeneric-16.png",
-		oncommand: function () {
-			Application.extensions ? Components.classes['@mozilla.org/widget/clipboardhelper;1'].getService(Components.interfaces.nsIClipboardHelper).copyString(Application.extensions.all.map(function (item, id) {
-					return id + 1 + ": " + item._item.name;
-				}).join("\n")) : Application.getExtensions(function (extensions) {
-				Components.classes['@mozilla.org/widget/clipboardhelper;1'].getService(Components.interfaces.nsIClipboardHelper).copyString(extensions.all.map(function (item, id) {
-						return id + 1 + ": " + item._item.name;
-					}).join("\n"));
-			})
-		}
-	}, {
 		label:"为此页搜索油猴脚本",
-		url: "https://www.google.de/search?hl=en-US&newwindow=1&nfpr=1&safe=off&q=site:greasyfork.org%20%HOST%",
-		where : "tab",
-		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADSSURBVDhPnZK9DcIwEIXTsQBL0CAU15RQUtKwRAbIAlmCPuzADExAmwUyQHjPvrNs6zA/T/p0jvPe6Sy7MXQEE1ikXsBPWtzNRfD9DNvfqysadGH7s3RkMkh4kH2LLciUjW5Bj4prn0pkhlLoUXHtU1APHsAMpdAD9JixwSQ/r250cxlKgYesGYJ2UkODdmx9rQGvkkkn8JShEvGtQNQecPPMaoVSxLsBpv46xgGkP6pIE95ClNxsXfQVU0SJpS763jU4gTvgY9JHUjILGpY30DQvwsxGGOnZ9v8AAAAASUVORK5CYII="
-	}];
+		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADSSURBVDhPnZK9DcIwEIXTsQBL0CAU15RQUtKwRAbIAlmCPuzADExAmwUyQHjPvrNs6zA/T/p0jvPe6Sy7MXQEE1ikXsBPWtzNRfD9DNvfqysadGH7s3RkMkh4kH2LLciUjW5Bj4prn0pkhlLoUXHtU1APHsAMpdAD9JixwSQ/r250cxlKgYesGYJ2UkODdmx9rQGvkkkn8JShEvGtQNQecPPMaoVSxLsBpv46xgGkP6pIE95ClNxsXfQVU0SJpS763jU4gTvgY9JHUjILGpY30DQvwsxGGOnZ9v8AAAAASUVORK5CYII=",
+		oncommand: function () {
+			var domain = content.location.hostname;
+			gBrowser.selectedTab = gBrowser.addTab('https://www.google.de/search?hl=en-US&newwindow=1&nfpr=1&safe=off&q=site:userscripts.org%20' + domain);
+			gBrowser.selectedTab = gBrowser.addTab('https://www.google.de/search?hl=en-US&newwindow=1&nfpr=1&safe=off&q=site:greasyfork.org%20' + domain);
+		}
+	},
+	{},
+    {
+        label: "重新加载配置",
+        accesskey: "r",
+		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABCklEQVRYhe2W3RGDIAyAM4IjOQIjuJEjMIAwS0dgAPkZwT5Ye1dBm5BYzrvmLm+QfOQXgL9Ii4kP0K5rB2Dj0hbCxqUtxAZwCYTxCkzQYKP7cHSmIhDT3JOcikLYMFY7ZgOs4W7k/PjlCWwYwXgF09xnKuJ8b+htMOivBmXyXio4PyDvMp0br4ovR9/ntl1eeIlkkN3zWfjDyDNIB9iF36u2ANPc3xeg1M5kAE4KSh2FAJArwnyaOgQ1sw030a5bxzZ1nnAH0fFDCOnkjGIAAOuHwi5BhH+T2mWkXXe4wsndRFnHxqvX+VS+U1vIIh+SivpBRgKhUnuE/il114zw82+5AxP075fX3eUJ4eD6CMeTckUAAAAASUVORK5CYII=",
+        oncommand: "setTimeout(function(){ addMenu.rebuild(true); }, 10);"
+    }];
 	var menu = PageMenu({
 		label: "多功能菜单",
 		condition: 'normal',
@@ -180,6 +188,12 @@ new function () {
 		label:"复制链接文本",
 		text:"%LINK_TEXT%",
 		image:" "
+	},
+	{},
+	{
+		label:"搜索链接文本",
+		url:"https://www.google.de/search?hl=en-US&newwindow=1&nfpr=1&safe=off&q=%LINK_TEXT%",
+		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHDSURBVDhPpVJbKENhHJ887NmLcnmQZ+U6SZ7mEk+ur8qDXEpMLBSRJbRHlzSRDFuNkkQRHoaiXE44LxbTssk0zhpDdj7/H0ecsYflV//+5/+7fN853/kUf4ExFkkVJYpiElUhVbnUk8BDl6y/AZGMcbu2O41+lecrDFYhu38jgI4ZPPSQi2CHXdutRmM6uMnUrbHgAg8dPikiB15Tv3LGq3pWmdZ86OQcnok3UWxExwweOnxSRA4SCiuGtwRV1zLjrjwTNMdTKdExg4cOnxSRg4TyrLalQEbHIsPOCEu8EjN46PB9BIKBlcsG1oV07Tzj7G75G9AMHjp8UuQbdDARJKj7zXv2tGYT005uO7kL9+cZUMcMftCy//sMpHCMwy30Fncv+PJaLf60BiMLrvqRzRsrfy3/C1/hS9dDe2m32ZtaN8lyWo3Pupmdq1LdgqCqmQqg95mtvPXEIb8HP8MlnXPelGoDy20y+k/ttyPEF1AVUYW+iURGX7jutSUdc97kqlGmbjT4OZtLT6YEmTEUfL6XlLKWKU9y5RBTN4yFFwZgnl45ms2vHX86PncOhhUG6BOUFEh8fHzNpOfYsML/h0LxDlnLtXo5zlbFAAAAAElFTkSuQmCC"
 	}];
 	var menu = PageMenu({ condition:'link', insertBefore:'context-openlink', onpopupshowing: syncHidden });
 	menu(items);
@@ -204,10 +218,10 @@ new function () {
 		label:"在隐私窗口打开",
 		oncommand:"gContextMenu.openLinkInPrivateWindow();",
 	},
-	// {
-	// 	label:"在侧边栏中打开",
-	// 	oncommand:"openWebPanel(gContextMenu.linkText(), gContextMenu.linkURL);",
-	// },
+	{
+		label:"在侧边栏中打开",
+		oncommand:"openWebPanel(gContextMenu.linkText(), gContextMenu.linkURL);",
+	},
 	{},
 	{
 		label:"在 IE 中打开",
@@ -281,14 +295,6 @@ new function () {
 			}, 100);
 		}
 	},
-	// {
-	// 	label: '谷歌以图搜图',
-	// 	image:" ",
-	// 	oncommand : function(){
-	// 		var url = encodeURIComponent(gContextMenu.mediaURL || gContextMenu.imageURL || gContextMenu.bgImageURL);
-	// 		gBrowser.addTab('https://www.google.de/searchbyimage?hl=en-US&safe=off&image_url=' + url);
-	// 	}
-	// },
 	{command: 'context-sep-copyimage'},
 	{command: 'context-viewimageinfo'},
 	{
@@ -306,7 +312,7 @@ new function () {
 };
 
 //右键以图搜图
-new function(){
+new function () {
 	var items=[
 	{
 		label: "Google",
@@ -382,7 +388,7 @@ new function(){
 		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAVElEQVQ4ja2SwQ4AMARD+/8/bbdlw8ogcdK9RQsApNmQal2A359dgCK7j07tBmiBByGzWMjABsBMfaaQgdAYxwGtFVomMiGZDRxSYFLulCtFY8z2AmZhBhe3B+XrAAAAAElFTkSuQmCC"
 	}];
 
-	var menu = PageMenu({ label:"以图搜图", accesskey:"t", condition:"image", where:"tab", insertAfter:"context-viewbgimage", image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH9SURBVDhPzVE7i5pREP1+gYWFIMKCIPgHfKyFoCkEwdbKQny/xbeCoCK4i6KfqCyCCGIlbGN+wgrCohAUY20TXEgXWEg7uWfwC0tIlSoDhzv3zpkzjyv9v2axWD4ZjUbv3d2dV6/X8wkYDAavzWbzqlQq9Y36d3t4eHgtlUqUTCYpk8kQ/EQiwVgsFiSE7pnocrme3G63bDKZZKEsW61W2Ww2yyLxLZfL0Wg0+sFEYcFg8HO326VarUYibwWeVC6XCUin01QoFPgURCoWi7TZbOh8Pv8Mh8PPgUDgWVQ+Hg4Hmk6n3Al4UiqVIuBWRPJ4PKtYLEar1Youlws9Pj6yWD6fp1arxaKn04mazSbF43GSIpEIAbd8yW63y9Vqle+z2ewNsWg0ytWQ0O/3OSbuX/AuifYIQEuohBHq9TqTRMVvSBLtswg4jUaDY8J/RadQYvVQKMQkPGazWXI6nZH5fP5dScQ7Cg2HQ/L5fHW/3/+VBZQRlKUo/nK5pOv1SpPJhLeOsTqdDm23W9rv91SpVLjg7xHw30oXEMK/r9dr2u1272gZNh6PX47HIw0GA+6IdwcHQKIygiKCzfd6vXeHwyGLf5dF7AU/ofBYoN1uE4C2P3aBIBYIIcSwF8ThA+DwN2q1WrtOp7tXq9UMjUbD+OgrAO/P+226fzVJ+gV+cHLx+IUV6AAAAABJRU5ErkJggg==" });
+	var menu = PageMenu({ label:"以图搜图", accesskey:"t", condition:"image", where:"tab", insertAfter:"context-viewbgimage", image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABzklEQVQ4jcXTQUhTARzH8d/JuegwmFBbBDFxOIfVVmPIcEZHh9DBQ0brEkEIQ1qBXgyR2qExQVBoRFAxOkSFUzo1GC3Fiv86qQThePG2HvYO7/AOT3jt/ToEXuzSLv7gc/ndv8CRb2kExeVLkE4sjaCIxWFIo9FgJxaHISgkIIqi8Otr739RFIWFBAT5OERVVW6t+v7Bz+01P3fenTqwvebn1qqfqqoyH4cgF4NomsaXuQg/vghz933gQKPSS6Xax+bmAH/Wz7K5OUCl2sdGpZeapjEXg2A+AtF1nRNDQ0wnkyw9uMhmLcRmLcTWeph79Sj3jXE67ZvcN8a5V4+ytR6mruucj0AwOwgxDIMJn4+j/f2ciMe4fDfKt4UL/PIqxh+fLtNpT5O8R6d9h8ZOkr8+n6dhGJwdhGAmBDFNk1Njbk6NuZm9cpz3r5/k3A0/H946zSdzQTa/p/jbvsbW7lWWH59j5ekZmqbJmRAE2SDEsizWnnkOe+7hRsnDetnLbx9OsF72cqP097csi9kgBJkAxLZtPrrddUh+0sWFjIsrRTerb45xpejmQsbF/KSLtm0zE4Ag3QNxHIedSPdAkOpGcbQL0olUN4pHnSLwB1rO4BkLftLTAAAAAElFTkSuQmCC" });
 	menu(items);
 	items.forEach(function(it){
 		if (it.command)
@@ -393,12 +399,12 @@ new function(){
 //快捷回复
 new function(){
 	var items = [
-        {},
+		{},
 		{label:"谢谢你的解答", input_text: "非常感谢您的解答！！！",accesskey: "T",image:" "},
 		{label:"亲，要的就是", input_text: "亲，要的就是这个，非常感谢！！！",accesskey: "D",image:" "},
 		{label:"不用客气~~~", input_text: "不用客气，大家互相帮助……\n\u256E\uFF08\u256F\u25C7\u2570\uFF09\u256D",accesskey: "Y",image:" "},
 		{label:"反馈情况再说", input_text: "Mark，看反馈情况再说。。。",accesskey: "M",image:" "},
-		{label:"看起来很不错", input_text: "看起来很不错哦，收藏之~~~\n谢谢LZ啦！！！",accesskey: "G",image:" "},
+		{label:"收藏备用~~~", input_text: "看起来很不错哦，收藏之~~~\n谢谢LZ啦！！！",accesskey: "G",image:" "},
 		{label:"谢谢楼主分享", input_text: "谢谢楼主的分享!这个绝对要顶！！！",accesskey: "F",image:" "},
 		{label:"楼上正解~~~", input_text: "楼上正解……\u0285\uFF08\u00B4\u25D4\u0C6A\u25D4\uFF09\u0283",accesskey: "R",image:" "},
 		{label:"坐等楼下解答", input_text: "坐等楼下高手解答~~~⊙_⊙",accesskey: "V",image:" "},
@@ -419,7 +425,9 @@ new function(){
 			// var input_text = event.target.getAttribute('input_text');
 			// if(input_text) {
 			// 	addMenu.copy(input_text);
-			// 	goDoCommand("cmd_paste");
+			// 	setTimeout(function() {
+			//		goDoCommand("cmd_paste");
+			//	}, 100);
 			// }
 			var focused    = document.commandDispatcher.focusedElement;
 			var input_text = event.target.getAttribute('input_text');
@@ -453,8 +461,6 @@ new function () {
 	var items = [
 	{label:"搜索此链接文本",url:"https://www.google.de/search?hl=en-US&newwindow=1&nfpr=1&safe=off&ie=utf-8&oe=utf-8&q=%LINK_TEXT%",image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABUUlEQVR42pWTzUsCYRCH9y9zu3SooCCkjhIRRLeIykXokiWCJ7PvDpZRlz6si1lIQZ3SQxQdOhREpgSm0JeQvfu0+i6I7LKLh4F5h5nnnRl+o6jTdHn8omAYbVqhXqvYFXcEBKFDwcoZZB8B4LkEB9cwGGmFKHb01A1EU9JXzfdvDYZi1lwLwBcVAIwsNWPesIwls7gDtB2Z7N9ujVe+IX2LO2AgItB1OL9vJqsmILDrOoK02IkBAdYy4FsQJC5h+VQCHQDWTqYSgo8fuHuRxS4Ae3stQ7UGE5ttAHqCUgfxC7m4ryrowOyeO6CxqHwZxtYFqtYc5+kNan/gDTsAeueEIRj7n/rmRQMwueUAGF0VAAT3rQBTC0Y3DoDOGbm00icML4oWHYSTgo0MFqjlmPpDgqMcFCuQf4erBzjOwXjcriu9qHg0uutO2+es6fl67T9ptebvFRjBVgAAAABJRU5ErkJggg=="},
 	{label:"在百度云搜索",url:"https://www.google.de/search?hl=en-US&newwindow=1&nfpr=1&safe=off&ie=utf-8&oe=utf-8&q=site:pan.baidu.com%20%LINK_TEXT%",image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJuSURBVDhPrVNZaxNRGL0/U7JM0yQqCIIEV7CCti+CIm70Uakg+OCDiELNvlobmlQS27Sl2jbJzKRJZslMJmOa5Pjd65T2XQcud5nvnO989zuX/ZdPSqsI5boIJGUEEm2EC334vjRp1jCX6UBKKTQfi7U/3oIv3kSkqMODnxEEKZAH+CkglPX2RCpxcK5HexXz+b6YI6VzBJyZZ/atHkFKdzBPwfP5HoEVXM4quFlScGu9j3DyL3kgJQtyD04E2WOESVK4qAlgkMgkOrv9tYOS6uDAAdItGw+qOoEVQcDL8+CMnUrndQdIwYWEjBBlqxsT/NSGeN0wsLzr4MX3Lu6ukcIsDUrkwRnjkvnFSXQPd8oaPhw6KLQH2NFdLGxoeHfoYqNjo9z9jeUtU1x2lNR6cMb8pMCX6eJiRsGnXwYmADqWi2t5GfGmhVrPwf2KTvegYWnTQGxdh5Q/RxCjH0XKaM+AwciF5bh4uW3h7a6JPXOMqwUVn4+GopwDe4LWcIIndeOMoNpzMZ1OMJ1NacywZ4yxVNGgnQD3qiZW2yOkDk083NTw+IeFR3ULC6TIgzP2cV+HNhxhfHKCGREkZRevGiZ2beB6UcE2lfBs20ZKHqGs2Hi/PxAle3DGomkZKzsG8sdjJCjT05qO51sWlms9oWCloWOx0sebfQexooob33oIkaE8OGO+OPWdentlTUc03UYkR86jNl4qkusSZNuMCinREu3zkwtDBV3Y2oMzxk3BrcstK9GPObHukOdbYh0kq/PWccMJy9OavwcPTgrIQPxxcC/w+TSYvxFhaSLiVudZQ3TO3wN3rQf/l4+xP5yBeeudxxlpAAAAAElFTkSuQmCC"},
-	// {label:"BookLink此小说",keyword: 'bl', text:'%LINK_TEXT%', where:'tab', image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFh0lEQVRYhb1XW0wTaRQ+aRqChhREJIYYH0zfmhBD9oEQHjaGF7Ntp8UuLJXWhkUWpEJFW7AbVxYRASWliIvQoiCl03JxZV3BWzItUC5VwAKF1G5FV9G4xiXGGGJMc/ahLXIZLlrXk5xM8mf++b7zncv/D8DGjAEAIXFxcWylUikjW1pOA0CYf/2rWKh7cICavlA7P5SdhfdVxzAjI0MBAMyvRWDzzNXOWYuAhxYBDymCi3bS6Nm0adNO+EoqhLo62mYCBCwCHg7lZuPRI0dOAUDIWhsjIyNZcrmcDwChwZANmepod1MEFxer8MBw5WV+fr5cLBYncTicneBLSQCEIZFI9kx23xhzlJZ4G2tr6yGIumG6/uhyLiZgEfDQKhLiYNaPOFKoxOn6unf2jnabUqnM5HA47Osmk26i4sx7KpAyRR7qamp0n0OCeUKtlk3V171ZTmC5UwQXh+Q56G66PN8nTkXLMsWcxta56OjohE8hEHrNbNaOqou864Gv58OHc7FAoWgGgF0bJcDsNBo1w/IcpIIAXlDAYHAzmcw9QFO0DAAIi4iIiNi2bVsYAGwGgBC1Wp0+duJnb9DABBcnNFXvExISVAAQRRc9c5yi7rhbDa897eaXj652PnV1tHsmf7vwNljZAwQG2sxPAOAbWunZbPYOl77h7ZJN/o3BggfcUVLsTUpKktISOHTokMiuOPzFwCiCizaZZOm6kI/66uouAGCtIKDVaAocp371rlZotgMSfNhwEWdMRpwxGbEvLWVNAtbvk/Fp17UVpOxXmp+u1gGhBEFIrSQ5cU95dIX0Y+oinL3ZgxYBDz3NTWjPy0VKwMPR4yocyspESsDD3pR96Cj+BfvSUnDop4Po1tWjRchHe5584TvTuob5LVu2JNKmAXwjdLtMJiuwk+RM76Io7xco0N2owyed7fhqcAAtQj669Q04WXEGn/15HS3JBM72dOOYuhAfm004WqTC8dIS/PvaVRxTFy18x6mp8iYmJkphjROUAQBMqVSabs//yNx5rtIXnTgVH9bX4Zi6EGdv3USK4OKjVgPeP1aArroLaBHy8VGrAZ3nKvFfhwNHVMeWKNmbKkLnpca5Oq22IioqKmY1JWDv3r3xD4pPLvT/YzOJo4VKfHDyBD6/fQt7U/bhP7Z+fFhfhxNlp9GeJ8dn3TdwxmTE4Zws9LQ0o026H5/fvY3jJcW4/ADrl6bjlJl8UVZaqqItypiYmChXc9PrwKb+9DQcPV6Ik+VlaN0n8K1JxGg7kI4UwUWK4OJgZgb2pooW3rcIeGgVJaNNJqFtZ4rgoqO0BIVCYTZtKixtbT1fcg7Q+XSjbn7r1q0C2jTIZDLBSJEq6DEciHaF87/Dm3qdCwBiaQmw2ewdf5HGN1+CQL9EjLfNZqdOq7lz5XwN1arV9rXX1g5nHTx4HgC206agy0Se75OIg5dayEe7iXwRGRkpAoAYAIj2g+7wP1e2ZFpaWqKzumo+6BoQ8tFhaJnbvXu3wg+2uO0YsEobbh7v6R60CPm0edxozvul+/GeiZyNjY3NA4CN35wzMzO/ndRUfVgCJuTjhKbqvZUkPeNnKz5YRcI1yVAEF++aza7w8HARTeTrWsi58vKKEXWhlyK4OHw4F6lWg9t/mYiLj49P1lZUkH2XL3mmmi69naqt+dC3/4cVBJqqq63gy/Nn3YBDz5aVnZ1qb5srUCiamUxmEny8yTDAd2PayWKx4jkcjshpaHm1fNoZa7Q28BXdZxkDAELCw8N3+YFDaCIJkGFUlperBzIzlhD4/eLFexCEAp9kLBYr0tnRNkMRXLT4i/WGrsEBn1J8QRqjSKXKnqws9zob9e+69Xqnf8isfuL9DxYmEAhkERERfPCN1+2wzj9jwP4Dbl10ubCceuUAAAAASUVORK5CYII="},
-	// {label:"龙部落此电影",url:"http://www.xuandy.com/index.php?s=%LINK_TEXT%&submit=%E7%AB%99%E5%86%85%E6%90%9C%E7%B4%A2", image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADkSURBVDhPzVLbDcIwDPRXpTgswAIswAJMwARswAZdgV36C20/+GCLLlNyzblyHyAk+OCkU5Ozz3HcyE9xVd02qlViSUmaEI7Q2qLYUVoCQRrBnhz2dQhn7G+qD9PI8RC5i2xq1f0qWaCO8eT1RUdtjAdURsDWvsC8g0kB3JMJSOzwJSvMxZ+MThDDmvY8vEmSow3RaAchRntGEkufSJavZoC50ZoBA6pbAkzQPpoBwMD4+2z9Px2ssKI1A8K7DvwVkJfY0ZqBZNAekTdhPbtCnwpfaM0YXmCif9YMDTHT5rEvIfIEoLvpsYVTY8EAAAAASUVORK5CYII="},
 	{label:"翻译此链接文本",url:"https://translate.google.cn/#auto/zh-CN/%LINK_TEXT%",image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABs0lEQVQ4jY2SP4viQBiHX0UQWz/AXb+VX8Iu/YqFhdhcd5BKEOTKC9jJFYrFgo3FIjYiCRauhTCQDMp4bJFklzCuLJLOWNj8rpDMJt7u7Q08xQzze953/hAR0el4QJLw8KR4fXkE/Wtch01zjP6gmxLsd9uPJafjAf1BF82WjmZLR61eRa1eVfNmS4cMxP8JksGk6FPB6XjAii1Qq1fBBYMMBL79+InvDIrbB0CzIpSmQHF0RnF0vkiTFxZX7A+6MOzwU0FxdEZKYJpj1fp1eO5KzF0JzYreF/iekzr77QMUhh2q1zDsUIULPQl6fXkEFww53cWKLWCaY3DBVMuaFWHuSsT7fM/5W5DTXYUMBGQgUJoCpelFst9tcc84DDuE7znQrAiFnrwIkuGY/W6rBIYdQgYC7RmHZkXwPQf3jL8JiCglISLKVCaqzfhZfc9RcMFwc/eMfGd9EWQbS+R0F9nGEtnGEpnKBJnKJFWxPNygPNygPePggqE942nBdTjG9xyUhxvVcqEnsWILrNjiTfCRJN9ZI99Zp8LxWsy73ztTmYCI6ObuGV/7Tym+/PqtICL6A7F/dNYyWabFAAAAAElFTkSuQmCC"},
 	{label:"搜索此链接文本",url:"http://www.baidu.com/baidu?wd=%LINK_TEXT%",image:"http://www.baidu.com/favicon.ico"},
 	{label:"搜索此链接文本",url:"https://startpage.com//do/search?cat=web&language=english_uk&query=%LINK_TEXT%",image:"http://startpage.com/favicon.ico"},
@@ -476,11 +482,11 @@ new function () {
 		{},
 		{label:"百度云搜索",url:"https://www.google.de/search?hl=en-US&newwindow=1&nfpr=1&safe=off&ie=utf-8&oe=utf-8&q=site:pan.baidu.com%20%s",image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJuSURBVDhPrVNZaxNRGL0/U7JM0yQqCIIEV7CCti+CIm70Uakg+OCDiELNvlobmlQS27Sl2jbJzKRJZslMJmOa5Pjd65T2XQcud5nvnO989zuX/ZdPSqsI5boIJGUEEm2EC334vjRp1jCX6UBKKTQfi7U/3oIv3kSkqMODnxEEKZAH+CkglPX2RCpxcK5HexXz+b6YI6VzBJyZZ/atHkFKdzBPwfP5HoEVXM4quFlScGu9j3DyL3kgJQtyD04E2WOESVK4qAlgkMgkOrv9tYOS6uDAAdItGw+qOoEVQcDL8+CMnUrndQdIwYWEjBBlqxsT/NSGeN0wsLzr4MX3Lu6ukcIsDUrkwRnjkvnFSXQPd8oaPhw6KLQH2NFdLGxoeHfoYqNjo9z9jeUtU1x2lNR6cMb8pMCX6eJiRsGnXwYmADqWi2t5GfGmhVrPwf2KTvegYWnTQGxdh5Q/RxCjH0XKaM+AwciF5bh4uW3h7a6JPXOMqwUVn4+GopwDe4LWcIIndeOMoNpzMZ1OMJ1NacywZ4yxVNGgnQD3qiZW2yOkDk083NTw+IeFR3ULC6TIgzP2cV+HNhxhfHKCGREkZRevGiZ2beB6UcE2lfBs20ZKHqGs2Hi/PxAle3DGomkZKzsG8sdjJCjT05qO51sWlms9oWCloWOx0sebfQexooob33oIkaE8OGO+OPWdentlTUc03UYkR86jNl4qkusSZNuMCinREu3zkwtDBV3Y2oMzxk3BrcstK9GPObHukOdbYh0kq/PWccMJy9OavwcPTgrIQPxxcC/w+TSYvxFhaSLiVudZQ3TO3wN3rQf/l4+xP5yBeeudxxlpAAAAAElFTkSuQmCC"},
 		// {label:"BookLink",keyword: 'bl', text:'%SEL%', where:'tab', image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFh0lEQVRYhb1XW0wTaRQ+aRqChhREJIYYH0zfmhBD9oEQHjaGF7Ntp8UuLJXWhkUWpEJFW7AbVxYRASWliIvQoiCl03JxZV3BWzItUC5VwAKF1G5FV9G4xiXGGGJMc/ahLXIZLlrXk5xM8mf++b7zncv/D8DGjAEAIXFxcWylUikjW1pOA0CYf/2rWKh7cICavlA7P5SdhfdVxzAjI0MBAMyvRWDzzNXOWYuAhxYBDymCi3bS6Nm0adNO+EoqhLo62mYCBCwCHg7lZuPRI0dOAUDIWhsjIyNZcrmcDwChwZANmepod1MEFxer8MBw5WV+fr5cLBYncTicneBLSQCEIZFI9kx23xhzlJZ4G2tr6yGIumG6/uhyLiZgEfDQKhLiYNaPOFKoxOn6unf2jnabUqnM5HA47Osmk26i4sx7KpAyRR7qamp0n0OCeUKtlk3V171ZTmC5UwQXh+Q56G66PN8nTkXLMsWcxta56OjohE8hEHrNbNaOqou864Gv58OHc7FAoWgGgF0bJcDsNBo1w/IcpIIAXlDAYHAzmcw9QFO0DAAIi4iIiNi2bVsYAGwGgBC1Wp0+duJnb9DABBcnNFXvExISVAAQRRc9c5yi7rhbDa897eaXj652PnV1tHsmf7vwNljZAwQG2sxPAOAbWunZbPYOl77h7ZJN/o3BggfcUVLsTUpKktISOHTokMiuOPzFwCiCizaZZOm6kI/66uouAGCtIKDVaAocp371rlZotgMSfNhwEWdMRpwxGbEvLWVNAtbvk/Fp17UVpOxXmp+u1gGhBEFIrSQ5cU95dIX0Y+oinL3ZgxYBDz3NTWjPy0VKwMPR4yocyspESsDD3pR96Cj+BfvSUnDop4Po1tWjRchHe5584TvTuob5LVu2JNKmAXwjdLtMJiuwk+RM76Io7xco0N2owyed7fhqcAAtQj669Q04WXEGn/15HS3JBM72dOOYuhAfm004WqTC8dIS/PvaVRxTFy18x6mp8iYmJkphjROUAQBMqVSabs//yNx5rtIXnTgVH9bX4Zi6EGdv3USK4OKjVgPeP1aArroLaBHy8VGrAZ3nKvFfhwNHVMeWKNmbKkLnpca5Oq22IioqKmY1JWDv3r3xD4pPLvT/YzOJo4VKfHDyBD6/fQt7U/bhP7Z+fFhfhxNlp9GeJ8dn3TdwxmTE4Zws9LQ0o026H5/fvY3jJcW4/ADrl6bjlJl8UVZaqqItypiYmChXc9PrwKb+9DQcPV6Ik+VlaN0n8K1JxGg7kI4UwUWK4OJgZgb2pooW3rcIeGgVJaNNJqFtZ4rgoqO0BIVCYTZtKixtbT1fcg7Q+XSjbn7r1q0C2jTIZDLBSJEq6DEciHaF87/Dm3qdCwBiaQmw2ewdf5HGN1+CQL9EjLfNZqdOq7lz5XwN1arV9rXX1g5nHTx4HgC206agy0Se75OIg5dayEe7iXwRGRkpAoAYAIj2g+7wP1e2ZFpaWqKzumo+6BoQ8tFhaJnbvXu3wg+2uO0YsEobbh7v6R60CPm0edxozvul+/GeiZyNjY3NA4CN35wzMzO/ndRUfVgCJuTjhKbqvZUkPeNnKz5YRcI1yVAEF++aza7w8HARTeTrWsi58vKKEXWhlyK4OHw4F6lWg9t/mYiLj49P1lZUkH2XL3mmmi69naqt+dC3/4cVBJqqq63gy/Nn3YBDz5aVnZ1qb5srUCiamUxmEny8yTDAd2PayWKx4jkcjshpaHm1fNoZa7Q28BXdZxkDAELCw8N3+YFDaCIJkGFUlperBzIzlhD4/eLFexCEAp9kLBYr0tnRNkMRXLT4i/WGrsEBn1J8QRqjSKXKnqws9zob9e+69Xqnf8isfuL9DxYmEAhkERERfPCN1+2wzj9jwP4Dbl10ubCceuUAAAAASUVORK5CYII="},
-		// {label:"龙部落",url:"http://www.xuandy.com/index.php?s=%s&submit=%E7%AB%99%E5%86%85%E6%90%9C%E7%B4%A2",image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADkSURBVDhPzVLbDcIwDPRXpTgswAIswAJMwARswAZdgV36C20/+GCLLlNyzblyHyAk+OCkU5Ozz3HcyE9xVd02qlViSUmaEI7Q2qLYUVoCQRrBnhz2dQhn7G+qD9PI8RC5i2xq1f0qWaCO8eT1RUdtjAdURsDWvsC8g0kB3JMJSOzwJSvMxZ+MThDDmvY8vEmSow3RaAchRntGEkufSJavZoC50ZoBA6pbAkzQPpoBwMD4+2z9Px2ssKI1A8K7DvwVkJfY0ZqBZNAekTdhPbtCnwpfaM0YXmCif9YMDTHT5rEvIfIEoLvpsYVTY8EAAAAASUVORK5CYII="},
+		// {label:"炫电影",url:"http://www.xuandy.com/index.php?s=%s&submit=%E7%AB%99%E5%86%85%E6%90%9C%E7%B4%A2",image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABzUlEQVQ4jX3Ty4uPYRQH8M+MSxq3yCUxiSYLpSTKNcoluWWBZiUL1Eixw0INyt5CYYWkDMolIYsfY4z3fc5JWRDJUvkzbN6ffmZwVk895/me7+U8NBVsCFqFzTqqxcSKtaP0DdLtXzXKwuRb4dhYgMKl4GvhyP8AZgelZg90TktmJjeSF0nP/wBGko2F9cmFFtPa9xUzalYXems2BceT8zqmzAleBweCx8lwzeqadcHh5HLwMKmCCN4kT1UsbwAWBB+CJ8Hp5GAyFNwObiU/gpPJior5SU+LiZLPwfaaJUFdWNM27y2zkknJ2STfsbiwtWbZb+rB8+ROYU3QSuZ0elPYmbyoWNsAVsnV3w2NxgPJ7uBJiymNpEnJ/uRt0F/obcdZs2lcCoVTwfUOZkuTT8HX5Gbyvjnv+FuKXU3OL5Mzw8xtGKyqWBTsa5jsQte4103Tq8LeYCS4396BxpvHwZZgW+HcO+b9AZAcDW4NMaHx5O4wcwsrk6dB/yh9QX/wPXhWsaitvTd41PGJupKeZvKX4GfwILlSOFE4lHwMrrX34GIyMFZbYWWzkQOj9A0xucPgfcm9EaYLTr9k6lhfBuluPs4404aYXLNkkO5fnNPM2ace42kAAAAASUVORK5CYII="},
 		{label:"YouTube",url:"https://www.youtube.com/results?search_query=%s",image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACPElEQVRYhe3Wz0tUURjG8Xc195xz77n3nmv2AyIoccToT2jlPxCEIC7aiLjIoBa1cCm0bBSxCZ1EDKQGBCMoFGsSHXVm0EUuxkJIEUajceEsxmBAeFokA2rmK4XTYh747M75nu0hqq66/2UZI++lAzuRDtRSOlBLGaM2MoGNf8KojXI3UONpI28eeDwVqPF0YOMspYwdJyKieU82LwQ2KmHek800a+x40tiohFljx2nGl5kZo1ARvsxQwsjcR6PANXP5PPvsSRJG5mjKl3vvjQJH4lINfmxtorj2Fdn7nUhc8Fn3jjPlyz2a9BW4EjfCKJVKZcVvW1jpeoQPVy6yG4fRO1+B7XoYxWLxgN3dXRQ2c1h++AATtT6/tY/e+ApsjfXY2dn5rUKhgO+fV5C608rv+Qo07iuwNdYjn8//0fb2Nr68HMXrGs1q0pgnwdZQh1wud6LkyDDGAofVpLgnwdZQh/X19WN9WphH5PYtdNkhvGI2adSTYAtfw+rq6hHLi4uItreh07MR0YLf8yTohSfBFr6KbDZbtjg3h6ftbbhbG+CxY2HkNK19NKxFadiV4Bg85yM1PY3k5ASetLagw7XRbVuIMe8foUWJYq7YeO5KcAy6Eh2Bh3YZQrcjEGPeO07MFWs0oEVywJXgip7i7Im0SFJUW0PPXIFKiGpriPod0dSvBSrCEU1ERNSnrUifFjhbVuTAvzDihFp6tPW2V4ulMkfke7XAX/nVKDd7tDURcUItZ/PVrq46xn4C/yowaRwJnAkAAAAASUVORK5CYII="},
 		{label:"搜库搜索",url:"http://www.soku.com/search_video/q_%s",image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABUUlEQVQ4jZ2RzY2EMAyFXQLHlYKIS6AESpgSKGFL8FbACaHkQgmUQAkcZp3rlBCJcGcPweFnZrWajRQplvM+28/gCbNAeli+cE2X9GMmvMF2ZsLbQvqx54veE2YAABCoaE7i7QbSYxK/yC+kpw2gx0PVeiasAyFJB6ky6ckTZjNhLZCZsP61QqCiAQA4fE4jLaSn+Adp6wKrhYpeEjsEqz8B4kGgovGEeOwogvcRYoyfpxGeNrCb6K/AVyZDXCOSmBlI+0B68ISltBwIq1QodkJpjR/dhLnhQRnXiEB1XCvrRtVyqcz3p7wlnxsecsNDDLp7lVu35tatIpY4N0zKulHeCSD57l6dACexZa9aLt8CXMUAAP8CKMtT1kzZ+wDDwxUiAGW5v3qmWi6fTbTcn4CGaYe6Mbfsc+tWZdwjrqzlUuZOa9wgyrgmdnGAbmLx6AeFqfCwQvMXAAAAAABJRU5ErkJggg=="},
 		{},
-		{label:"搜索相关图片",url:"http://www.google.de/search?hl=en-US&nfpr=1&safe=off&site=imghp&tbm=isch&source=hp&q=%s", image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH9SURBVDhPzVE7i5pREP1+gYWFIMKCIPgHfKyFoCkEwdbKQny/xbeCoCK4i6KfqCyCCGIlbGN+wgrCohAUY20TXEgXWEg7uWfwC0tIlSoDhzv3zpkzjyv9v2axWD4ZjUbv3d2dV6/X8wkYDAavzWbzqlQq9Y36d3t4eHgtlUqUTCYpk8kQ/EQiwVgsFiSE7pnocrme3G63bDKZZKEsW61W2Ww2yyLxLZfL0Wg0+sFEYcFg8HO326VarUYibwWeVC6XCUin01QoFPgURCoWi7TZbOh8Pv8Mh8PPgUDgWVQ+Hg4Hmk6n3Al4UiqVIuBWRPJ4PKtYLEar1Youlws9Pj6yWD6fp1arxaKn04mazSbF43GSIpEIAbd8yW63y9Vqle+z2ewNsWg0ytWQ0O/3OSbuX/AuifYIQEuohBHq9TqTRMVvSBLtswg4jUaDY8J/RadQYvVQKMQkPGazWXI6nZH5fP5dScQ7Cg2HQ/L5fHW/3/+VBZQRlKUo/nK5pOv1SpPJhLeOsTqdDm23W9rv91SpVLjg7xHw30oXEMK/r9dr2u1272gZNh6PX47HIw0GA+6IdwcHQKIygiKCzfd6vXeHwyGLf5dF7AU/ofBYoN1uE4C2P3aBIBYIIcSwF8ThA+DwN2q1WrtOp7tXq9UMjUbD+OgrAO/P+226fzVJ+gV+cHLx+IUV6AAAAABJRU5ErkJggg=="},
+		{label:"搜索相关图片",url:"https://www.google.de/search?hl=en-US&nfpr=1&safe=off&newwindow=1&site=imghp&tbm=isch&source=hp&q=%s", image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH9SURBVDhPzVE7i5pREP1+gYWFIMKCIPgHfKyFoCkEwdbKQny/xbeCoCK4i6KfqCyCCGIlbGN+wgrCohAUY20TXEgXWEg7uWfwC0tIlSoDhzv3zpkzjyv9v2axWD4ZjUbv3d2dV6/X8wkYDAavzWbzqlQq9Y36d3t4eHgtlUqUTCYpk8kQ/EQiwVgsFiSE7pnocrme3G63bDKZZKEsW61W2Ww2yyLxLZfL0Wg0+sFEYcFg8HO326VarUYibwWeVC6XCUin01QoFPgURCoWi7TZbOh8Pv8Mh8PPgUDgWVQ+Hg4Hmk6n3Al4UiqVIuBWRPJ4PKtYLEar1Youlws9Pj6yWD6fp1arxaKn04mazSbF43GSIpEIAbd8yW63y9Vqle+z2ewNsWg0ytWQ0O/3OSbuX/AuifYIQEuohBHq9TqTRMVvSBLtswg4jUaDY8J/RadQYvVQKMQkPGazWXI6nZH5fP5dScQ7Cg2HQ/L5fHW/3/+VBZQRlKUo/nK5pOv1SpPJhLeOsTqdDm23W9rv91SpVLjg7xHw30oXEMK/r9dr2u1272gZNh6PX47HIw0GA+6IdwcHQKIygiKCzfd6vXeHwyGLf5dF7AU/ofBYoN1uE4C2P3aBIBYIIcSwF8ThA+DwN2q1WrtOp7tXq9UMjUbD+OgrAO/P+226fzVJ+gV+cHLx+IUV6AAAAABJRU5ErkJggg=="},
 		{label:"搜索所选文本",url:"http://www.baidu.com/baidu?wd=%s",image:"http://www.baidu.com/favicon.ico"},
 		{label:"搜索所选文本",url:"https://startpage.com//do/search?cat=web&language=english_uk&query=%s",image:"http://startpage.com/favicon.ico"},
 		// {label:"360网盘搜索",url:"https://www.google.de/search?q=site:yunpan.cn%20%s",image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAChklEQVQ4jZ3Q3UtTcRgH8N9fEupetOlQ3Jmbk0wIuojuCsIgqsvuCsR5tplFVrbedLo5l0o1kUSKQJxtOydfVphKYstWzKDUnDq3s/myt7PtfLuxESiCXnxuvs/D8zw8hBBC5C3e6sqGkaTGwApVTaM4iMbACJrrg5ny+98VhBBCSm7N1FQ1sjjRFz8UTSMLefNsNVFrHQmNPYajUGmHY6TSwED1fGdfZwZiuDwUR01fbN+6WucWiNrAgurd2uPRVBJZAQCAGC+gjonv6VHrGRCVgUFZdxRl3VFoXmziytAOTvdv4c3XCK7aPuJ82xgGphYR4wX0fEnipH0z16/Su0FUegaltijOvtoCl9hdCWA+sINz9j8oaVtC1cPPeO3xgfVHsZ0ScOntNkptUVTo3CAVegbyrgh+htNgfet4511Bgs8AAPiMAONkHCWWdYi0LogN4xicXoJ3LQV5V+T/ARz6JxdxyjgBkWEclbdH8MEfzF3TM5dAsZVDsZWDaXQZCT6LYisHJe0CUeoYyCxhtDq+4c57DrJODsdNq8inWTwe9iGz+8mxRR4vvUkk0ln8CGxC1smBanAJRKljUGQJ48KzOfAZAeyvFCaWeHjX0yhrmcVFsweh7WTumkgshVrrNIosYShoZ5ZQOjcKzSGIjQuoNXtg8yzDxP6GqnkMUtMqxEY/ZA0O3LDP4FrvJ0jqhiA2LqDQHIKSdqUJRbvS0o4QpB0hiB74kXdzCnlNM5C0BvAvl5jWUHB3HgX3fJC2B3O5gnamiFI7vCbp2MBRUPWOABE9CYoVtCsrbt/AYVC0K33MtCojhBCS9zRYRmlHQuW0M6ug3TiQ1pmh6h3B/NaVQkII+QtqncEVt0PFzwAAAABJRU5ErkJggg=="},
@@ -494,6 +500,44 @@ new function () {
 		condition:"select",
 		position: 10,
 		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHDSURBVDhPpVJbKENhHJ887NmLcnmQZ+U6SZ7mEk+ur8qDXEpMLBSRJbRHlzSRDFuNkkQRHoaiXE44LxbTssk0zhpDdj7/H0ecsYflV//+5/+7fN853/kUf4ExFkkVJYpiElUhVbnUk8BDl6y/AZGMcbu2O41+lecrDFYhu38jgI4ZPPSQi2CHXdutRmM6uMnUrbHgAg8dPikiB15Tv3LGq3pWmdZ86OQcnok3UWxExwweOnxSRA4SCiuGtwRV1zLjrjwTNMdTKdExg4cOnxSRg4TyrLalQEbHIsPOCEu8EjN46PB9BIKBlcsG1oV07Tzj7G75G9AMHjp8UuQbdDARJKj7zXv2tGYT005uO7kL9+cZUMcMftCy//sMpHCMwy30Fncv+PJaLf60BiMLrvqRzRsrfy3/C1/hS9dDe2m32ZtaN8lyWo3Pupmdq1LdgqCqmQqg95mtvPXEIb8HP8MlnXPelGoDy20y+k/ttyPEF1AVUYW+iURGX7jutSUdc97kqlGmbjT4OZtLT6YEmTEUfL6XlLKWKU9y5RBTN4yFFwZgnl45ms2vHX86PncOhhUG6BOUFEh8fHzNpOfYsML/h0LxDlnLtXo5zlbFAAAAAElFTkSuQmCC"
+	});
+	menu(items);
+};
+
+//撤销关闭二级菜单
+new function () {
+	var items = [
+		{label: "恢复上一次会话",command: "Browser:RestoreLastSession"}
+		];
+	var menu = PageMenu({
+		label: '撤销关闭',
+		position: 2,
+		tooltiptext: "右键显示所有历史记录",
+		onclick: "if (event.button == 2) {PlacesCommandHook.showPlacesOrganizer('History');}",
+		onpopupshowing: function(e) {
+			var popup = e.target;
+			popup.setAttribute('id', 'addUndoMneun');
+			var items = popup.querySelectorAll('.bookmark-item');
+			[].forEach.call(items, function(item) {
+				item.parentNode.removeChild(item);
+			});
+			var undoItems = JSON.parse(Cc['@mozilla.org/browser/sessionstore;1'].getService(Ci.nsISessionStore).getClosedTabData(window));
+			if (undoItems.length == 0) {
+				popup.setAttribute('oncommand', 'this.parentNode._placesView._onCommand(event);');
+				if (!this.parentNode._placesView) new HistoryMenu(event);
+			} else {
+				undoItems.map(function(item, id) {
+					var m = document.createElement('menuitem');
+					m.setAttribute('label', item.title);
+					m.setAttribute('image', item.image ? 'moz-anno:favicon:' + item.image : '');
+					m.setAttribute('class', 'menuitem-iconic bookmark-item closedtab');
+					m.setAttribute('oncommand', 'undoCloseTab(' + id + ')');
+					m.setAttribute('type', 'unclose-menuitem');
+					popup.appendChild(m);
+				});
+			}
+		},
+		image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAASCAYAAABSO15qAAABDklEQVQ4jZ3SPShFcRjH8Q8JN2IgI4pJorxkMJDNYlE27AZWG4vBJoOymewMshtsdzHIQilKUl7SDde9hnNuTqdzLuc+9UzP8/2e/uf3kFyNWMVwyrxqNWEddxjPCuewiQJeMJYFbsU2PlDGM0b/C7dhF58hXA5FR9jDBhbQh/o43IV9FCNwUhdxgx30RwWHKP0BxzuPiYpgCbcZBWWco7cimcV1bKGEJzziPUHwja3oU2ZwFVl4xTwGMYUVHMdkl/EfOokLvzGOxOY5LOI+3CnEBQTHk8eb9ENaw1fYiTWEU+mn3C2I9CFNAD3oTJm1CFI4qSaoVu04w3KtggEcoKMWuA5zmK71682CeBvgB+93YAIjVuYDAAAAAElFTkSuQmCC"
 	});
 	menu(items);
 };
