@@ -1,0 +1,3 @@
+[submodule "PanList"]
+	path = PanList
+	url = git@github.com:Firef0x/PanList.git
