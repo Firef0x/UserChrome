@@ -48,19 +48,23 @@
 location == "chrome://browser/content/browser.xul" && (function(){
 
     var buttons = [
-		{ id: "greasemonkey-tbb", bar: "TabsToolbar_aidBar", pos: 1 },//greasemonkey扩展
-		 { id: "stylish-toolbar-button", bar: "TabsToolbar_aidBar", pos: 2 },//stylish 扩展
-		// { id: "abp-toolbarbutton", bar: "TabsToolbar_aidBar", pos: 3 },// ABP、ABE扩展
-		{ id: "lpt_lastpass-compact-btn", bar: "TabsToolbar_aidBar", pos: 4 },// Lastpass 扩展
-		{ id: "wot-button", bar: "TabsToolbar_aidBar", pos: 5 },// WOT 扩展
-		{ id: "pan-toolbarbutton", bar: "TabsToolbar_aidBar", pos: 6 },// AutoProxy 扩展
-		{ id: "RIL_toolbar_button", bar: "TabsToolbar_aidBar", pos: 7 },// Pocket 扩展
-		// { id: "sessionmanager-undo", bar: "TabsToolbar_aidBar", pos: 8 },// SessionManager 扩展
-		// { id: "sessionmanager-toolbar", bar: "TabsToolbar_aidBar", pos: 9 },// SessionManager 扩展
-		{ id: "firebug-badged-button", bar: "TabsToolbar_aidBar", pos: 10 },// Firebug 扩展
-		{ id: "redisposition-button", bar: "TabsToolbar_aidBar", pos: 11 },// Redisposition 扩展
-		{ id: "redirector-icon", bar: "TabsToolbar_aidBar", pos: 12 },// Redirector.uc.js 脚本
+    
+		// 自用的配置
+		{ id: "wot-button", bar: "TabsToolbar_aidBar", pos: 1 },// WOT 扩展
+		{ id: "greasemonkey-tbb", bar: "TabsToolbar_aidBar", pos: 2 },//greasemonkey扩展
+		{ id: "stylish-toolbar-button", bar: "TabsToolbar_aidBar", pos: 3 },//stylish 扩展
+		{ id: "dta-manager-button", bar: "TabsToolbar_aidBar", pos: 4 },// DownThemAll! 扩展 管理器
+		{ id: "redisposition-button", bar: "TabsToolbar_aidBar", pos: 5 },// Redisposition 扩展
+		{ id: "RIL_toolbar_button", bar: "TabsToolbar_aidBar", pos: 6 },// Pocket 扩展
+		{ id: "firebug-badged-button", bar: "TabsToolbar_aidBar", pos: 7 },// Firebug 扩展
+		// { id: "webclipper-toolbar-button", bar: "TabsToolbar_aidBar", pos: 8 },// WizNote Web Clipper 扩展
+		{ id: "sessionmanager-toolbar", bar: "TabsToolbar_aidBar", pos: 9 },// SessionManager 扩展
+		{ id: "pan-toolbarbutton", bar: "TabsToolbar_aidBar", pos: 10 },// Pan 扩展
+		{ id: "lpt_lastpass-compact-btn", bar: "TabsToolbar_aidBar", pos: 8 },// Lastpass 扩展
+		// { id: "abp-toolbarbutton", bar: "TabsToolbar_aidBar", pos: 10 },// ABP、ABE扩展
+		// { id: "sessionmanager-undo", bar: "TabsToolbar_aidBar", pos: 11 },// SessionManager 扩展
 
+		
         // { id: "autoReaderButton", bar: "PersonalToolbar", pos: 1 },
         // { id: "showFlagS-icon", insertBefore: "bookmarks-menu-button" },
         // { id: "nosquint-status", bar: "dactyl-status-bar" },
