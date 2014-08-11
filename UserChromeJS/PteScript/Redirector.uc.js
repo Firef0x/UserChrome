@@ -129,7 +129,7 @@
                 icon.setAttribute("context", "redirector-menupopup");
                 icon.setAttribute("onclick", "Redirector.iconClick(event);");
                 icon.setAttribute("tooltiptext", "Redirector");
-                icon.setAttribute("style", "padding: 0px 2px; list-style-image: url(" + (this.state ? this.enableIcon : this.disableIcon) + ")");
+                icon.setAttribute("style", "padding: 5px 2px; list-style-image: url(" + (this.state ? this.enableIcon : this.disableIcon) + ")");
                 // add menu
                 let xml = '\
                     <menupopup id="redirector-menupopup">\

@@ -33,12 +33,12 @@ rules = [
 		to: "http:\/\/userscripts.org:8080/$1",
 		regex: true
 	},
-	{
-		name: "WiKi链接加密",
-		from: /^http:\/\/([^\/]+\.wikipedia\.org\/.+)/i,
-		to: "https://$1",
-		regex: true
-	},
+	// {
+	//	name: "WiKi链接加密",
+	//	from: /^http:\/\/([^\/]+\.wikipedia\.org\/.+)/i,
+	//	to: "https://$1",
+	//	regex: true
+	// },
 	{
 	    // 包含手机版界面
 	    name: "百度随心听（音质改320）",
@@ -55,9 +55,15 @@ rules = [
 	},
 	{
 	    name: "Google搜索跳转到wen.lu",
-	    from: /^https?:\/\/(www\.)?google\.[^\/]+\/(.+)/i,
+	    from: /^https?:\/\/(www\.)?google\.[^\/]+\/(.*)$/i,
 	    exclude: /translate\.google\./i,
 		to: "https://wen.lu/$2",
 	    regex: true
+	},
+	{
+		name: "重定向Google公共库到国内镜像",
+		from: /^https?:\/\/(.*?)googleapis\.[^\/]+\/(.*)$/,
+		to: "http://$1useso.com/$2",
+		regex: true
 	}
 ];
