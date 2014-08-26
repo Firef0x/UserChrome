@@ -47,7 +47,6 @@ rules = [
 	    regex: true
 	},
 	{
-	    // 包含手机版界面
 	    name: "防御路由DNS劫持",
 	    from: /^192\.168\.3\.1\/.*/i,
 	    to: "http://localhost/",
@@ -58,6 +57,12 @@ rules = [
 	    from: /^https?:\/\/(www\.)?google\.[^\/]+\/(.*)$/i,
 	    exclude: /translate\.google\./i,
 		to: "https://wen.lu/$2",
+	    regex: true
+	},
+	{
+	    name: "解决wen.lu无法重定向图片地址",
+	    from: /^https?:\/\/wen.lu\/imgres\?.*imgurl=([^&]*).*/i,
+		to: "$1",
 	    regex: true
 	},
 	{
