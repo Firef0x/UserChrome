@@ -910,12 +910,12 @@
 				favicon: 'http://ishare.iask.sina.com.cn/favicon.ico',
 				encoding: 'gbk',
 			};
-			engineList.knowledge[8] = {
+			engineList.knowledge[7] = {
 				name: '百度知道',
 				url: 'http://zhidao.baidu.com/search?word=%s',
 				favicon: 'http://www.baidu.com/favicon.ico',
 			};
-			engineList.knowledge[9] = {
+			engineList.knowledge[8] = {
 				name: 'ArchWiki',
 				url: 'https://wiki.archlinux.org/index.php/Special:Search?fulltext=Search&search=%s',
 				favicon: 'http://www.archlinux.org/favicon.ico',
