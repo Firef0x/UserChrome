@@ -29,8 +29,8 @@ rules = [
 	// },
 	{
 		name: "userscripts重定向",
-		from: /^https?:\/\/userscripts\.org\/(.*)/i,
-		to: "http:\/\/userscripts.org:8080/$1",
+		from: /^https?:\/\/userscripts\.org(:8080)?\/(.*)/i,
+		to: "http:\/\/userscripts-mirror.org/$2",
 		regex: true
 	},
 	// {
@@ -60,15 +60,56 @@ rules = [
 	    regex: true
 	},
 	{
+	    name: "Google学术搜索跳转到wen.lu",
+	    from: /^https?:\/\/scholar\.google\.[^\/]+\/(.*)$/i,
+		to: "https://scholar.wen.lu/$2",
+	    regex: true
+	},
+	{
 	    name: "解决wen.lu无法重定向图片地址",
 	    from: /^https?:\/\/wen.lu\/imgres\?.*imgurl=([^&]*).*/i,
 		to: "$1",
 	    regex: true
 	},
 	{
-		name: "重定向Google公共库到国内镜像",
-		from: /^https?:\/\/(.*?)googleapis\.[^\/]+\/(.*)$/,
+		name: "重定向Google公共库到360镜像",
+		from: /^http:\/\/(.*?)googleapis\.[^\/]+\/(.*)$/,
 		to: "http://$1useso.com/$2",
 		regex: true
-	}
+	},
+	{
+		// 取自 https://github.com/523860169/list/blob/master/_redirector.js
+		name: "重定向Google公共库到科大镜像",
+		from: /^https:\/\/(ajax|fonts)\.googleapis\.[^\/]+\/(.*)$/i,
+		to: "http://$1lug.ustc.edu.cn/$2",
+		regex: true
+	},
+	{
+		// 取自 https://github.com/523860169/list/blob/master/_redirector.js
+		name: "科大博客提供Google Themes加速",
+		from: /^https?:\/\/themes\.googleuserconten\.[^\/]+\/(.*)$/i,
+		to: "http://google-themes.lug.ustc.edu.cn/$1",
+		regex: true
+	},
+	{
+		// 取自 https://github.com/523860169/list/blob/master/_redirector.js
+		name: "Google Code链接加密",
+		from: /^http:\/\/(.*?)googlecode\.com\/(.*)$/i,
+		to: "https://$1googlecode.com/$2",
+		regex: true
+	},
+	{
+		// 取自 http://tieba.baidu.com/p/3279099939
+		name: "重定向Gravatar头像到多说镜像",
+		from: /^https?:\/\/([0-9]?)\.gravatar\.com\/avatar\/(.*)$/,
+		to: "http://gravatar.duoshuo.com/avatar/$2",
+		regex: true
+	},
+	{
+		// 取自 https://github.com/523860169/list/blob/master/_redirector.js
+		name: "tumblr链接加密",
+		from: /^http:\/\/(.*?)tumblr\.com\/(.*)$/i,
+		to: "https://$1tumblr.com/$2",
+		regex: true
+	},
 ];
