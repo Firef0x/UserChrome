@@ -100,7 +100,7 @@ new function () {
 	}
 	];
 	
-	var menu = PageMenu({condition: 'normal', insertBefore: 'context-reload', onpopupshowing: syncHidden });
+	var menu = PageMenu({condition: 'normal', insertBefore: 'context-openlinkincurrent', onpopupshowing: syncHidden });
 	menu(items);
 };
 
@@ -170,7 +170,7 @@ new function () {
 	var menu = PageMenu({
 		label: "多功能菜单",
 		condition: 'normal',
-		insertBefore: 'context-reload'
+		insertBefore: 'context-openlinkincurrent'
 	});
 	menu(items);
 };
@@ -407,7 +407,6 @@ new function () {
 //快捷回复
 new function(){
 	var items = [
-		{},
 		{label:"谢谢你的解答", input_text: "非常感谢您的解答！！！",accesskey: "T",image:" "},
 		{label:"亲，要的就是", input_text: "亲，要的就是这个，非常感谢！！！",accesskey: "D",image:" "},
 		{label:"不用客气~~~", input_text: "不用客气，大家互相帮助……\n\u256E\uFF08\u256F\u25C7\u2570\uFF09\u256D",accesskey: "Y",image:" "},
