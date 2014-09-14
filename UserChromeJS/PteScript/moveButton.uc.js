@@ -55,16 +55,16 @@ location == "chrome://browser/content/browser.xul" && (function(){
 		{ id: "stylish-toolbar-button", bar: "TabsToolbar_aidBar", pos: 3 },//stylish 扩展
 		{ id: "dta-manager-button", bar: "TabsToolbar_aidBar", pos: 4 },// DownThemAll! 扩展 管理器
 		{ id: "redisposition-button", bar: "TabsToolbar_aidBar", pos: 5 },// Redisposition 扩展
-		{ id: "RIL_toolbar_button", bar: "TabsToolbar_aidBar", pos: 6 },// Pocket 扩展
+		{ id: "useragentswitcher-button", bar: "TabsToolbar_aidBar", pos: 6 },// User Agent Switcher 扩展
 		{ id: "firebug-badged-button", bar: "TabsToolbar_aidBar", pos: 7 },// Firebug 扩展
 		// { id: "webclipper-toolbar-button", bar: "TabsToolbar_aidBar", pos: 8 },// WizNote Web Clipper 扩展
+		{ id: "lpt_lastpass-compact-btn", bar: "TabsToolbar_aidBar", pos: 8 },// Lastpass 扩展
 		{ id: "sessionmanager-toolbar", bar: "TabsToolbar_aidBar", pos: 9 },// SessionManager 扩展
 		{ id: "pan-toolbarbutton", bar: "TabsToolbar_aidBar", pos: 10 },// Pan 扩展
-		{ id: "lpt_lastpass-compact-btn", bar: "TabsToolbar_aidBar", pos: 8 },// Lastpass 扩展
+
 		// { id: "abp-toolbarbutton", bar: "TabsToolbar_aidBar", pos: 10 },// ABP、ABE扩展
 		// { id: "sessionmanager-undo", bar: "TabsToolbar_aidBar", pos: 11 },// SessionManager 扩展
 
-		
         // { id: "autoReaderButton", bar: "PersonalToolbar", pos: 1 },
         // { id: "showFlagS-icon", insertBefore: "bookmarks-menu-button" },
         // { id: "nosquint-status", bar: "dactyl-status-bar" },
