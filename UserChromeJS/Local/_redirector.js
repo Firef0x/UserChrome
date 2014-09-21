@@ -54,7 +54,7 @@ rules = [
 	},
 	{
 	    name: "Google搜索跳转到wen.lu",
-	    from: /^https?:\/\/(www\.)?google\.[^\/]+\/(.*)$/i,
+	    from: /^https?:\/\/(www\.)?google\.[^\/]+\/(search.*)$/i,
 	    exclude: /translate\.google\./i,
 		to: "https://wen.lu/$2",
 	    regex: true
@@ -62,7 +62,7 @@ rules = [
 	{
 	    name: "Google学术搜索跳转到wen.lu",
 	    from: /^https?:\/\/scholar\.google\.[^\/]+\/(.*)$/i,
-		to: "https://scholar.wen.lu/$2",
+		to: "https://scholar.wen.lu/$1",
 	    regex: true
 	},
 	{
