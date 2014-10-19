@@ -1,3 +1,6 @@
+//隐藏菜单右侧的 tab 提示
+css('.addMenu .menu-iconic-accel[value="tab"] { display: none; }');
+
 //添加标签右键菜单项
 tab([{
 		label:"复制 Favicon 的 URL",
@@ -412,7 +415,7 @@ new function(){
 		{label:"不用客气~~~", input_text: "不用客气，大家互相帮助……\n\u256E\uFF08\u256F\u25C7\u2570\uFF09\u256D",accesskey: "Y",image:" "},
 		{label:"反馈情况再说", input_text: "Mark，看反馈情况再说。。。",accesskey: "M",image:" "},
 		{label:"收藏备用~~~", input_text: "看起来很不错哦，收藏之~~~\n谢谢LZ啦！！！",accesskey: "G",image:" "},
-		{label:"谢谢楼主分享", input_text: "谢谢楼主的分享!这个绝对要顶！！！",accesskey: "F",image:" "},
+		{label:"谢谢楼主分享", input_text: "谢谢楼主的分享！！！这个绝对要顶！！！",accesskey: "F",image:" "},
 		{label:"楼上正解~~~", input_text: "楼上正解……\u0285\uFF08\u00B4\u25D4\u0C6A\u25D4\uFF09\u0283",accesskey: "R",image:" "},
 		{label:"坐等楼下解答", input_text: "坐等楼下高手解答~~~⊙_⊙",accesskey: "V",image:" "},
 		{},
