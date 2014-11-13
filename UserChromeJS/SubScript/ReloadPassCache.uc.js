@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            ReloadPassCache.uc.js
-// @description     按Ctrl+F5所有frame跳过缓存刷新
+// @description     鎸塁trl+F5鎵�鏈塮rame璺宠繃缂撳瓨鍒锋柊
 // ==/UserScript==
 
 location == "chrome://browser/content/browser.xul" && addEventListener("keydown", function (event) {
