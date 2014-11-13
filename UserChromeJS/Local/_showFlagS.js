@@ -14,10 +14,10 @@ var Perfs = {
 	Inquiry_Delay: "",
 
 	//旧版国旗图标库，相对路径，Chrome文件夹，脚本内已有预设：chrome\lib\countryflags.js 文件。	
-	libIconPath: "Local\\countryflags.js", //支持Linux、WIndows格式，但请勿直接以“\\”开头。
+	libIconPath: "local\\countryflags.js", //支持Linux、WIndows格式，但请勿直接以“\\”开头。
 
 	//本地PNG图标存放文件夹，相对路径，Chrome文件夹，预设： chrome\lib\LocalFlags 文件夹。	
-	LocalFlags: "Local\\LocalFlags", //支持Linux、WIndows格式，但请勿直接以“\\”开头。
+	LocalFlags: "local\\LocalFlags", //支持Linux、WIndows格式，但请勿直接以“\\”开头。
 
 	//网络图标地址，预设'http://www.razerzone.com/asset/images/icons/flags/'。
 	BAK_FLAG_PATH: "", //http://www.1108.hk/images/ext/ 、http://www.myip.cn/images/country_icons/ 等等。

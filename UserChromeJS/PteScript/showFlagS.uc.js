@@ -146,7 +146,7 @@ location == "chrome://browser/content/browser.xul" && (function() {
 	showFlagS.reload = function(isAlert) {
 		var aFile, data, libFile, libData, err, errMsg = [];
 		aFile = Services.dirsvc.get('UChrm', Ci.nsILocalFile);
-		aFile.appendRelativePath('Local');
+		aFile.appendRelativePath('local');
 		aFile.appendRelativePath('_showFlagS.js');
 		if (aFile && aFile.exists() && aFile.isFile()) {
 			this.isConfigFile = true;

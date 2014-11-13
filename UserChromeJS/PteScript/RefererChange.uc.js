@@ -14,7 +14,7 @@
 
 var refererChanger = {};
 refererChanger.state = true; /* 启动时是否启用 */
-refererChanger.folderName = 'Local';
+refererChanger.folderName = 'local';
 refererChanger.fileName = '_refererChange.js';
 refererChanger.enabledTip = "左键：开关外链\n中键：重载配置\n右键：编辑配置";
 refererChanger.disabledTip = "左键：开关外链\n中键：重载配置\n右键：编辑配置";

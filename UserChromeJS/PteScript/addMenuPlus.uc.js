@@ -158,7 +158,7 @@ window.addMenu = {
         }
 
         aFile = Services.dirsvc.get("UChrm", Ci.nsILocalFile);
-        aFile.appendRelativePath("Local");
+        aFile.appendRelativePath("local");
         aFile.appendRelativePath(path);
 
         if (!aFile.exists()) {
