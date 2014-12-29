@@ -1,26 +1,26 @@
 rules = [
 	//  自带示例 [[[1
 	// {
-	//	name: "about:haoutil",					// 规则名称
-	//	from: "about:haoutil",					// 需要重定向的地址
-	//	to: "https://haoutil.googlecode.com",	// 目标地址
-	//	wildcard: false,						// 可选，true 表示 from 是通配符
-	//	regex: false,							// 可选，true 表示 from 是正则表达式
-	//	resp: false								// 可选，true 表示替换 response body
-	//  state: true,                            // 可选，true 表示该规则默认开启；false 表示该规则默认关闭，需要时能点击使用，重启 Firefox 后恢复关闭状态。
+	// 	name: "about:haoutil",                  // 规则名称
+	// 	from: "about:haoutil",                  // 需要重定向的地址
+	// 	to: "https://haoutil.googlecode.com",   // 目标地址
+	// 	wildcard: false,                        // 可选，true 表示 from 是通配符
+	// 	regex: false,                           // 可选，true 表示 from 是正则表达式
+	// 	resp: false                             // 可选，true 表示替换 response body
+	// 	state: true,                            // 可选，true 表示该规则默认开启；false 表示该规则默认关闭，需要时能点击使用，重启 Firefox 后恢复关闭状态。
 	// },
 	// {
-	//	   name: "google链接加密",
-	//	   from: /^http:\/\/(([^\.]+\.)?google\..+)/i,
-	//	   exclude: /google\.cn/i,				   // 可选，排除例外规则
-	//	   to: "https://$1",
-	//	   regex: true
+	// 	name: "google链接加密",
+	// 	from: /^http:\/\/(([^\.]+\.)?google\..+)/i,
+	// 	exclude: /google\.cn/i,				    // 可选，排除例外规则
+	// 	to: "https://$1",
+	// 	regex: true
 	// },
 	// {
-	//	   name: "google搜索结果禁止跳转",
-	//	   from: /^https?:\/\/www\.google\.com\/url\?.*url=([^&]*).*/i,
-	//	   to: "$1",
-	//	   regex: true
+	// 	name: "google搜索结果禁止跳转",
+	// 	from: /^https?:\/\/www\.google\.com\/url\?.*url=([^&]*).*/i,
+	// 	to: "$1",
+	// 	regex: true
 	// },
 	// ]]]
 	//  原创 [[[1
@@ -39,7 +39,7 @@ rules = [
 	{
 		name: "Google 搜索跳转到 wen.lu",
 		from: /^https?:\/\/(www\.)?google\.[^\/]+\/(search.*)$/i,
-		exclude: /translate\.google\./i,
+		exclude: /google\.cn/i,
 		to: "https://wen.lu/$2",
 		regex: true
 	},
@@ -52,18 +52,18 @@ rules = [
 	},
 	{
 		name: "解决 wen.lu 无法重定向图片地址",
-		from: /^https?:\/\/wen.lu\/imgres\?.*imgurl=([^&]*).*/i,
+		from: /^https?:\/\/wen\.lu\/imgres\?.*imgurl=([^&]*).*/i,
 		to: "$1",
 		regex: true
 	},
 	// ]]]
 	//  取自 https://github.com/523860169/list/blob/master/_redirector.js [[[1
 	// {
-	//	name: "wiki繁 >> 简",
-	//	from: /\:\/\/zh\.wikipedia\.org\/(?!zh\-cn\/)[^\/]+/i,
-	//	exclude: /favicon\.ico/i,
-	//	to: '://zh.wikipedia.org/zh-cn',
-	//	regex: true
+	// 	name: "wiki繁 >> 简",
+	// 	from: /\:\/\/zh\.wikipedia\.org\/(?!zh\-cn\/)[^\/]+/i,
+	// 	exclude: /favicon\.ico/i,
+	// 	to: '://zh.wikipedia.org/zh-cn',
+	// 	regex: true
 	// },
 	{
 		name: "重定向 Google Ajax/Fonts 公共库到 360 镜像",
