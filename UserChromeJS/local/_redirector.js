@@ -51,8 +51,15 @@ rules = [
 		state: false
 	},
 	{
+		// 部分参考自 https://github.com/goagent/goagent/blob/3.0/local/proxy.ini
 		name: "解决 wen.lu 无法重定向图片地址",
-		from: /^https?:\/\/wen\.lu\/imgres\?.*imgurl=([^&]*).*/i,
+		from: /^https?:\/\/wen\.lu\/(?:imgres|url)\?.*url=([^&]+).*/i,
+		to: "$1",
+		regex: true
+	},
+	{
+		name: "解决 awk.so 无法重定向图片地址",
+		from: /^https?:\/\/awk\.so\/(?:imgres|url)\?.*url=([^&]+).*/i,
 		to: "$1",
 		regex: true
 	},
