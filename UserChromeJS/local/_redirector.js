@@ -6,8 +6,9 @@ rules = [
 	// 	to: "https://haoutil.googlecode.com",   // 目标地址
 	// 	wildcard: false,                        // 可选，true 表示 from 是通配符
 	// 	regex: false,                           // 可选，true 表示 from 是正则表达式
-	// 	resp: false                             // 可选，true 表示替换 response body
+	// 	resp: false,                            // 可选，true 表示替换 response body
 	// 	state: true,                            // 可选，true 表示该规则默认开启；false 表示该规则默认关闭，需要时能点击使用，重启 Firefox 后恢复关闭状态。
+	//  decode: false                           // 可选，true 表示尝试对 from 解码
 	// },
 	// {
 	// 	name: "google链接加密",
@@ -37,29 +38,38 @@ rules = [
 		regex: true
 	},
 	{
-		name: "Google 搜索跳转到 wen.lu",
-		from: /^https?:\/\/(www\.)?google\.[^\/]+\/(search.*)$/i,
+		name: "Google 搜索跳转到 glgoo.com",
+		from: /^https?:\/\/(www\.)?google\.[^\/]+\/(search\?.*)$/i,
 		exclude: /google\.cn/i,
-		to: "https://wen.lu/$2",
+		to: "https://e.glgoo.com/$2",
 		regex: true
+		// state: false
 	},
 	{
-		name: "Google 学术搜索跳转到 wen.lu (已失效)",
+		name: "Google 学术搜索跳转到 glgoo.com",
 		from: /^https?:\/\/scholar\.google\.[^\/]+\/(.*)$/i,
-		to: "https://scholar.wen.lu/$1",
-		regex: true,
-		state: false
+		to: "https://scholar.glgoo.com/$1",
+		regex: true
+		// state: false
 	},
 	{
 		// 部分参考自 https://github.com/goagent/goagent/blob/3.0/local/proxy.ini
 		name: "解决 wen.lu 无法重定向图片地址",
 		from: /^https?:\/\/wen\.lu\/(?:imgres|url)\?.*url=([^&]+).*/i,
 		to: "$1",
-		regex: true
+		regex: true,
+		state: false
 	},
 	{
 		name: "解决 awk.so 无法重定向图片地址",
 		from: /^https?:\/\/awk\.so\/(?:imgres|url)\?.*url=([^&]+).*/i,
+		to: "$1",
+		regex: true,
+		state: false
+	},
+	{
+		name: "解决 glgoo.com 无法重定向图片地址",
+		from: /^https?:\/\/.*\.glgoo\.com\/(?:imgres|url)\?.*url=([^&]+).*/i,
 		to: "$1",
 		regex: true
 	},
@@ -72,6 +82,7 @@ rules = [
 	// 	to: '://zh.wikipedia.org/zh-cn',
 	// 	regex: true
 	// },
+	// 以下三条见 https://servers.ustclug.org/index.php/2014/06/blog-googlefonts-speedup/
 	{
 		name: "重定向 Google Ajax/Fonts 公共库到 360 镜像",
 		from: /^https?:\/\/(ajax|fonts)\.googleapis\.com\/(.*)$/i,
@@ -143,6 +154,22 @@ rules = [
 		regex: true
 	},
 	// ]]]
+	//  取自 https://github.com/dupontjoy/userChromeJS/blob/master/Local/_redirector.js [[[1
+	{
+		name: "反 Google 搜索验证码",
+		from: /^https?:\/\/ipv4\.google\.com\/sorry\/IndexRedirect\?continue=https?:\/\/(www\.)?google\.[^\/]+\/search\?(.*q=.*)&q=.*/i,
+		to: "https://www.google.com/ncr#$1",
+		regex: true
+	},
+	{
+		//http://bbs.kafan.cn/thread-1801036-1-1.html
+		name: "flickr 显示原始大图",
+		from: /^(https?:\/\/c\d\.staticflickr\.com\/\d\/\d+\/\d+_[^\._]+)(_[a-z])?(\.jpg)$/,
+		exclude: /^(https?:\/\/c\d\.staticflickr\.com\/\d\/\d+\/\d+_\w+)_o(\.jpg)$/,
+		to: "$1_o$3",
+		regex: true
+	},
+	// ]]]
 	//  取自其它 [[[1
 	{
 		// 取自 http://tieba.baidu.com/p/3279099939
@@ -171,5 +198,5 @@ rules = [
 	// ]]]
 ];
 //  Vim Modeline: [[[1
-// vim:fdm=marker:fmr=[[[,]]]
+// vim:sts=4:sw=4:ts=4:noet:fdm=marker:fmr=[[[,]]]
 // ]]]
