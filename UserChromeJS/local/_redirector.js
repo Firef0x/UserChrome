@@ -120,6 +120,12 @@ rules = [
 		regex: true
 	},
 	{
+		name: "百度搜索禁止劫持",
+		from: /^https?:\/\/(www\.baidu\.com\/s\?).*(wd=.*?)&(rs|oq).*/i,
+		to: "https://$1$2",
+		regex: true
+	},
+	{
 		name: "百度贴吧|百科显示原始大图",
 		from: /http:\/\/(imgsrc|[\w]?\.hiphotos)\.baidu\.com\/(forum|baike)\/[\w].+\/sign=[^\/]+(\/.*).jpg/i,
 		to: "http://$1.baidu.com/$2/pic/item$3.jpg",
