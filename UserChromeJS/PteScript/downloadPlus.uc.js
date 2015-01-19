@@ -12,11 +12,12 @@
 // ==/UserScript==
 (function() {
 
-    var popups = true           //true,(新建下载)弹窗             false,不弹窗
-    var rename = true           //true,(下载改名)可改名           false,不可改
-    var locking = true          //true,(下载改名)锁定保存文件按钮 false,不锁定
-    var encodingConvert = true  //true,(下载改名)开启下拉菜单选项 false,关闭下拉菜单选项
-    var convert = true          //true,(保存并打开)兼容火狐版本26+(也许会有BUG)     false,火狐版本29+
+    var popups = true           //true,(新建下载)弹窗                                false,不弹窗
+    var rename = true           //true,(下载改名)可改名                              false,不可改
+    var locking = true          //true,(下载改名)锁定保存文件按钮                    false,不锁定
+    var encodingConvert = true  //true,(下载改名)开启下拉菜单选项                    false,关闭下拉菜单选项
+    var convert = false          //true,(保存并打开)兼容火狐版本26+(也许会有BUG)      false,火狐版本29+
+    var suffix = true	        //true,(保存到)后缀样式一,如downloadPlus.uc.js(1).7z  false,后缀样式二,如downloadPlus.uc.js-1.7z
 
     switch (location.href) {
 	    case "chrome://browser/content/browser.xul":
@@ -38,6 +39,7 @@
 				download_dialog_saveTo();          // 保存到...
 				download_dialog_showCompleteURL(); // 下载弹出窗口双击链接复制完整链接
 				download_dialog_doubleclicksaveL();// 下载弹出窗口双击保存文件项执行下载
+				download_openInBrowser();          // 在浏览器中打开
 				window.sizeToContent();            // 下载弹出窗口大小自适应(确保在添加的按钮之后加载)
 //            }, 200);
             break;
@@ -467,11 +469,11 @@
         var style = document.createProcessingInstruction("xml-stylesheet", "type=\"text/css\"" + " href=\"data:text/css;base64," + btoa(cssStr) + "\"");
         document.insertBefore(style,document.firstChild);
 	    var dir = [
-		    ["F:\\IDM下载\\压缩", "压缩"],
-		    ["F:\\IDM下载\\程序", "软件"],
-		    ["F:\\IDM下载\\文档", "文档"],
-		    ["F:\\IDM下载\\音乐", "歌曲"],
-		    ["F:\\IDM下载\\常规", "其他"]
+		    ["D:\\下载文件\\Compressed", "压缩"],
+		    ["E:\\软件安装程序库\\Download", "软件"],
+		    ["D:\\下载文件\\Documents", "文档"],
+		    ["D:\\歌曲库", "歌曲"],
+		    ["D:\\下载文件", "其他"]
 	    ];
 	    var saveTo = document.documentElement._buttons.cancel.parentNode.insertBefore(document.createElement("button"), document.documentElement._buttons.cancel);
 	    var saveToMenu = saveTo.appendChild(document.createElement("menupopup"));
@@ -488,14 +490,71 @@
 			var filename = (document.querySelector("#locationtext") ? document.querySelector("#locationtext").value.trim() : document.querySelector("#location").value);
 			var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 			    file.initWithPath(dir + "\\" + filename);
-			    if(file.exists()) file.createUnique(0,0644); 
+			if (suffix)
+				while(file.exists()){
+                    let index = filename.match(/\((\d+)\)(?:\.[^\.]+)?$/);
+                    if(index && index[1]){
+                        filename = filename.replace(/\d+(?=\)(?:\.[^\.]+)?$)/, parseInt(index[1]) + 1);
+                    }else{
+                        filename = filename.replace(/(?=(\.[^\.]+)?$)/, "(1)");
+                    }
+                    file.initWithPath(dir + "\\" + filename);
+                }
+            else				
+				if(file.exists()) file.createUnique(0,0644);
 			    dialog.mLauncher.saveToDisk(file,1);
 			    dialog.onCancel = function(){};
 			    close();
 		    };
 	    })	
 	}
-		
+	// 在浏览器中打开
+    function download_openInBrowser() {
+        
+	if (location != "chrome://mozapps/content/downloads/unknownContentType.xul") return;
+	var openInFirefox = {
+		Components: Components,
+		observe: function (aSubject, aTopic, aData) {
+			var channel = aSubject.QueryInterface(this.Components.interfaces.nsIHttpChannel);
+			if (channel.originalURI.spec != openInFirefox.url) return
+			channel.contentType = openInFirefox.mime;
+			channel.loadFlags &= ~this.Components.interfaces.nsIChannel.LOAD_CALL_CONTENT_SNIFFERS;
+			channel.setResponseHeader("Content-Disposition", "", false);
+			var observerService = this.Components.classes["@mozilla.org/observer-service;1"].getService(this.Components.interfaces.nsIObserverService);
+			observerService.removeObserver(openInFirefox, "http-on-examine-response", false);
+			observerService.removeObserver(openInFirefox, "http-on-examine-merged-response", false);
+		  }
+       }
+       document.querySelector("#save").parentNode.insertBefore(document.createElement("hbox"), document.querySelector("#save")).appendChild(document.createElement("radio")).id = "openInBrowser";
+       document.querySelector("#openInBrowser").setAttribute("width", "93");
+       document.querySelector("#openInBrowser").setAttribute("label", "Firefox\u6253\u5F00");
+       document.querySelector("#openInBrowser").parentNode.appendChild(document.createElement("vbox")).appendChild(document.createElement("menulist")).id = "MIMETypes";
+       var menupopup = document.querySelector("#MIMETypes").appendChild(document.createElement("menupopup"));
+       menupopup.setAttribute("flex", "1");
+       menupopup.appendChild(document.createElement("menuitem")).setAttribute("label", "\u7F51\u9875");
+       menupopup.appendChild(document.createElement("menuitem")).setAttribute("label", "\u7EAF\u6587\u672C");
+       menupopup.appendChild(document.createElement("menuitem")).setAttribute("label", "\u56FE\u7247");
+       menupopup.appendChild(document.createElement("menuitem")).setAttribute("label", "XML");
+       document.querySelector("#MIMETypes").selectedIndex = 0;
+       //addEventListener("DOMNodeInserted", window.sizeToContent, true)
+       //addEventListener("mouseover", window.sizeToContent, true)
+       addEventListener("dialogaccept", function () {
+		if (document.querySelector("#mode").selectedItem.id == "openInBrowser") {
+			document.documentElement.removeAttribute("ondialogaccept");
+			openInFirefox.url = dialog.mLauncher.source.asciiSpec;
+			openInFirefox.mime = ["text/html", "text/plain", "image/png", "text/xml"][document.querySelector("#MIMETypes").selectedIndex]
+			var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+			observerService.addObserver(openInFirefox, "http-on-examine-response", false);
+			observerService.addObserver(openInFirefox, "http-on-examine-merged-response", false);
+			var mainwin = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator).getMostRecentWindow("navigator:browser");
+			(mainwin.content.location == "about:blank") ? (mainwin.gBrowser.mCurrentBrowser.loadURIWithFlags(openInFirefox.url, 256)) : (mainwin.gBrowser.loadOneTab("", {
+				inBackground: false
+			}) && mainwin.gBrowser.mCurrentBrowser.loadURIWithFlags(openInFirefox.url, 256));
+		   }
+	   }, false);
+    
+    }
+	
 	// 下载弹出窗口双击链接复制完整链接
 	function download_dialog_showCompleteURL() {
 	    var s = document.querySelector("#source");
