@@ -2,9 +2,9 @@
 // @name        refererChanger
 // @include     main
 // @include     chrome://browser/content/browser.xul
-// @version     1.0.3
-// @description 破解图片外链脚本，黑名单、工具菜单、外置配置 自用DIY版
-// note         https://github.com/defpt/userChromeJs/tree/master/RefererChange
+// @version     v2014.10.04
+// @description 破解图片外链脚本，黑名单、工具菜单版、外置配置 自用DIY版
+// @note        添加某站点规则
 // ==/UserScript==
 // ◆設定方法
 //   @NORMAL：不改变referer
@@ -14,47 +14,42 @@
 
 var refererChanger = {};
 refererChanger.state = true; /* 启动时是否启用 */
-refererChanger.folderName = 'local';
-refererChanger.fileName = '_refererChange.js';
-refererChanger.enabledTip = "左键：开关外链\n中键：重载配置\n右键：编辑配置";
-refererChanger.disabledTip = "左键：开关外链\n中键：重载配置\n右键：编辑配置";
-refererChanger.enabledLab = "破解外链已启用";
-refererChanger.disabledLab = "破解外链已禁用";
+refererChanger.fileName = 'local\\_refererChange.js';
+refererChanger.enabledSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADdSURBVDhPtVNBCsIwEOwbxH+IR4sYk5RAexP8ki/x6A8EEf8iFi+91IsnnQ3ZkBbTRsGBoTvZnemS0kwpVYI38PUlyVNSQGhuEulDKMAKrfU8S4SUcsY+H+AaO9QtPe3kAGIBT6dbOzUA7/MFQG8GH/0NoHNw5aTFx4AYYD6CZyctkgOKoljyTLiF9/nCAfUW3DhJ+sQz4RZ81gkQQkwxdIeujTETfNo195l0Fg2A+cAa9R7PC+vg3G7BuhPA9Rj/E4DVcmqkAPewCAN++ROZNV1cRUWvMUr4rlLK6g1AWikHrFj7lgAAAABJRU5ErkJggg==";
+refererChanger.disabledSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADESURBVDhPnVExDsIwDOwj+AgjC8HJBBsSX+I1PALxFwRiYSkLE5yNHblSWtWcdIp98V3Spss5b8Eb+ImwM6Dx5uccqvUHCGIupSxVmg321QAWiOiIuudVJiZQfT4gpfTWvpepCVRfLQA+GSGvv28QQTiAZ3CztbbjAagP4F5bgc0g4KxSOwDfvwAfMqGwfSOee+P1QQBOOPFqgH6xfaPdwvpBgIfpLfr9ZoBpY/QzUogrAPyHlQ+rMDHAu1rjZrzWlYh2X7nA+NaBJVlNAAAAAElFTkSuQmCC";
 refererChanger.sites = {};
 
-refererChanger.init = function () {
+refererChanger.init = function() {
 	this.reload();
-	var label = this.state ? this.enabledLab : this.disabledLab;
-	var tooltiptext = this.state ? this.enabledTip : this.disabledTip;
-	var menuitem = document.createElement("menuitem");
-	menuitem.setAttribute("id", "refererChangerToggle");
+	var src = this.state ? this.enabledSrc : this.disabledSrc;
+	var label = this.state ? "破解图片外链已启用" : "破解图片外链已禁用";
+	var menuitem = document.createElement('menuitem');
+	menuitem.setAttribute('id', 'RefererChanger');
+	menuitem.setAttribute('class', 'menuitem-iconic');
+	menuitem.setAttribute("tooltiptext", '左键：开关外链\n中键：重载配置\n右键：编辑配置');
 	menuitem.setAttribute("label", label);
-	menuitem.setAttribute("type", "checkbox");
-	menuitem.setAttribute("tooltiptext", tooltiptext);
-	menuitem.setAttribute("autocheck", "false");
-	menuitem.setAttribute("checked", this.state);
-	menuitem.setAttribute("oncommand", "refererChanger.RCToggle();");
+	menuitem.setAttribute('src', src);
+	menuitem.setAttribute('oncommand', 'refererChanger.RCToggle();');
 	menuitem.setAttribute('onclick', 'if (event.button == 2) {event.preventDefault();closeMenus(event.currentTarget); refererChanger.edit();}else if(event.button == 1) { event.preventDefault(); refererChanger.reload(true);}');
-	document.getElementById("devToolsSeparator").parentNode.insertBefore(menuitem, document.getElementById("devToolsSeparator"));
+	document.getElementById('menu_ToolsPopup').appendChild(menuitem);
 
-    var os = Cc['@mozilla.org/observer-service;1'].getService(
-        Ci.nsIObserverService);
-    os.addObserver(this, 'http-on-modify-request', false);
+	var os = Cc['@mozilla.org/observer-service;1'].getService(
+	Ci.nsIObserverService);
+	os.addObserver(this, 'http-on-modify-request', false);
 
 };
-refererChanger.RCToggle = function () {
-    this.state = !this.state;
-    let menuitem = document.getElementById('refererChangerToggle');
-    try{
-		menuitem.setAttribute("checked", !(menuitem.getAttribute("checked") == "true"));
-		var label = this.state ? this.enabledLab : this.disabledLab;
-		var tooltiptext = this.state ? this.enabledTip : this.disabledTip;
+refererChanger.RCToggle = function() {
+	this.state = !this.state;
+	let menuitem = document.getElementById('RefererChanger');
+	try {
+		var src = this.state ? this.enabledSrc : this.disabledSrc;
+		var label = this.state ? "破解图片外链已启用" : "破解图片外链已禁用";
+		menuitem.setAttribute("src", src);
 		menuitem.setAttribute("label", label);
-		menuitem.setAttribute("tooltiptext", tooltiptext);
-    }catch(e){}
+	} catch (e) {}
 };
 refererChanger.reload = function(isAlert) {
-	var data = this.loadFile(this.folderName, this.fileName);
+	var data = this.loadFile(this.fileName);
 	if (!data) return;
 	var sandbox = new Cu.Sandbox(new XPCNativeWrapper(window));
 	try {
@@ -68,10 +63,8 @@ refererChanger.reload = function(isAlert) {
 	if (isAlert) this.alert("配置已经重新载入");
 };
 
-refererChanger.loadFile = function(aFolderName, aLeafName) {
-	var aFile = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIDirectoryService).QueryInterface(Ci.nsIProperties).get('UChrm', Ci.nsILocalFile);
-	aFile.appendRelativePath(aFolderName);
-	aFile.appendRelativePath(aLeafName);
+refererChanger.loadFile = function(aLeafName) {
+	var aFile = FileUtils.getFile("UChrm", aLeafName.split('\\'), false);
 	if (!aFile.exists() || !aFile.isFile()) return null;
 	var fstream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
 	var sstream = Cc["@mozilla.org/scriptableinputstream;1"].createInstance(Ci.nsIScriptableInputStream);
@@ -90,9 +83,7 @@ refererChanger.alert = function(aString, aTitle) {
 };
 
 refererChanger.edit = function() {
-	var aFile = Cc["@mozilla.org/file/directory_service;1"].getService(Ci.nsIDirectoryService).QueryInterface(Ci.nsIProperties).get('UChrm', Ci.nsILocalFile);
-	aFile.appendRelativePath(this.folderName);
-	aFile.appendRelativePath(this.fileName);
+	var aFile = FileUtils.getFile("UChrm", this.fileName.split('\\'), false);
 	if (!aFile || !aFile.exists() || !aFile.isFile()) return;
 	var editor;
 	try {
