@@ -49,7 +49,7 @@
 location == "chrome://browser/content/browser.xul" && (function(){
 
     var buttons = [
-    
+
 		// 自用的配置
 		{ id: "wot-button", bar: "TabsToolbar_aidBar", pos: 1 },// WOT 扩展
 		{ id: "greasemonkey-tbb", bar: "TabsToolbar_aidBar", pos: 2 },//greasemonkey扩展
@@ -58,11 +58,13 @@ location == "chrome://browser/content/browser.xul" && (function(){
 		{ id: "redisposition-button", bar: "TabsToolbar_aidBar", pos: 5 },// Redisposition 扩展
 		{ id: "useragentswitcher-button", bar: "TabsToolbar_aidBar", pos: 6 },// User Agent Switcher 扩展
 		{ id: "firebug-badged-button", bar: "TabsToolbar_aidBar", pos: 7 },// Firebug 扩展
-		// { id: "webclipper-toolbar-button", bar: "TabsToolbar_aidBar", pos: 8 },// WizNote Web Clipper 扩展
 		{ id: "lpt_lastpass-compact-btn", bar: "TabsToolbar_aidBar", pos: 8 },// Lastpass 扩展
 		{ id: "sessionmanager-toolbar", bar: "TabsToolbar_aidBar", pos: 9 },// SessionManager 扩展
 		{ id: "pan-toolbarbutton", bar: "TabsToolbar_aidBar", pos: 10 },// Pan 扩展
 
+		// 弃用的扩展、脚本的配置
+		// { id: "webclipper-toolbar-button", bar: "TabsToolbar_aidBar", pos: 8 },// WizNote Web Clipper 扩展
+		// { id: "ToolsMenu-button", bar: "TabsToolbar_aidBar", pos: 11 },// ToolsMenuBtn.uc.js 脚本
 		// { id: "abp-toolbarbutton", bar: "TabsToolbar_aidBar", pos: 10 },// ABP、ABE扩展
 		// { id: "sessionmanager-undo", bar: "TabsToolbar_aidBar", pos: 11 },// SessionManager 扩展
 
