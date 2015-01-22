@@ -212,22 +212,38 @@ new function () {
 		oncommand: function(){
 			content.document.documentElement.appendChild(content.document.createElement("script")).src = "http://tongwen.openfoundry.org/NewTongWen/tools/bookmarklet_cn2.js";
 		}
-	}, {
+	},
+	{
 		label:"自动刷新",
 		url: "javascript:(function(p)%7Bopen('','',p).document.write('%3Cbody%20id=1%3E%3Cnobr%20id=2%3E%3C/nobr%3E%3Chr%3E%3Cnobr%20id=3%3E%3C/nobr%3E%3Chr%3E%3Ca%20href=%22#%22onclick=%22return!(c=t)%22%3E%E7%82%B9%E5%87%BB%E5%BC%BA%E5%88%B6%E5%88%B7%E6%96%B0%3C/a%3E%3Cscript%3Efunction%20i(n)%7Breturn%20d.getElementById(n)%7Dfunction%20z()%7Bc+=0.2;if(c%3E=t)%7Bc=0;e.location=u;r++%7Dx()%7Dfunction%20x()%7Bs=t-Math.floor(c);m=Math.floor(s/60);s-=m*60;i(1).style.backgroundColor=(r==0%7C%7Cc/t%3E2/3?%22fcc%22:c/t%3C1/3?%22cfc%22:%22ffc%22);i(2).innerHTML=%22%E5%88%B7%E6%96%B0%E8%AE%A1%E6%95%B0:%20%22+r;i(3).innerHTML=%22%E5%88%B7%E6%96%B0%E5%80%92%E8%AE%A1%E6%97%B6:%20%22+m+%22:%22+(s%3C10?%220%22+s:s)%7Dc=r=0;d=document;e=opener.top;u=prompt(%22%E9%93%BE%E6%8E%A5%E5%9C%B0%E5%9D%80%22,e.location.href);t=u?prompt(%22%E5%88%B7%E6%96%B0%E9%97%B4%E9%9A%94/%E7%A7%92%EF%BC%9A%22,300):0;setInterval(%22z()%22,200);if(!t)%7Bwindow.close()%7D%3C/script%3E%3C/body%3E')%7D)('status=0,scrollbars=0,width=240,height=160,left=1,top=1')",
 		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAK2SURBVDhPY0AGq/6HMs9/YFo794Hp8oUPrTIWP3Aymn/fXqC+noEJqoQwmHpT2nvybZlPU24p/pl0Tft130Xzox1n7YKg0vjBkmde8vMemkycekvu28Qb0v87Lyn8rzuu9q/ysG4DUJoRogoHWPLE3mD2PZ3DU27J/Zl8S+p/3zXZ/63nlP5XHtL4VLRP0xmqDDuY/9JUYvY97b2Tb0n/m3Jb6v+E69L/Oi/J/qg/qfKvdJ/WueKdemJQpWDwH+iaVaGhzFAuA8Os+zoZQH//mnRTCmTAvUk3ZTrazymmVB1Re160R2ti6CoGhGIgOCYjw3lYWVkbzJn535h1+h2lVZNuSnyfckNq6dS70nqr/jMw11/RYivZp92Wv0vPHawQCZy1sFA5qKraeMbYmJVh5lNJLmDIb5h8W7Jy4i0hPqgaMKifry+wONcMRey8u7vCUX39tfvl5HZukpTkYph5xph10i3J5CkvRXmgauDgsIGB/hETk/pjFhac++3tWU47OFgf1tU9sFdO7u9eaelVYBeAwJyH6lKrViEFChRsU1FJ2qqg8GafqWneAVPTtu1KSk+2SEn93ywp+WublFQmVBl2AAxppjVyctNXiIn9XyMl9XO1pOTfVUD2SjGxf2tERfevFRGRhCrFDlYpKfEvlpA4Ol9Y+D8ILwDihcLCfxeKiJxaKiJiDFWGG8yWl9ecLir6dKqg4P9pQDwdRAsJbZ8jLKwOlMafKoGAcaKoqHKvgMD+bn7+V718fD97+Pn/dfPwbAeyhaBqIGDlypWiixcvNl24cKH7okWLgoF0FJBOXrJwYeq87u7y2cXFk6bHx2+e7ONzo9/a+vn0zMxqkFqQHpBeBqBixSVLlgQB6WygYBWQ3QKkO4D0JKDYVBAGsRcvWNC5aN689oXz51eD1EL0LFIEAGnEJwptdKj6AAAAAElFTkSuQmCC"
-	}, {
-	    label: "GBK <-> UTF-8",
-	    image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC3SURBVDhPY6AKmGs//z85GKp9WBlwtP/Yf2RwY/PN/xeXX4Ly/v+/f/D+/9XRa7EbsDV/O1gRSNNCj8X/T886A+aDAEhuV+UeMBtkCFYD0DFMw/OLz+FiMACyAMSHakcYALL1/aMPUGW4wYbUTZgG7G8+CJYE2QhSAPMSspPRMVQ7xABYAILoZYErwAbBACjgQGIgw0AAqxdAgjAFIAAyABQOyAaB2CCXYXUBORiqfTAYQD5gYAAArhcq19H6/18AAAAASUVORK5CYII=",
-	    oncommand: function() {
-	        var charset = gBrowser.mCurrentBrowser._docShell.charset;
-	        BrowserSetForcedCharacterSet(charset == "UTF-8" ? "GBK" : "UTF-8");
-	    }
+	},
+	{
+		label: "GBK <-> UTF-8",
+		image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC3SURBVDhPY6AKmGs//z85GKp9WBlwtP/Yf2RwY/PN/xeXX4Ly/v+/f/D+/9XRa7EbsDV/O1gRSNNCj8X/T886A+aDAEhuV+UeMBtkCFYD0DFMw/OLz+FiMACyAMSHakcYALL1/aMPUGW4wYbUTZgG7G8+CJYE2QhSAPMSspPRMVQ7xABYAILoZYErwAbBACjgQGIgw0AAqxdAgjAFIAAyABQOyAaB2CCXYXUBORiqfTAYQD5gYAAArhcq19H6/18AAAAASUVORK5CYII=",
+		oncommand: function() {
+			var charset = gBrowser.mCurrentBrowser._docShell.charset;
+			BrowserSetForcedCharacterSet(charset == "UTF-8" ? "GBK" : "UTF-8");
+		}
 	},
 	{},
 	{
+		label: "可见区域截图",
+		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABISURBVDhPY6AOWPnmPwpGBuhy6PJggE8Buhy6PBjglEADA2/AMAAUhwHtDUDGyACbPAjDAV5JIMAmD8IkA7I1wgDFBmAABgYA9oelARp3ZZ4AAAAASUVORK5CYII=",
+		condition: "noinput",
+		oncommand: function() {
+			var canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
+			canvas.width = content.innerWidth;
+			canvas.height = content.innerHeight;
+			var ctx = canvas.getContext("2d");
+			ctx.drawWindow(content, content.pageXOffset, content.pageYOffset, canvas.width, canvas.height, "rgb(255,255,255)");
+			saveImageURL(canvas.toDataURL(), content.document.title + ".png", null, null, null, null, document);
+		}
+	},
+	{
 		label:"全页面截图",
 		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABISURBVDhPY6AOWPnmPwpGBuhy6PJggE8Buhy6PBjglEADA2/AMAAUhwHtDUDGyACbPAjDAV5JIMAmD8IkA7I1wgDFBmAABgYA9oelARp3ZZ4AAAAASUVORK5CYII=",
+		condition: "noinput",
 		oncommand: function () {
 			var canvas = document.createElementNS("http://www.w3.org/1999/xhtml", "canvas");
 			canvas.width = content.document.documentElement.scrollWidth;
@@ -236,11 +252,13 @@ new function () {
 			ctx.drawWindow(content, 0, 0, canvas.width, canvas.height, "rgb(255,255,255)");
 			saveImageURL(canvas.toDataURL(), content.document.title + ".png", null, null, null, null, document);
 		}
-	}, {
+	},
+	{
 		label: "宽度匹配",
 		url: "javascript:(function(){function%20t(f){a=d.createNodeIterator(d,1,f,false);while(a.nextNode()){}}var%20d=document;t(function(e){x=e.offsetLeft;l=e.offsetParent;while(l!=null){x+=l.offsetLeft;l=l.offsetParent}var%20w=d.documentElement.clientWidth-x;var%20s=e.style;if(s.marginLeft)w-=s.marginLeft;if(s.marginRight)w-=s.marginRight;if(s.paddingLeft)w-=s.paddingLeft;if(s.paddingRight)w-=s.paddingRight;if(s.borderSize)w-=s.borderSize;w-=d.defaultView.innerWidth-d.documentElement.offsetWidth;if(e.tagName=='IMG'){h=e.clientHeight*w/e.clientWidth;s.maxHeight=h}s.maxWidth=w+'px'})})();",
 		image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGXSURBVDhPYxh4MHHiRPv///8zQrlEA5Ce/v5+B4aWlpZX9fX1TFBxogFIT3Nz8yu4AatWrWI+fPiwIFAOp2tAtoLUgNSiGLB//36WdevWuU2YMKEZKMECVY8BQHIgNRs2bHABscEGtLa2vt66dasrkHOdm5v77Zw5c3iBhhpkZ2ebAA0W2bZtmyiI3d7ert/Z2ckLUgNUew1kCFDda4a2trbP4uLi30RERP5zcXG9rays1BESEvouLCz8u66uLrampiYOyP8NEisrK9MGqQGpFRMT+wbSCzLgG5Dzi4+P7z8nJ+fb9PR0fUFBwV8CAgL/srKykjIyMlJAbCD+mZycrMfBwfGWl5cXZMAvoOu/gb2wePHilLS0tBcgA2bOnCkC9F8YUGPsmjVrVEE4NTU1FuiaUJAcyACgQc8XLVqUDPYCKCCAfuVYsGBBOtC50/AFItASVqA3pgPVpoH0gAMRRAA1MQEDi/3IkSPK+BIVSA6kBqQWpAfFAKgaogHcAGDUhJOblDs6OiIYQKkKKkYyoEQvFDAwAACRUudRsBI1mwAAAABJRU5ErkJggg==",
-	}, {
+	},
+	{
 		label: "破解右键防复制",
 		url: "javascript:alert(document.body.oncontextmenu=document.body.onmouseup=document.body.onmousemove=document.body.onclick=document.body.onselectstart%20=document.body.oncopy=document.onmousedown%20=%20document.onkeydown%20=null)",
 		image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEZSURBVDhPjZExisJQEIYfrIW4HsBOq8VLLCoiKjYeQNAykHZBRQW9gPZewkJBiwVLL7B3sBRLC2c2M5mJL9FH/OEneZP//5L3Ykjj6Rxd5kCaXhVtS8wtDSb1NsQG2KWkJf4sDaQByFKJSx/aANjvEQYDnpFodqjVcdPuPEOSgNloglAoYJBEWK14vu71eX37yODS8+OQJIDvj8cQkM0i7HZ4/czzettoRhmpOwCBfr8r0VsZ1u3yXDNSdwNIUCyG5VwO8XLhmWak7gbovu8ECEyfT9KM1B8A23g+Pw7S98MrncfpFGWk/hoA1SqX/r7KvNbzgFIJFz9Dnkk9LnrAv9HzOKz7JhEUWq10gFqDrrVU4rIDaTbGmH8Vxu1dx2qGHAAAAABJRU5ErkJggg==",
@@ -250,7 +268,8 @@ new function () {
 		label:"编辑当前网页",
 		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAK1SURBVDhPY6AGYHn14fOqt2+/3MaHQWoYGCS5GLi5xRgY+BUYGHhEgXpZQQbwPH/z8Ty3pPIzRi6xx4w8oo9QMFCMTUju1cNnby4ANets3L53xa0HT3/NWLB6DgOPpAjIAKEnL9+dAip+6M8edguGmXhET/lHJYNpkEH7j5y6uGL1pi33n775f+LS7f9N05Z+YWDgUwYZIPz01bsTDFySd5i4xA5hYvHDIMNX7zrxY9aK7f93HTv/v2fu2v8dU2bvhhvw8NX7Y4xc4jcZeST2RgfIXYRhIH8/v1PM9aaeSV+Xbzn43zeu6H/HnDX/y5t6LzLxiKUC9cqADXj0/P0RBk7Rq4w84jsQWGIX0AUHW3snvoQ5G6RZN7f9NQOHRDUDt7gDMDAFwAY8fvHhEAOHyGVGLolNCUHKJ2ND5E/5ecpemDlr2nuYZpCzkyra7jDwSNUyMIu5MHBxSQD1soANePry436gqReA3ljLyC2+npFHbHvnxCnPkDU390//wsgp0YauGQSEH738sJeJX/IM0Nkrov0Uj02fNfN99+w1/5ds3AvWnJJT/S01p+QuA5tEELpmEBB+9OrdbiZu0ZMMfCKLgS5Y1zhh0S/v+ML/aX1L/2eUVL0HpYVpC5aeZWCQ0ASqR9EMAsKPX73bycgtcTwjp2QPv6z2Vp+E4v8xrbP/miRXfgJ65ywwgK+dOHPlAAMw5KB6UIDwk+fvtwMD8AQDn8R8bhGljVwSqkeBMXEOJAaKEZD3Hjx5vQOkFqIFFQg/ffF+q4SK/kURGY29glJqB3hEVU7xiiueAybvk3zSKodFFHSugNSA1EK0oAKhq3ceTnn17vOJd+8+nwQl68s37p69dP3uuXuPX5x5+e7dKZAcSA1ILUQLKuABJggloPe0GXiENbBiBh4tsBqwWmTAwAAAYo9bM5woFn0AAAAASUVORK5CYII=",
 		oncommand: 'content.document.body.contentEditable = content.document.body.contentEditable == "true" ? "false" : "true";'
-	}, {
+	},
+	{
 		label:"为此页搜索油猴脚本",
 		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADSSURBVDhPnZK9DcIwEIXTsQBL0CAU15RQUtKwRAbIAlmCPuzADExAmwUyQHjPvrNs6zA/T/p0jvPe6Sy7MXQEE1ikXsBPWtzNRfD9DNvfqysadGH7s3RkMkh4kH2LLciUjW5Bj4prn0pkhlLoUXHtU1APHsAMpdAD9JixwSQ/r250cxlKgYesGYJ2UkODdmx9rQGvkkkn8JShEvGtQNQecPPMaoVSxLsBpv46xgGkP6pIE95ClNxsXfQVU0SJpS763jU4gTvgY9JHUjILGpY30DQvwsxGGOnZ9v8AAAAASUVORK5CYII=",
 		oncommand: function () {
@@ -308,7 +327,12 @@ new function () {
 		where : "tab",
 		image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHDSURBVDhPpVJbKENhHJ887NmLcnmQZ+U6SZ7mEk+ur8qDXEpMLBSRJbRHlzSRDFuNkkQRHoaiXE44LxbTssk0zhpDdj7/H0ecsYflV//+5/+7fN853/kUf4ExFkkVJYpiElUhVbnUk8BDl6y/AZGMcbu2O41+lecrDFYhu38jgI4ZPPSQi2CHXdutRmM6uMnUrbHgAg8dPikiB15Tv3LGq3pWmdZ86OQcnok3UWxExwweOnxSRA4SCiuGtwRV1zLjrjwTNMdTKdExg4cOnxSRg4TyrLalQEbHIsPOCEu8EjN46PB9BIKBlcsG1oV07Tzj7G75G9AMHjp8UuQbdDARJKj7zXv2tGYT005uO7kL9+cZUMcMftCy//sMpHCMwy30Fncv+PJaLf60BiMLrvqRzRsrfy3/C1/hS9dDe2m32ZtaN8lyWo3Pupmdq1LdgqCqmQqg95mtvPXEIb8HP8MlnXPelGoDy20y+k/ttyPEF1AVUYW+iURGX7jutSUdc97kqlGmbjT4OZtLT6YEmTEUfL6XlLKWKU9y5RBTN4yFFwZgnl45ms2vHX86PncOhhUG6BOUFEh8fHzNpOfYsML/h0LxDlnLtXo5zlbFAAAAAElFTkSuQmCC"
 	}];
-	var menu = PageMenu({condition:'link', insertBefore:'context-openlink', onpopupshowing: syncHidden });
+	var menu = PageMenu({
+		condition:'link',
+		insertBefore:'context-openlink',
+		onpopupshowing: syncHidden,
+		image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABlSURBVDhP5Y5BCsAgEAP3i/1AP+D/zxUlwWBXXQueOhAQzQStcN3p2UmVFK80C7QGH1aEBniOBPqhgRnsQB8P8KzRe+i/+YHCO+htQNPjdaB/G4D6hoWekFzQohfUxngSg4pglgGUsQ0ZR4jGSwAAAABJRU5ErkJggg=="
+	});
 	menu(items);
 	items.forEach(function(it){
 		if (it.command)
@@ -321,6 +345,7 @@ new function () {
 new function () {
 	var items = [
 	{ command: 'context-openlinkintab' },
+	{ command: 'context-openlink' },
 	// {
 	// 	label:"在谷歌缓存打开",
 	// 	url:"http://webcache.googleusercontent.com/search?q=cache:%l",
@@ -350,7 +375,12 @@ new function () {
 		image:" "
 	}
 	];
-	var menu = PageMenu({ condition: 'link', insertBefore:'context-openlink', onpopupshowing: syncHidden});
+	var menu = PageMenu({
+		condition: 'link',
+		insertBefore:'context-openlink',
+		onpopupshowing: syncHidden,
+		image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAARElEQVRYhe3SwQkAQAgDQftv2itBAjkMuIE8lRGsmtOfCwAAgH2AXSweBAAAgDzAOADgPMBdAPkANfI+AHEA+5MBiAY8Qpxdv1iFHckAAAAASUVORK5CYII="
+	});
 	menu(items);
 	items.forEach(function(it){
 		if (it.command)
@@ -364,19 +394,273 @@ new function () {
 	var items = [
 	{ command: 'context-copy' },
 	{
-		label:"复制纯文本",
+		label:"复制为纯文本",
 		text:"%SEL%",
 		image:" "
 	},
 	{
-		label:"复制 BBCode",
+		label: "复制为 HTML",
+		class: "copy",
+		condition: "select noinput",
+		oncommand: function() {
+			var div = content.document.createElement('div');
+			div.appendChild(content.getSelection().getRangeAt(0).cloneContents());
+			addMenu.copy(div.innerHTML);
+		}
+	},
+	{
+		label:"复制为 BBCode",
 		image:" ",
 		oncommand: function () {
 			var div = content.document.createElement('div');
 			div.appendChild(content.getSelection().getRangeAt(0).cloneContents());
-			function HTMLtoBBCode(a){function b(k,g,j,h,f){this.pos=k;this.font=g;this.face=j;this.size=h;this.color=f}fl=new b(50);fc=new b(50);al=new b(50);function e(h){var g=0;var f=0;var m;var l;var k;h=h.toUpperCase();for(l=0;l!=-1;l){l=h.indexOf("<FONT",l);if(l!=-1){m=h.indexOf(">",l);fl[g]=new b(0,0,0,0,0);fl[g].pos=l;fl[g].font=1;k=h.substring(l,m);if(k.search(/FACE/)!=-1){fl[g].face=1}else{fl[g].face=0}if(k.search(/SIZE/)!=-1){fl[g].size=1}else{fl[g].size=0}if(k.search(/COLOR/)!=-1){fl[g].color=1}else{fl[g].color=0}l++;g++}}for(l=0;l!=-1;l){l=h.indexOf("</FONT>",l++);if(l!=-1){fc[f]=new b(0,0,0,0,0);fc[f].pos=l;fc[f].font=1;for(ii=g-1;ii>=0;ii--){if(fl[ii].pos<l){if(fl[ii].font==1){fl[ii].font=0;fc[f].color=fl[ii].color;fc[f].size=fl[ii].size;fc[f].face=fl[ii].face;ii=-1}}}l++;f++}else{fc[f]=new b(0,0,0,0,0);fc[f].font=0}}}function d(h){var g=0;var f=0;var m;var l;var k;h=h.toUpperCase();for(l=0;l!=-1;l){l=h.indexOf("<A HREF",l);if(l!=-1){m=h.indexOf(">",l);al[g]=new b(0,0,0,0,0);al[g].font=1;k=h.substring(l,m);if(k.search(/MAILTO:/)!=-1){k=k.replace(/<A HREF=MAILTO:/,"");k=k.replace(/\"/,"");k=k.replace(/\'/,"");al[g].pos=1;k=k.toLowerCase();al[g].face=k}else{al[g].pos=2}l++;g++}else{al[g]=new b(0,0,0,0,0);al[g].pos=0}}}e(a);a=a.replace(/<SCRIPT[^>]*>/gi,"<TEXTAREA>");a=a.replace(/<\/SCRIPT>/gi,"</TEXTAREA>");a=a.replace(/ = /gi,"=");a=a.replace(/=\"/gi,"=");a=a.replace(/=\'/gi,"=");a=a.replace(/<param name=movie[^>]*value=/gi,"<movie=");a=a.replace(/\s+BORDER=[^\'\">]*[\'\">]/gi,"");a=a.replace(/\s+TARGET=[^\'\">]*[\'\">]/gi,"");a=a.replace(/\s+CLASSID=[^\'\">]*[\'\">]/gi,"");a=a.replace(/\s+ID=[^\'\">]*[\'\">]/gi,"");a=a.replace(/\s+NAME=[^\'\">]*[\'\">]/gi,"");a=a.replace(/\s+STYLE=[^\'\">]*[\'\">]/gi,"");a=a.replace(/\s+CLASS=[^\'\">]*[\'\">]/gi,"");a=a.replace(/\s+ALT=[^\'\">]*[\'\">]/gi,"");a=a.replace(/\s+TITLE=[^\'\">]*[\'\">]/gi,"");a=a.replace(/\s+REL=[^\'\">]*[\'\">]/gi,"");a=a.replace(/\s+ONCLICK=[^\'\">]*[\'\">]/gi,"");a=a.replace(/<A\s*HREF/i,"<A HREF");d(a);a=a.replace(/<BR>/gi,"\r");a=a.replace(/<BR(.*?)\/>/gi,"\r");a=a.replace(/<P>/gi,"\r\r");a=a.replace(/<P [^>]*>/gi,"\r\r");a=a.replace(/<CODE>/gi,"[code]");a=a.replace(/<\/CODE>/gi,"[/code]");a=a.replace(/<BLOCKQUOTE>/gi,"[quote]");a=a.replace(/<\/BLOCKQUOTE>/gi,"[/quote]");a=a.replace(/<UL[^>]*>/gi,"[list]");a=a.replace(/<\/UL>/gi,"[/list]");a=a.replace(/<OL[^>]*>/gi,"[list=1]");a=a.replace(/<\/OL>/gi,"[/list]");a=a.replace(/<LI>/gi,"[*]");a=a.replace(/<IMG[\s\S]*?SRC=([\s\S]*?)\"[\s\S]*?>/gi,"[img]$1[/img]");a=a.replace(/<IMG[\s\S]*?SRC=([\s\S]*?)'[\s\S]*?>/gi,"[img]$1[/img]");a=a.replace(/<BIG>/gi,"[b]");a=a.replace(/<\/BIG>/gi,"[/b]");a=a.replace(/<B>/gi,"[b]");a=a.replace(/<\/B>/gi,"[/b]");a=a.replace(/<U>/gi,"[u]");a=a.replace(/<\/U>/gi,"[/u]");a=a.replace(/<I>/gi,"[i]");a=a.replace(/<\/I>/gi,"[/i]");a=a.replace(/<EM>/gi,"[i]");a=a.replace(/<\/EM>/gi,"[/i]");a=a.replace(/<h\d>/gi,"\r\r[b]");a=a.replace(/<\/h\d>/gi,"[/b]");a=a.replace(/&nbsp;/gi," ");a=a.replace(/<FONT Face[^\'\">]*[\'\">]/gi,"<FONT");a=a.replace(/ FACE=[^\'\"]*[\'\"]/gi,"");a=a.replace(/<STRONG>/gi,"[b]");a=a.replace(/<\/STRONG>/gi,"[/b]");a=a.replace(/<TR[^>]*>/gi,"\r");a=a.replace(/<TD[^>]*>/gi," ");a=a.replace(/<TH[^>]*>/gi," ");a=a.replace(/<\/TR>/gi," ");a=a.replace(/<\/TD>/gi," ");a=a.replace(/<\/TH>/gi," ");a=a.replace(/<FONT SIZE=/gi,"[size=");a=a.replace(/<FONT color=/gi,"[color=");a=a.replace(/ color=/gi,"][color=");a=a.replace(/ size=/gi,"][size=");var c;for(i=0;fc[i].font!=0;i++){c="";if(fc[i].color==1){c=c+"[/color]"}if(fc[i].size==1){c=c+"[/size]"}a=a.replace(/<\/FONT>/i,c)}for(i=0;al[i].pos!=0;i++){if(al[i].pos==2){a=a.replace(/<A HREF/i,"[url");a=a.replace(/<\/A>/i,"[/url]")}if(al[i].pos==1){a=a.replace(/<A HREF[^<]*<\/A>/i,al[i].face)}}a=a.replace(/<[^>]*>/g,"");a=a.replace(/>/g,"]");a=a.replace(/\'>/g,"]");a=a.replace(/\">/g,"]");a=a.replace(/\']/g,"]");a=a.replace(/\"]/g,"]");a = a.replace(/\[url\=([^\]]+?)\]|\[img\](.+?)\[\/img\]/g, function($0,$1,$2){if($0.indexOf("http://")<0){var u = $1||$2,b="/";if(u){if(/^\.?\//.test(u)) b = "";return $0.replace(u,content.location.origin+b+u)}}else{return $0}});return a};
+			function HTMLtoBBCode(a) {
+				function b(k, g, j, h, f) {
+					this.pos = k;
+					this.font = g;
+					this.face = j;
+					this.size = h;
+					this.color = f
+				}
+				fl = new b(50);
+				fc = new b(50);
+				al = new b(50);
+
+				function e(h) {
+					var g = 0;
+					var f = 0;
+					var m;
+					var l;
+					var k;
+					h = h.toUpperCase();
+					for (l = 0; l != -1; l) {
+						l = h.indexOf("<FONT", l);
+						if (l != -1) {
+							m = h.indexOf(">", l);
+							fl[g] = new b(0, 0, 0, 0, 0);
+							fl[g].pos = l;
+							fl[g].font = 1;
+							k = h.substring(l, m);
+							if (k.search(/FACE/) != -1) {
+								fl[g].face = 1
+							} else {
+								fl[g].face = 0
+							} if (k.search(/SIZE/) != -1) {
+								fl[g].size = 1
+							} else {
+								fl[g].size = 0
+							} if (k.search(/COLOR/) != -1) {
+								fl[g].color = 1
+							} else {
+								fl[g].color = 0
+							}
+							l++;
+							g++
+						}
+					}
+					for (l = 0; l != -1; l) {
+						l = h.indexOf("</FONT>", l++);
+						if (l != -1) {
+							fc[f] = new b(0, 0, 0, 0, 0);
+							fc[f].pos = l;
+							fc[f].font = 1;
+							for (ii = g - 1; ii >= 0; ii--) {
+								if (fl[ii].pos < l) {
+									if (fl[ii].font == 1) {
+										fl[ii].font = 0;
+										fc[f].color = fl[ii].color;
+										fc[f].size = fl[ii].size;
+										fc[f].face = fl[ii].face;
+										ii = -1
+									}
+								}
+							}
+							l++;
+							f++
+						} else {
+								fc[f] = new b(0, 0, 0, 0, 0);
+								fc[f].font = 0
+							}
+					}
+				}
+
+				function d(h) {
+					var g = 0;
+					var f = 0;
+					var m;
+					var l;
+					var k;
+					h = h.toUpperCase();
+					for (l = 0; l != -1; l) {
+						l = h.indexOf("<A HREF", l);
+						if (l != -1) {
+							m = h.indexOf(">", l);
+							al[g] = new b(0, 0, 0, 0, 0);
+							al[g].font = 1;
+							k = h.substring(l, m);
+							if (k.search(/MAILTO:/) != -1) {
+								k = k.replace(/<A HREF=MAILTO:/, "");
+								k = k.replace(/\"/, "");
+								k = k.replace(/\'/, "");
+								al[g].pos = 1;
+								k = k.toLowerCase();
+								al[g].face = k
+							} else {
+								al[g].pos = 2
+							}
+							l++;
+							g++
+						} else {
+								al[g] = new b(0, 0, 0, 0, 0);
+								al[g].pos = 0
+							}
+					}
+				}
+				e(a);
+				a = a.replace(/<SCRIPT[^>]*>/gi, "<TEXTAREA>");
+				a = a.replace(/<\/SCRIPT>/gi, "</TEXTAREA>");
+				a = a.replace(/ = /gi, "=");
+				a = a.replace(/=\"/gi, "=");
+				a = a.replace(/=\'/gi, "=");
+				a = a.replace(/<param name=movie[^>]*value=/gi, "<movie=");
+				a = a.replace(/\s+BORDER=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+TARGET=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+CLASSID=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+ID=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+NAME=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+STYLE=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+CLASS=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+ALT=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+TITLE=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+REL=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+ONCLICK=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/\s+MCOLORED=[^\'\">]*[\'\">]/gi, "");
+				a = a.replace(/<A\s*HREF/i, "<A HREF");
+				d(a);
+				a = a.replace(/<BR>/gi, "\r");
+				a = a.replace(/<BR(.*?)\/>/gi, "\r");
+				a = a.replace(/<P>/gi, "\r\r");
+				a = a.replace(/<P [^>]*>/gi, "\r\r");
+				a = a.replace(/<CODE>/gi, "[code]");
+				a = a.replace(/<\/CODE>/gi, "[/code]");
+				a = a.replace(/<BLOCKQUOTE>/gi, "[quote]");
+				a = a.replace(/<\/BLOCKQUOTE>/gi, "[/quote]");
+				a = a.replace(/<UL[^>]*>/gi, "[list]");
+				a = a.replace(/<\/UL>/gi, "[/list]");
+				a = a.replace(/<OL[^>]*>/gi, "[list=1]");
+				a = a.replace(/<\/OL>/gi, "[/list]");
+				a = a.replace(/<LI>/gi, "[*]");
+				a = a.replace(/<IMG[\s\S]*?SRC=([\s\S]*?)\"[\s\S]*?>/gi, "[img]$1[/img]");
+				a = a.replace(/<IMG[\s\S]*?SRC=([\s\S]*?)'[\s\S]*?>/gi, "[img]$1[/img]"); // 此注释修正 Vim 语法高亮错误问题 '
+				a = a.replace(/<BIG>/gi, "[b]");
+				a = a.replace(/<\/BIG>/gi, "[/b]");
+				a = a.replace(/<B>/gi, "[b]");
+				a = a.replace(/<\/B>/gi, "[/b]");
+				a = a.replace(/<U>/gi, "[u]");
+				a = a.replace(/<\/U>/gi, "[/u]");
+				a = a.replace(/<I>/gi, "[i]");
+				a = a.replace(/<\/I>/gi, "[/i]");
+				a = a.replace(/<EM>/gi, "[i]");
+				a = a.replace(/<\/EM>/gi, "[/i]");
+				a = a.replace(/<h\d>/gi, "\r\r[b]");
+				a = a.replace(/<\/h\d>/gi, "[/b]");
+				a = a.replace(/&nbsp;/gi, " ");
+				a = a.replace(/<FONT Face[^\'\">]*[\'\">]/gi, "<FONT");
+				a = a.replace(/ FACE=[^\'\"]*[\'\"]/gi, "");
+				a = a.replace(/<STRONG>/gi, "[b]");
+				a = a.replace(/<\/STRONG>/gi, "[/b]");
+				a = a.replace(/<TR[^>]*>/gi, "\r");
+				a = a.replace(/<TD[^>]*>/gi, " ");
+				a = a.replace(/<TH[^>]*>/gi, " ");
+				a = a.replace(/<\/TR>/gi, " ");
+				a = a.replace(/<\/TD>/gi, " ");
+				a = a.replace(/<\/TH>/gi, " ");
+				a = a.replace(/<FONT SIZE=/gi, "[size=");
+				a = a.replace(/<FONT color=/gi, "[color=");
+				a = a.replace(/ color=/gi, "][color=");
+				a = a.replace(/ size=/gi, "][size=");
+				var c;
+				for (i = 0; fc[i].font != 0; i++) {
+					c = "";
+					if (fc[i].color == 1) {
+						c = c + "[/color]"
+					}
+					if (fc[i].size == 1) {
+						c = c + "[/size]"
+					}
+					a = a.replace(/<\/FONT>/i, c)
+				}
+				for (i = 0; al[i].pos != 0; i++) {
+					if (al[i].pos == 2) {
+						a = a.replace(/<A HREF/i, "[url");
+						a = a.replace(/<\/A>/i, "[/url]")
+					}
+					if (al[i].pos == 1) {
+						a = a.replace(/<A HREF[^<]*<\/A>/i, al[i].face)
+					}
+				}
+				a = a.replace(/<[^>]*>/g, "");
+				a = a.replace(/>/g, "]");
+				a = a.replace(/\'>/g, "]");
+				a = a.replace(/\">/g, "]");
+				a = a.replace(/\']/g, "]");
+				a = a.replace(/\"]/g, "]");
+				a = a.replace(/\[url\=([^\]]+?)\]|\[img\](.+?)\[\/img\]/g, function($0, $1, $2) {
+					if ($0.indexOf("http://") < 0) {
+						var u = $1 || $2,
+					b = "/";
+					if (u) {
+						if (/^\.?\//.test(u)) b = "";
+								return $0.replace(u, content.location.origin + b + u)
+					}
+					} else {
+						return $0
+					}
+				});
+				return a
+			};
 			Components.classes["@mozilla.org/widget/clipboardhelper;1"].getService(Components.interfaces.nsIClipboardHelper).copyString(HTMLtoBBCode(div.innerHTML));
-		}
+		},
+		condition: "select noinput"
+	},
+	{
+		label: "复制选择范围内的链接",
+		oncommand: function(event) {
+			var urls = {};
+			addMenu.$$('a:not(:empty)', null, true).forEach(function(a) {
+				urls[a.href] = true;
+			});
+			urls = Object.keys(urls);
+			if (urls.length === 0) return;
+			addMenu.copy(urls.join('\n'));
+		},
+		condition: "select noinput"
+	},
+	{
+		label: "以特定格式复制选择范围内的链接",
+		tooltiptext: "自动防止重复链接\n左键：BBCode\n中键：MD 格式\n右键：HTML Code",
+		class: "copy",
+		onclick: function(event) {
+			Components.classes['@mozilla.org/widget/clipboardhelper;1'].getService(Components.interfaces.nsIClipboardHelper).copyString(Array.filter(content.document.links, function(link) {
+				arguments.callee.uniq = arguments.callee.uniq || [];
+				if ((!~arguments.callee.uniq.indexOf(link.href + link.text)) && content.getSelection().containsNode(link, 1)) {
+					arguments.callee.uniq.push(link.href + link.text);
+					return 1;
+				}
+			}).map(function(link) {
+				[/\s(·|::|-|—|»|\|)\s.*/i, /_[^\[\]【】]+$/].forEach(function(r) {
+					link.text = link.text.replace(r, "");
+				}); //简化标题
+				var formats = [
+					"[url=" + link.href + "]" + link.text + "[/url]",
+					"[" + link.text + "](" + link.href + ")",
+					'<a href="' + link.href + '">' + link.text + '</a><br>'
+				];
+				XULBrowserWindow.statusTextField.label = "复制：" + formats[event.button];
+				return formats[event.button];
+			}).join("\r\n"));
+		},
+		condition: "select noinput"
 	}];
 	
 	var menu = PageMenu({
@@ -593,6 +877,98 @@ new function(){
 	});
 	menu(items);
 };
+// ]]]
+
+//  特殊符号选单，打造三级菜单 [[[1
+var Punctuationsub = PageMenu({
+	label:"特殊符号",
+	accesskey: "S",
+	condition:"input",
+	position: 2,
+	image:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAB9ElEQVRYhe2XMU8bMRiGP5bqmPgDVCwdEmW5730dnW7zzl9gQOmfyJ6hUzamsHRnSEYQ+QFZylaJATGwROpUqZE6MKQDNjLu5eIegSBRS+9i+z4/d9/7nW0pimIfwAjAguQyQXOSA2ttJq5ZazOSAze2NgaABYBRURT7AmCUuPATqWrPA6hqr0kMACOpefMhyT7Js6pxY8zUAxhjpg0BFlIzoSUikuf58YrxmQcgOWsCQHL5HyAEGJJseXU6nQ8u+F7YH+T7LwA31krQsAqgLwmN5KTmC0wSY/SrAM7yPD/2IrknIgLgU9R/VQNwFc5dJQaV9aY88H4BKv/fztGTIOexxgHAuCHAXPiwiTR5+DAAOGwYYyDW2kxVe+6NZwkau8V3gsracRDjlBjGmKmq9sId9R23radg6yZk4jGqQhsrw7j+T0jehH0AzgGcR3OrfkT3JH8m6LePEwN8ERHpdrsfSd76xa21mbU2iyA2vhs+AoiItNvtA5KnvlZfC+AJhG8Vi68CuCP5NUHf6gCWxpjPEfFpxbyX2Q1V9bIsy90QwKXjdh0AgF8kr9cJwI9VABc+52VZ7oZfwhnzpg7g2R4AcORzrqqXsSdcib6oCe8BHJG8iI3ptM4Dcz6cIWoF4PsjwD9cSmOjbuZqtvXL6bav538A5nOVtxqkTZYAAAAASUVORK5CYII=",
+	oncommand: function(event) {
+		// var input_text = event.target.getAttribute('input_text');
+		// if(input_text) {
+		// 	addMenu.copy(input_text);
+		// 	setTimeout(function() {
+		//		goDoCommand("cmd_paste");
+		//	}, 100);
+		// }
+		var focused    = document.commandDispatcher.focusedElement;
+		var input_text = event.target.getAttribute('input_text');
+		if(focused) {
+			var host = addMenu.convertText("%h"),
+			url  = addMenu.convertText("%u");
+			if (host.contains("tieba") || url.startsWith("data:text/html")) {
+				addMenu.copy(input_text);
+				goDoCommand("cmd_paste");
+			}
+			else {
+				var aStart    = aEnd = focused.selectionStart;
+				focused.value = focused.value.slice(0, aStart) + input_text + focused.value.slice(aEnd);
+				var aOffset   = aStart + input_text.length;
+				focused.setSelectionRange(aOffset, aOffset);
+			}
+			return;
+		}
+		else {
+			addMenu.copy(input_text);
+			goDoCommand("cmd_paste");
+		}
+		return;
+	}
+});
+
+Punctuationsub([
+	{id: "Punctuation-sep", style: "display:none;"}
+]);
+
+var PunctuationsubMenu1 = PageMenu({
+	label: "物理",
+	condition: "input",
+	insertBefore: "Punctuation-sep",
+});
+
+PunctuationsubMenu1([
+	{label: "°", input_text:"°"},
+	{label: "°C", input_text:"°C"},
+	{label: "m²", input_text:"m²"},
+	{label: "cm²", input_text:"cm²"},
+	{label: "km²", input_text:"km²"},
+	{label: "Ω", input_text:"Ω"},//ohm
+	{label: "Φ", input_text:"Φ"},//diameter
+	{label: "¢", input_text:"¢"},//another way of diameter
+]);
+
+var PunctuationsubMenu2 = PageMenu({
+	label: "数学",
+	condition: "input",
+	insertBefore: "Punctuation-sep",
+});
+
+PunctuationsubMenu2([
+	{label: "±", input_text:"±"},
+	{label: "×", input_text:"×"},
+	{label: "÷", input_text:"÷"},
+	{label: "≤", input_text:"≤"},
+	{label: "≥", input_text:"≥"},
+	/*{label: "≦", input_text:"≦"},//is less than or equal
+	  {label: "≧", input_text:"≧"},*/
+	{label: "≠", input_text:"≠"},//is not equal to
+	{label: "≈", input_text:"≈"},//is approximately equal to
+	{label: "√", input_text:"√"},
+	{label: "∞", input_text:"∞"},//infinity
+]);
+
+var PunctuationsubMenu3 = PageMenu({
+	label: "其它",
+	condition: "input",
+	insertBefore: "Punctuation-sep",
+});
+
+PunctuationsubMenu3([
+	{label: "·", input_text:"·"},//placeholder,位于字母中间
+]);
 // ]]]
 
 //  搜索链接文本 [[[1
