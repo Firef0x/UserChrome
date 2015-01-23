@@ -34,21 +34,21 @@
             , "whereToOpenLink"));
     }catch(e){}
     
-    /* open url in new tab */
-    try {
-        try { // firefox 3.0.*
-            eval("BrowserLoadURL = "+ BrowserLoadURL.toString().replace(
-                /if \(aTriggeringEvent instanceof MouseEvent\) {/,
-                "_LoadURL(aTriggeringEvent, aPostData); return; $&"));
-        }
-        catch(e) { // firefox 3.1+
-            var urlbar = document.getElementById("urlbar");
-            eval("urlbar.handleCommand="+ urlbar.handleCommand.toString(
-                ).replace("aTriggeringEvent.altKey && ", "").replace(
-                "altEnter && !isTabEmpty","!isMouseEvent && !isTabEmpty"
-                ));
-        }
-    }catch(e){}
+    // /* open url in new tab */
+    // try {
+    //     try { // firefox 3.0.*
+    //         eval("BrowserLoadURL = "+ BrowserLoadURL.toString().replace(
+    //             /if \(aTriggeringEvent instanceof MouseEvent\) {/,
+    //             "_LoadURL(aTriggeringEvent, aPostData); return; $&"));
+    //     }
+    //     catch(e) { // firefox 3.1+
+    //         var urlbar = document.getElementById("urlbar");
+    //         eval("urlbar.handleCommand="+ urlbar.handleCommand.toString(
+    //             ).replace("aTriggeringEvent.altKey && ", "").replace(
+    //             "altEnter && !isTabEmpty","!isMouseEvent && !isTabEmpty"
+    //             ));
+    //     }
+    // }catch(e){}
 
     /* open home in new tab */
     try {
@@ -108,11 +108,11 @@ document.getElementById("sidebar-box").addEventListener("load", function(event) 
 }, true);
 
 //地址栏回车键在新标签页打开，Alt+回车键在当前标签页打开
-eval("gURLBar.handleCommand = " + gURLBar.handleCommand.toString()
-  .replace(/aTriggeringEvent\s*&&\s*aTriggeringEvent.altKey/, "!($&)")
-  .replace("aTriggeringEvent.preventDefault();", "")
-  .replace("aTriggeringEvent.stopPropagation();", "")
-);
+// eval("gURLBar.handleCommand = " + gURLBar.handleCommand.toString()
+//   .replace(/aTriggeringEvent\s*&&\s*aTriggeringEvent.altKey/, "!($&)")
+//   .replace("aTriggeringEvent.preventDefault();", "")
+//   .replace("aTriggeringEvent.stopPropagation();", "")
+// );
 
 	// 标签上双击刷新
 gBrowser.mTabContainer.addEventListener('dblclick', function (event){
