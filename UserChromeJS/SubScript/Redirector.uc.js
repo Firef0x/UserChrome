@@ -61,7 +61,7 @@
             // this.mm.removeMessageListener("redirector:toggle-item", this);
         },
         edit: function() {
-            let aFile = FileUtils.getFile("UChrm", this.redirector.rulesFile, false);
+            let aFile = FileUtils.getFile("UChrm", this.redirector.rulesFile.split('\\'), false);
             if (!aFile || !aFile.exists() || !aFile.isFile()) return;
             var editor;
             try {
@@ -225,7 +225,7 @@
     };
 
     function Redirector() {
-        this.rulesFile = ["local", "_redirector.js"];
+        this.rulesFile = "local\\_redirector.js";
         this.rules = [];
     }
     Redirector.prototype = {
@@ -274,7 +274,7 @@
             this.loadRule();
         },
         loadRule: function() {
-            var aFile = FileUtils.getFile("UChrm", this.rulesFile, false);
+            var aFile = FileUtils.getFile("UChrm", this.rulesFile.split('\\'), false);
             if (!aFile.exists() || !aFile.isFile()) return null;
             var fstream = Cc["@mozilla.org/network/file-input-stream;1"].createInstance(Ci.nsIFileInputStream);
             var sstream = Cc["@mozilla.org/scriptableinputstream;1"].createInstance(Ci.nsIScriptableInputStream);
