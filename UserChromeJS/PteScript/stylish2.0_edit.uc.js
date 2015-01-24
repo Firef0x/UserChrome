@@ -295,7 +295,7 @@
         }
 
         if (aWindow.sourceEditorType == "orion" || aWindow.sourceEditorType == "sourceeditor") {
-          aWindow.sourceEditor.setText(textBoxText);
+          aWindow.sourceEditor.setText(utf.convertStringToUTF8(textBoxText, encode, true));
         } else {
           if (textBoxText.length) {
             box.value = utf.convertStringToUTF8(textBoxText, encode, true);
