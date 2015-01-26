@@ -31,7 +31,9 @@ refererChanger.init = function() {
 	menuitem.setAttribute('src', src);
 	menuitem.setAttribute('oncommand', 'refererChanger.RCToggle();');
 	menuitem.setAttribute('onclick', 'if (event.button == 2) {event.preventDefault();closeMenus(event.currentTarget); refererChanger.edit();}else if(event.button == 1) { event.preventDefault(); refererChanger.reload(true);}');
-	document.getElementById('menu_ToolsPopup').appendChild(menuitem);
+
+	var ins = document.getElementById('devToolsSeparator');
+	ins.parentNode.insertBefore(menuitem, ins);
 
 	var os = Cc['@mozilla.org/observer-service;1'].getService(
 	Ci.nsIObserverService);
