@@ -8,13 +8,16 @@
 // @downloadURL     https://raw.githubusercontent.com/Harv/userChromeJS/master/redirector_ui.uc.js
 // @startup         Redirector.init();
 // @shutdown        Redirector.destroy(true);
-// @version         1.5.3
+// @version         1.5.5
 // ==/UserScript==
 (function() {
     Cu.import("resource://gre/modules/XPCOMUtils.jsm");
     Cu.import("resource://gre/modules/Services.jsm");
     Cu.import("resource://gre/modules/NetUtil.jsm");
-
+    function Redirector() {
+        this.rulesFile = "local\\_redirector.js";
+        this.rules = [];
+    }
     function RedirectorUI() {
         this.addIcon = true;                        // 是否添加按钮
         this.state = true;                          // 是否启用脚本
@@ -130,7 +133,7 @@
                 icon.setAttribute("id", "redirector-icon");
                 icon.setAttribute("context", "redirector-menupopup");
                 icon.setAttribute("onclick", "Redirector.iconClick(event);");
-                icon.setAttribute("tooltiptext", "重定向");
+                icon.setAttribute("tooltiptext", "Redirector");
                 icon.setAttribute("style", "padding: 0px 2px; list-style-image: url(" + (this.state ? this.enableIcon : this.disableIcon) + ")");
                 // add menu
                 let xml = '\
@@ -224,10 +227,7 @@
         }
     };
 
-    function Redirector() {
-        this.rulesFile = "local\\_redirector.js";
-        this.rules = [];
-    }
+
     Redirector.prototype = {
         _cache: {
             redirectUrl: {},
@@ -295,12 +295,12 @@
             this.rules = sandbox.rules;
         },
         getRedirectUrl: function(originUrl) {
-            let url = originUrl;
-            let redirectUrl = this._cache.redirectUrl[url];
+            let redirectUrl = this._cache.redirectUrl[originUrl];
             if(typeof redirectUrl != "undefined") {
                 return redirectUrl;
             }
             redirectUrl = null;
+            let url, redirect;
             let regex, from, to, exclude, decode;
             for each (let rule in this.rules) {
                 if (typeof rule.state == "undefined") rule.state = true;
@@ -315,24 +315,22 @@
                     }
                     rule.computed = {regex: regex, from: from, to: to, exclude: exclude, decode: decode};
                 }
-                if (decode) {
-                    url = this.decodeUrl(originUrl);
-                }
-                let redirect = regex
+                url = decode ? this.decodeUrl(originUrl) : originUrl;
+                redirect = regex
                     ? from.test(url) ? !(exclude && exclude.test(url)) : false
                     : from == url ? !(exclude && exclude == url) : false;
                 if (redirect) {
-                    let reurl = typeof to == "function"
+                    url = typeof to == "function"
                         ? regex ? to(url.match(from)) : to(from)
                         : regex ? url.replace(from, to) : to;
                     redirectUrl = {
-                        url : decode ? reurl : this.decodeUrl(reurl),   // 避免二次解码
+                        url : decode ? url : this.decodeUrl(url),   // 避免二次解码
                         resp: rule.resp
                     };
                     break;
                 }
             }
-            this._cache.redirectUrl[url] = redirectUrl;
+            this._cache.redirectUrl[originUrl] = redirectUrl;
             return redirectUrl;
         },
         decodeUrl: function(encodedUrl) {
