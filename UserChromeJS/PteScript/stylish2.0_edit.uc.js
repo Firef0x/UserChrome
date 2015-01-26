@@ -10,6 +10,7 @@
 // @version        2014/12/13 add note
 // @version        2014/12/13 for update buttons
 // @version        2014/12/13 for Stylish2.0
+// @Note           修复了按钮样式与其他按钮样式不一致的问题
 // @Note           修复了原脚本只能在纯文本下编辑的情况（即使用时需把 extensions.stylish.editor 设为 1，默认0）。现在无需设置也能使用。
 // @Note           编辑器路径移到最前面，如果为空则为 about:config 中 view_source.editor.path。
 // @Note           This version will only work with the following add-on and sub script loader.
@@ -117,6 +118,8 @@
 //!important////////////////////////////////////////////////////////////////////////////////////////
       // create a button and place it
       var button = aWindow.document.createElement("button");
+      button.setAttribute("id", "important-button");
+      button.setAttribute("class", "devtools-toolbarbutton");
       button.setAttribute("label", "!important");
       checkbox.parentNode.insertBefore(button, checkbox);
 
@@ -179,6 +182,8 @@
     //if(typeof ItsAllText != 'undefined') return;
     // add External Editor button
     button = aWindow.document.createElement("button");
+    button.setAttribute("id", "editor-button");
+    button.setAttribute("class", "devtools-toolbarbutton");
     button.setAttribute("label", "Editor");
     button.setAttribute("accesskey","T");
     checkbox.parentNode.insertBefore(button, checkbox);
