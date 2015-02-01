@@ -27,8 +27,8 @@ rules = [
 	//  原创 [[[1
 	{
 		name: "Userscripts 重定向",
-		from: /^https?:\/\/userscripts\.org(:8080)?\/(.*)/i,
-		to: "http:\/\/userscripts-mirror.org/$2",
+		from: /^https?:\/\/userscripts\.org(?:\:8080|)\/(.*)/i,
+		to: "http:\/\/userscripts-mirror.org/$1",
 		regex: true
 	},
 	{
@@ -168,11 +168,23 @@ rules = [
 		regex: true
 	},
 	{
+		name: "反百度搜索验证码",
+		from: /^https?:\/\/verify\.baidu\.com\/vcode\?http:\/\/www\.baidu\.com\/s\?wd=(.*)&(.*=.*)/i,
+		to: "http://www.baidu.com/s?wd=$1",
+		regex: true
+	},
+	{
 		//http://bbs.kafan.cn/thread-1801036-1-1.html
 		name: "flickr 显示原始大图",
 		from: /^(https?:\/\/c\d\.staticflickr\.com\/\d\/\d+\/\d+_[^\._]+)(_[a-z])?(\.jpg)$/,
 		exclude: /^(https?:\/\/c\d\.staticflickr\.com\/\d\/\d+\/\d+_\w+)_o(\.jpg)$/,
 		to: "$1_o$3",
+		regex: true
+	},
+	{
+		name: "noMoreArchiver",
+		from: /(.*)\/archiver\/(.*)tid-(.*)\.html/,
+		to: "$1/viewthread.php?tid=$3",
 		regex: true
 	},
 	// ]]]
