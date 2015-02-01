@@ -8,7 +8,7 @@
 // @downloadURL     https://raw.githubusercontent.com/Harv/userChromeJS/master/redirector_ui.uc.js
 // @startup         Redirector.init();
 // @shutdown        Redirector.destroy(true);
-// @version         1.5.5
+// @version         1.5.5.1
 // ==/UserScript==
 (function() {
     Cu.import("resource://gre/modules/XPCOMUtils.jsm");
@@ -54,6 +54,7 @@
             // register self as a messagelistener
             this.mm.addMessageListener("redirector:toggle", this);
             this.mm.addMessageListener("redirector:toggle-item", this);
+            this.mm.addMessageListener("redirector:reload", this);
         },
         destroy: function(shouldDestoryUI) {
             this.redirector.destroy(window);
@@ -62,6 +63,7 @@
             }
             // this.mm.removeMessageListener("redirector:toggle", this);
             // this.mm.removeMessageListener("redirector:toggle-item", this);
+            // this.mm.removeMessageListener("redirector:reload", this);
         },
         edit: function() {
             let aFile = FileUtils.getFile("UChrm", this.redirector.rulesFile.split('\\'), false);
@@ -133,7 +135,7 @@
                 icon.setAttribute("id", "redirector-icon");
                 icon.setAttribute("context", "redirector-menupopup");
                 icon.setAttribute("onclick", "Redirector.iconClick(event);");
-                icon.setAttribute("tooltiptext", "Redirector");
+                icon.setAttribute("tooltiptext", "重定向");
                 icon.setAttribute("style", "padding: 0px 2px; list-style-image: url(" + (this.state ? this.enableIcon : this.disableIcon) + ")");
                 // add menu
                 let xml = '\
@@ -206,10 +208,16 @@
                 menu.removeChild(menuitems[i]);
             }
         },
-        reload: function() {
-            this.redirector.reload();
+        reload: function(callfromMessage) {
+            if (!callfromMessage) {
+                this.redirector.reload();
+            }
             this.clearItems();
             this.buildItems();
+            if (!callfromMessage) {
+                // notify other windows to update
+                this.ppmm.broadcastAsyncMessage("redirector:reload", {hash: this.hash});
+            }
         },
         // nsIMessageListener interface implementation
         receiveMessage: function(message) {
@@ -223,10 +231,12 @@
                 case "redirector:toggle-item":
                     this.toggle(message.data.item, true);
                     break;
+                case "redirector:reload":
+                    this.reload(true);
+                    break;
             }
         }
     };
-
 
     Redirector.prototype = {
         _cache: {
