@@ -6,19 +6,19 @@
 // ]]]
 sites = {
 	// 以下取自 https://github.com/dupontjoy/userChromeJS/blob/master/Local/_refererChange.js
+	'ft.com': 'https://www.google.com/',//免登陆或订阅看全文
+	'economist.com': 'https://www.google.com/',//突破每周3篇限制
 	'wsj.com': 'https://www.google.com/',//免登陆或订阅看全文
 	'pconline.com.cn': '@FORGE',
 	'postimg.org': '@FORGE',
 	'chiphell.com': '@FORGE',
 	'niunews.cn': '@FORGE',
 	'poco.cn': '@FORGE',
-	'about:blank': '@NORMAL',
 	'jump.bdimg.com': '@NORMAL',
 	'img.liufen.com': 'http://www.liufen.com.cn/',
 	't4.mangafiles.com' : 'http://www.imanhua.com/',
 	't5.mangafiles.com' : 'http://www.imanhua.com/',
 	'laibafile.cn' : 'http://www.tianya.cn/',
-	'zol.com.cn' : '@FORGE',
 	'tmoke.com': '@BLOCK',
 	'51img1.com' : '@FORGE',
 	'zol-img.com.cn' : '@FORGE',
