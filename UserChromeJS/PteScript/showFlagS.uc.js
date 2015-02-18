@@ -595,10 +595,10 @@ location == "chrome://browser/content/browser.xul" && (function() {
 			thx.push(obj.MyInfoThx)
 		if (obj.FlagThx && obj.FlagThx !== obj.SiteInfoThx)
 			thx.push(obj.FlagThx)
-		if (thx.join('\n') !== "") {
-			if (tipArrSep3) tooltipArr.push(tipArrSep3);
-			tooltipArr.push(tipArrThanks + new String(thx));
-		}
+		// if (thx.join('\n') !== "") {
+		// 	if (tipArrSep3) tooltipArr.push(tipArrSep3);
+		// 	tooltipArr.push(tipArrThanks + new String(thx));
+		// }
 
 		this.icon.tooltipText = tooltipArr.join('\n');
 	};
