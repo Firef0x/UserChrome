@@ -5,6 +5,9 @@
 //  @BLOCK : 发送空referer
 // ]]]
 sites = {
+	'bimg.126.net': '@FORGE',
+	'tankr.net': '@FORGE',
+	'51cto.com': '@FORGE',
 	// 以下取自 https://github.com/dupontjoy/userChromeJS/blob/master/Local/_refererChange.js
 	'ft.com': 'https://www.google.com/',//免登陆或订阅看全文
 	'economist.com': 'https://www.google.com/',//突破每周3篇限制
@@ -16,12 +19,12 @@ sites = {
 	'poco.cn': '@FORGE',
 	'jump.bdimg.com': '@NORMAL',
 	'img.liufen.com': 'http://www.liufen.com.cn/',
-	't4.mangafiles.com' : 'http://www.imanhua.com/',
-	't5.mangafiles.com' : 'http://www.imanhua.com/',
-	'laibafile.cn' : 'http://www.tianya.cn/',
+	't4.mangafiles.com': 'http://www.imanhua.com/',
+	't5.mangafiles.com': 'http://www.imanhua.com/',
+	'laibafile.cn': 'http://www.tianya.cn/',
 	'tmoke.com': '@BLOCK',
-	'51img1.com' : '@FORGE',
-	'zol-img.com.cn' : '@FORGE',
+	'51img1.com': '@FORGE',
+	'zol-img.com.cn': '@FORGE',
 
 	//
 	'douban.com': 'http://www.douban.com',
@@ -30,7 +33,7 @@ sites = {
 
 	// baidu 相关网站
 	'hiphotos.baidu.com': '@FORGE',
-	'hiphotos.bdimg.com' : '@FORGE',
+	'hiphotos.bdimg.com': '@FORGE',
 	'imgsrc.baidu.com': '@FORGE',
 	'baidu-img.cn': 'http://www.baidu.com/',
 
@@ -39,7 +42,7 @@ sites = {
 	'sinaimg.cn': 'http://blog.sina.com.cn/',
 
 	'pixiv.net': '@FORGE',
-	'ph.126.net' : '@FORGE',
+	'ph.126.net': '@FORGE',
 	'isnowfy.com': '@FORGE',
 	'image.itmedia.co.jp': '@FORGE',
 	'2ch.net': '@FORGE',

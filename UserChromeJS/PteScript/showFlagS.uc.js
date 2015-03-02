@@ -7,26 +7,27 @@
 // @include			chrome://browser/content/browser.xul
 // @id 				[FE89584D]
 // @startup         window.showFlag.init();
-// @shutdown        window.showFlag.onDestroy(true);
+// @shutdown        window.showFlag.onDestroy();
 // @optionsURL		about:config?filter=showFlagS.
 // @reviewURL		http://bbs.kafan.cn/thread-1666483-1-1.html
 // @reviewURL		http://www.firefoxfan.com/UC-Script/328.html
 // @homepageURL		https://github.com/feiruo/userChromeJS/tree/master/showFlagS
 // @note            Begin 2013-12-16
-// @note            左键点击复制，中间刷新，右键弹出菜单
-// @note            支持菜单和脚本设置重载
-// @note            更多功能需要 _showFlagS.js 配置文件
+// @note            显示网站IP地址和国旗，帮助识别网站真实性,修改浏览器标识，显示反盗链真实图片,左键点击复制，中间刷新，右键弹出菜单,更多功能需要 _showFlagS.js 配置文件。
+// @version         1.6.2.4.1 	2015.02.27 14:00	Fix page-proxy-favicon CSS。
+// @version         1.6.2.4 	2015.02.25 19:00	Add RefererChange。
+// @version         1.6.2.3 	2015.02.18 22:00	Add UserAgentChanger。
 // @version         1.6.2.2 	2015.02.13 23:00	Fix exec。
 // @version         1.6.2.1 	2014.09.18 19:00	Fix Path indexof '\\' or '//'。
-// @version         1.6.2 		2014.08.29 21:30	完善卸载，完善路径兼容。
-// @version         1.6.1 		2014.08.27 20:30	完善禁用和路径支持。
-// @version         1.6.1 		2014.08.24 22:00	错误页面显示。
-// @version         1.6.1 		2014.08.22 22:00	修复Linux和Windows路径问题。
-// @version         1.6.0 		2014.08.17 16:40	Fix。
-// @version         1.6.0 		2014.08.10 18:00	ReBuilding。
-// @version         1.6.0 		2014.08.08 21:00	ReBuilding。
-// @version         1.6.0 		2014.08.07 17:00	ReBuilding。
-// @version         1.6.0 		ReBuild。
+// @version         1.6.2.0		2014.08.29 21:30	完善卸载，完善路径兼容。
+// @version         1.6.1.2		2014.08.27 20:30	完善禁用和路径支持。
+// @version         1.6.1.1		2014.08.24 22:00	错误页面显示。
+// @version         1.6.1.0		2014.08.22 22:00	修复Linux和Windows路径问题。
+// @version         1.6.0.4		2014.08.17 16:40	Fix。
+// @version         1.6.0.3		2014.08.10 18:00	ReBuilding。
+// @version         1.6.0.2		2014.08.08 21:00	ReBuilding。
+// @version         1.6.0.1		2014.08.07 17:00	ReBuilding。
+// @version         1.6.0.0		ReBuild。
 // @version         1.5.8.3.4 	将存入perfs的选项移至脚本内，便于配置文件的理解,其他修复。
 // @version         1.5.8.3.3 	修复因临时删除文件导致的错误。
 // @version         1.5.8.3.2 	identity-box时错误页面智能隐藏，已查询到便显示，每查询到便隐藏。
@@ -64,18 +65,19 @@ location == "chrome://browser/content/browser.xul" && (function() {
 				}
 				userChrome.import(this.dirs);
 			},
-			onDestroy: function(isAlert) {
-				try {
-					window.showFlagS.removeMenu(window.showFlagS.Menus);
-					$("showFlagS-popup").parentNode.removeChild($("showFlagS-popup"));
-					if (window.showFlagS.Perfs.showLocationPos == "identity-box")
-						$("page-proxy-favicon").style.visibility = "";
-				} catch (e) {
-					log(e);
-				}
+			onDestroy: function() {
+				var os = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
+				os.removeObserver(showFlagS.observe, "http-on-modify-request", false);
+				os.removeObserver(showFlagS.onDocumentCreated, "content-document-global-created", false);
 				window.getBrowser().removeProgressListener(window.showFlagS.progressListener);
+				window.showFlagS.removeMenu(window.showFlagS.Menus);
+				if (window.showFlagS.Perfs.showLocationPos == "identity-box")
+					$("page-proxy-favicon").style.visibility = "";
+				var popup = $("showFlagS-popup");
+				if (popup) popup.parentNode.removeChild(popup);
+				delete popup;
 				delete window.showFlagS;
-				Services.obs.notifyObservers(null, "startupcache-invalidate", "");
+				Services.appinfo.invalidateCachesOnRestart();
 			},
 		};
 		window.addEventListener("unload", function() {
@@ -87,13 +89,17 @@ location == "chrome://browser/content/browser.xul" && (function() {
 
 	var showFlagS = {
 		debug: true,
+		def_uaIdx: 0,
+		Current_idx: 0,
+		UANameIdxHash: [],
 		dnsCache: [],
 		isReqHash: [],
 		isReqHash_tooltip: [],
 		showFlagHash: [],
 		showFlagTooltipHash: [],
 		//等待时国旗图标
-		DEFAULT_Flag: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACG0lEQVQ4ja2TwW7aQBRF+ZDku0q/qChds5mxkDG2iY3H9jyTBFAWLAgRG7CwCawQi6BEQhgEFkiAuF3VaVXaSlWvdBazuGfx5r1c7n/H9/1rIvpCAUWS5E6S3FFAkU9+wff967+VP1FA6fPzMwaDAcbjMQaDAabTKSggEFEqpcxfLEvp5huNxnmxWGC73SIMQ9Tv6gjqAbrdLqT0Ub+rg4jOUro/S4QQV57nbZMkwel0wvF4xGazQafTgeu5GY1GA8PhEMITqRDiKhM4jnPTbrdxOBxwOByQJAlcz4UQ4heiKILruXAc52smsGzrpd/v4/X1FcPhEBQQ7Jp9kVarhdlsBsu2Xj4E1u3x/v4eRATLuv0tQT3AdDrFcrmEZd2eMoFZNXdm1cSP2DUbZtUEEYECglk1MRqNkKYp3t/fYZjGPhPohh7rhg7d0PH09IQ4jjGbzdBsNtHr9SBcAd3QMZlMMJ/PEYYhdEOPM0G5Ur7RKhoeHx+xWq2wXq+xXq/x9vaGVqsFraJBq2jQDT17l8vljyFyzq9UVd2qqoooirBarTLCMIRds6GqKgzTgOPUoKpqyjn/+MZcLpdTFCVfKpXOlm1huVwiSRIkSYLFYgGzauLh4QHNZhNaRTsrinJ5GxljeUVRUil99Ho9dLtduJ4LKX0QERRFSTnnny+Wv6dYLF4zxgqMsZhzvuec7xljMWOsUCwW/3xM/5JvTakQArDW8fcAAAAASUVORK5CYII=",
+		DEFAULT_Flag: "chrome://branding/content/icon16.png",
+
 		get dns() {
 			return Cc["@mozilla.org/network/dns-service;1"]
 				.getService(Components.interfaces.nsIDNSService);
@@ -103,6 +109,19 @@ location == "chrome://browser/content/browser.xul" && (function() {
 		},
 		get contentDoc() {
 			return window.content.document;
+		},
+		get usingUA() {
+			var prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService).getBranch("");
+			if (prefs.getPrefType("general.useragent.override") != 0)
+				return prefs.getCharPref("general.useragent.override");
+			else
+				return null;
+		},
+		get ContentBrowser() {
+			var windowMediator = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
+			var topWindowOfType = windowMediator.getMostRecentWindow("navigator:browser");
+			if (topWindowOfType) return topWindowOfType.document.getElementById("content");
+			return null;
 		},
 	};
 
@@ -127,11 +146,18 @@ location == "chrome://browser/content/browser.xul" && (function() {
 				<menupopup id="showFlagS-popup">\
 				<menuitem label="复制信息" id="showFlagS-copy" oncommand="showFlagS.command(\'Copy\');" />\
 				<menuitem label="刷新信息" id="showFlagS-reload" oncommand="showFlagS.onLocationChange(true);"/>\
+				<menu label="UserAgent" id="showFlagS-UserAgent-config" class="showFlagS menu-iconic" hidden="true">\
+				<menupopup  id="showFlagS-UserAgent-popup">\
+					<menuseparator id="showFlagS-sepalator3" hidden="true"/>\
+				</menupopup>\
+				</menu>\
 				<menu label="脚本设置" id="showFlagS-set-config" class="showFlagS menu-iconic" hidden="true" image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAWCAYAAADJqhx8AAABlElEQVQ4jaXUSWtUQRQF4M9hYTuEuDAmGl0Yp0QkcQBFRFEXQhB3ATf+gKziwrU/wr8RcK04EY04JuBSQXQRhziEhEDAdDe6qKqkuuiHAQsOvHte3Vv3nlPvwRLqaKCZofEP/jOGxKCJb5jJ8BW/2/BfYs4sjokVv+MS9mU4gze4XPCn8BE/UoFmPG2/1rULkzhc8F14167AwWJjbywwUPDdeL+WDnoqOthRdtCIwTCOZLiIaVwt+PP4lBeoC2q/xpMML7EgCJnzLwTrW1yYxdnYdsJxvIon5vwgPrTT4EAxa3Khv+C7qkT8bxf6io09eIpDBd/WhZ8YEW5ZwhW8xbWCHxau9Jyg04oLz/EQjyKeYV5QPecfC+LeT90lF05ie4aBmHw6xp3Zu050YEOuQenCbqsurENNxVqLCxtxC6PYWVWgdKFbq403BL2m4vNerE8a/MJ1XMgwEjeni3RU+G8sYgK3cQ7+RNSxnKEeE9LXuAl3cQfbsBVb4B4eVGAce7KxxnCz1KCGzRWopTnj6seJPPkvhrmYqehLVdcAAAAASUVORK5CYII=">\
 				<menupopup  id="showFlagS-set-popup">\
 					<menuseparator id="showFlagS-sepalator1"/>\
 					<menuitem label="查询本地信息" id="showFlagS-set-MyInfo" type="checkbox"  oncommand="showFlagS.setPerfs(\'MyInfo\')" />\
-					<menuitem label="自动重新获取" id="showFlagS-set-Reacquire" type="checkbox"  oncommand="showFlagS.setPerfs(\'Reacquire\')" />\
+					<menuitem label="自动重新获取" id="showFlagS-set-Reacquire" tooltiptext="如果查询不到IP信息则再次查询" type="checkbox"  oncommand="showFlagS.setPerfs(\'Reacquire\')" />\
+					<menuitem label="RefChanger" id="showFlagS-set-RefChanger" tooltiptext="破解图片反盗链" type="checkbox"  oncommand="showFlagS.setPerfs(\'RefChanger\')" />\
+					<menuitem label="UAChanger" id="showFlagS-set-UAChanger" tooltiptext="修改浏览器UserAgent" type="checkbox"  oncommand="showFlagS.setPerfs(\'UAChanger\')" />\
 					<menuitem label="脚本菜单配置" id="showFlagS-set-setMenu" tooltiptext="左键：重载配置\r\n右键：编辑配置" onclick="if(event.button == 0){showFlagS.reload(true);}else if (event.button == 2) {showFlagS.command(\'Edit\');}" class="showFlagS menuitem-iconic" image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABYElEQVQ4jY3TO0/VQRAF8F9yTUB6QMCCZ6KJBq4JNIQKCkoopAWMsabhC1ho5SOYaO2j0AQ+gYKPS/BeaDD0kPhJLP7nbzZA0ElOsjvnzOzOziyX2yjO8Ds4i++/bRgdzAUdjFwVMIkNDASP8QuDwXF8Nb+RGHAdb3GC72jhIxZxLViMbx/fon2XWKv4inHcx6OaQH8A3eFWot3DmmT8jImipF48y21aeI6+gp9IzA+Ywmu0k7mBF9jBDKaxjZfhxqN9k1hULepgLI90gHvFic34BqJtR6tM0D6XYKrgJ/FT1ZFa+3cu7mALR6mtkf2n3KKZ9auihMPs79aPuIvbxYn9SbIfbOFGwd/CF1XbPVC1ZARL2XdFOIihrLuwjuVod/EQevBeNXmt1P8BC6ohamA+moNojqPpqa/UxCZuBk8iKkf5abihaMsuXbBh1UvPBm3/+EznbRSnqm9c49Lv/AcsoU6W+qo3pgAAAABJRU5ErkJggg=="/>\
 				</menupopup>\
 				</menu>\
@@ -186,11 +212,14 @@ location == "chrome://browser/content/browser.xul" && (function() {
 		this.ServerInfo = sandbox.ServerInfo || {};
 		this.SourceAPI = sandbox.SourceAPI || {};
 		this.MyInfo = sandbox.MyInfo || {};
+		this.UASites = sandbox.UASites || [];
+		this.UAList = sandbox.UAList || [];
+		this.RefererChange = sandbox.RefererChange || {};
 
 		this.Perfs.showLocationPos = this.Perfs.showLocationPos ? this.Perfs.showLocationPos : 'identity-box';
 		this.Inquiry_Delay = this.Perfs.Inquiry_Delay ? this.Perfs.Inquiry_Delay : 3500;
-		this.libIconPath = this.Perfs.libIconPath ? this.Perfs.libIconPath : "lib\\countryflags.js",
-			this.LocalFlags = this.Perfs.LocalFlags ? this.Perfs.LocalFlags : "lib\\LocalFlags\\";
+		this.libIconPath = this.Perfs.libIconPath ? this.Perfs.libIconPath : "lib\\countryflags.js";
+		this.LocalFlags = this.Perfs.LocalFlags ? this.Perfs.LocalFlags : "lib\\LocalFlags\\";
 		this.BAK_FLAG_PATH = this.Perfs.BAK_FLAG_PATH ? this.Perfs.BAK_FLAG_PATH : 'http://www.razerzone.com/asset/images/icons/flags/';
 		this.DEFAULT_Flag = this.Perfs.DEFAULT_Flag ? this.Perfs.DEFAULT_Flag : this.DEFAULT_Flag;
 		this.Unknown_Flag = this.Perfs.Unknown_Flag ? this.Perfs.Unknown_Flag : this.DEFAULT_Flag;
@@ -198,6 +227,8 @@ location == "chrome://browser/content/browser.xul" && (function() {
 		this.Base64_Flag = this.Perfs.Base64_Flag ? this.Perfs.Base64_Flag : this.File_Flag;
 		this.LocahHost_Flag = this.Perfs.LocahHost_Flag ? this.Perfs.LocahHost_Flag : this.DEFAULT_Flag;
 		this.LAN_Flag = this.Perfs.LAN_Flag ? this.Perfs.LAN_Flag : this.DEFAULT_Flag;
+		this.RfCState = this.Perfs.RfCState ? this.Perfs.RfCState : true;
+		this.UAState = this.Perfs.UAState ? this.Perfs.UAState : true;
 
 		this.libIconPath = this.libIconPath.replace(/\//g, '\\');
 		if (/(\\)$/.test(this.libIconPath))
@@ -210,22 +241,49 @@ location == "chrome://browser/content/browser.xul" && (function() {
 		}
 
 		try {
+			var lineFinder = new Error();
 			Cu.evalInSandbox(libData, sandbox, "1.8");
 		} catch (e) {
+			let line = e.lineNumber - lineFinder.lineNumber - 1;
 			err = true;
-			errMsg.push(e);
+			errMsg.push('Error: ' + e + "\n请重新检查配置文件第 " + line + " 行");
 			log(e);
 		}
 
 		this.CountryNames = sandbox.CountryNames || [];
 		this.CountryFlags = sandbox.CountryFlags || [];
 
+		var tmp = {};
+		tmp.label = "Firefox" + Services.appinfo.version.split(".")[0];
+		tmp.ua = "";
+		tmp.image = this.Perfs.DEFAULT_UA ? this.Perfs.DEFAULT_UA : this.DEFAULT_Flag;
+		this.UAList.unshift(tmp);
+
 		this.getPrefs();
 		this.buildSiteMenu(this.SourceAPI);
+		this.buildUserAgentMenu(this.UAList);
 		this.buildFreedomMenu(this.Menus);
 		this.addIcon(this.Perfs);
+		this.uaMenuStates();
+
+		if (this.UAList.length != 0) {
+			for (let i = 0; i < this.UAList.length; i++) {
+				this.UANameIdxHash[this.UAList[i].label] = i;
+			}
+			for (let j = 0; j < this.UASites.length; j++) {
+				if (this.UANameIdxHash[this.UASites[j].label])
+					this.UASites[j].idx = this.UANameIdxHash[this.UASites[j].label];
+				else
+					this.UASites[j].idx = this.def_uaIdx;
+			}
+			$("showFlagS-UserAgent-config").hidden = false;
+		} else
+			this.UAState = false;
+
 		$("showFlagS-set-Reacquire").setAttribute('checked', this.isReacquire);
 		$("showFlagS-set-MyInfo").setAttribute('checked', this.isMyInfo);
+		$("showFlagS-set-RefChanger").setAttribute('checked', this.RfCState);
+		$("showFlagS-set-UAChanger").setAttribute('checked', this.UAState);
 		$("showFlagS-set-config").hidden = $("showFlagS-sepalator2").hidden = this.isConfigFile ? false : true;
 		if (this.SourceAPI[0] && this.apiSite)
 			$("showFlagS-apiSite-" + this.apiSite).setAttribute('checked', true);
@@ -248,33 +306,53 @@ location == "chrome://browser/content/browser.xul" && (function() {
 			for (i in menu) {
 				$("main-menubar").insertBefore($(menu[i].id), $("main-menubar").childNodes[7]);
 			}
+			delete menu;
 		} catch (e) {}
 
 		let sites = document.querySelectorAll("menuitem[id^='showFlagS-apiSite-']");
 		for (let i = 0; i < sites.length; i++) {
 			sites[i].parentNode.removeChild(sites[i]);
 		}
+		delete sites;
+
+		let usList = document.querySelectorAll("menuitem[id^='showFlagS-UserAgent-']");
+		for (let i = 0; i < usList.length; i++) {
+			usList[i].parentNode.removeChild(usList[i]);
+		}
+		delete usList;
+
+		let uamenuseparator = document.querySelectorAll("menuseparator[id^='showFlagS-UserAgent-']");
+		for (let i = 0; i < uamenuseparator.length; i++) {
+			uamenuseparator[i].parentNode.removeChild(uamenuseparator[i]);
+		}
+		delete uamenuseparator;
 
 		let menuitems = document.querySelectorAll("menuitem[id^='showFlagS-item-']");
-		let menus = document.querySelectorAll("menu[id^='showFlagS-menu-']");
+		if (menuitems) {
+			for (let i = 0; i < menuitems.length; i++) {
+				menuitems[i].parentNode.removeChild(menuitems[i]);
+			}
+			delete menuitems;
+		}
 
-		if (!menuitems || !menus) return;
-		for (let i = 0; i < menuitems.length; i++) {
-			menuitems[i].parentNode.removeChild(menuitems[i]);
+		let menus = document.querySelectorAll("menu[id^='showFlagS-menu-']");
+		if (menus) {
+			for (let i = 0; i < menus.length; i++) {
+				menus[i].parentNode.removeChild(menus[i]);
+			}
+			delete menus;
 		}
-		for (let i = 0; i < menus.length; i++) {
-			menus[i].parentNode.removeChild(menus[i]);
-		}
-		try {
-			$("showFlagS-icon").parentNode.removeChild($("showFlagS-icon"));
-		} catch (e) {}
+
+		var icon = $("showFlagS-icon");
+		if (icon) icon.parentNode.removeChild(icon);
+		delete icon;
 	};
 
 	showFlagS.getPrefs = function() {
-		this._prefs = Components.classes["@mozilla.org/preferences-service;1"]
-			.getService(Components.interfaces.nsIPrefService)
-			.getBranch("userChromeJS.showFlagS.");
-		this._prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
+		this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
+			.getService(Ci.nsIPrefService);
+		this._prefs = this.prefs.getBranch("userChromeJS.showFlagS.");
+		this._prefs.QueryInterface(Ci.nsIPrefBranch2);
 
 		if (!this._prefs.prefHasUserValue("SourceSite") || this._prefs.getPrefType("SourceSite") != Ci.nsIPrefBranch.PREF_STRING)
 			this._prefs.setCharPref("SourceSite", (this.SourceAPI ? (this.SourceAPI[0] ? this.SourceAPI[0].id : "") : ""));
@@ -285,12 +363,46 @@ location == "chrome://browser/content/browser.xul" && (function() {
 		if (!this._prefs.prefHasUserValue("Reacquire") || this._prefs.getPrefType("Reacquire") != Ci.nsIPrefBranch.PREF_BOOL)
 			this._prefs.setBoolPref("Reacquire", this.isReacquire);
 
+		if (!this._prefs.prefHasUserValue("RefChanger") || this._prefs.getPrefType("RefChanger") != Ci.nsIPrefBranch.PREF_BOOL)
+			this._prefs.setBoolPref("RefChanger", this.RfCState);
+
+		if (!this._prefs.prefHasUserValue("UAChanger") || this._prefs.getPrefType("UAChanger") != Ci.nsIPrefBranch.PREF_BOOL)
+			this._prefs.setBoolPref("UAChanger", this.UAState);
+
 		this.isReacquire = this._prefs.getBoolPref("Reacquire");
 		this.isMyInfo = this._prefs.getBoolPref("MyInfo");
+		this.RfCState = this._prefs.getBoolPref("RefChanger");
+		this.UAState = this._prefs.getBoolPref("UAChanger");
 		this.apiSite = this._prefs.getCharPref("SourceSite");
 	};
 
 	showFlagS.setPerfs = function(tyep, val) {
+		if (tyep == "UA") {
+			if (val == 0) {
+				if (this.prefs.getBranch("").getPrefType("general.useragent.override") == 0 && this.prefs.getBranch("").getPrefType("general.platform.override") == 0) return;
+				this.prefs.getBranch("").clearUserPref("general.useragent.override");
+				this.prefs.getBranch("").clearUserPref("general.platform.override");
+			} else {
+				this.prefs.getBranch("").setCharPref("general.useragent.override", this.UAList[val].ua);
+				var platform = this.getPlatformString(this.UAList[val].ua);
+				if (platform != "")
+					this.prefs.getBranch("").setCharPref("general.platform.override", platform);
+				else
+					this.prefs.getBranch("").clearUserPref("general.platform.override");
+			}
+			this.def_uaIdx = val;
+			this.uaMenuStates(val);
+		}
+		if (tyep == "RefChanger") {
+			this.RfCState = !this.RfCState;
+			this._prefs.setBoolPref("RefChanger", this.RfCState);
+			$("showFlagS-set-RefChanger").setAttribute('checked', this.RfCState);
+		}
+		if (tyep == "UAChanger") {
+			this.UAState = !this.UAState;
+			this._prefs.setBoolPref("UAChanger", this.UAState);
+			$("showFlagS-set-UAChanger").setAttribute('checked', this.UAState);
+		}
 		if (tyep == "apiSite") {
 			this.apiSite = val;
 			this._prefs.setCharPref("SourceSite", this.apiSite);
@@ -321,11 +433,153 @@ location == "chrome://browser/content/browser.xul" && (function() {
 				}
 			}
 		}
+
+		$("showFlagS-UserAgent-config").hidden = !this.UAState;
+
+		var os = Cc["@mozilla.org/observer-service;1"].getService(Ci.nsIObserverService);
+		try {
+			os.removeObserver(this.observe, "http-on-modify-request", false);
+			os.removeObserver(this.onDocumentCreated, "content-document-global-created", false);
+		} catch (e) {}
+		os.addObserver(this.observe, "http-on-modify-request", false);
+		os.addObserver(this.onDocumentCreated, "content-document-global-created", false);
+
 		this.onLocationChange(true);
+	};
+
+	showFlagS.uaMenuStates = function(idx) {
+		var usingUAIdx;
+		for (var j = 0; j < this.UAList.length; j++) {
+			if (this.UAList[j].ua || this.UAList[j].ua == "") {
+				if (this.UAList[j].ua == this.usingUA || this.UAList[j].ua == "")
+					usingUAIdx = j;
+				$("showFlagS-UserAgent-" + j).setAttribute("style", 'font-weight: normal;');
+				$("showFlagS-UserAgent-" + j).style.color = 'black';
+			}
+		}
+		if (idx || typeof(usingUAIdx) != 'undefined') {
+			var i = idx || usingUAIdx;
+			$("showFlagS-UserAgent-" + i).setAttribute("style", 'font-weight: bold;');
+			$("showFlagS-UserAgent-" + i).style.color = 'brown';
+			$("showFlagS-UserAgent-config").setAttribute("label", this.UAList[i].label);
+			$("showFlagS-UserAgent-config").setAttribute("image", this.UAList[i].image);
+			$("showFlagS-UserAgent-config").style.padding = "0px 2px";
+			this.Current_idx = i;
+		} else {
+			$("showFlagS-UserAgent-config").setAttribute("label", "未知UserAgent");
+			$("showFlagS-UserAgent-config").setAttribute("tooltiptext", this.usingUA);
+			$("showFlagS-UserAgent-config").setAttribute("image", null);
+		}
+	};
+
+	/*****************************************************************************************/
+	showFlagS.observe = function(subject, topic, data) {
+		var that = showFlagS;
+		if (that.UAState && (topic == "http-on-modify-request")) {
+			var http = subject.QueryInterface(Ci.nsIHttpChannel);
+			for (var i = 0; i < that.UASites.length; i++) {
+				if (http.URI && (new RegExp(that.UASites[i].url)).test(http.URI.spec)) {
+					var idx = that.UASites[i].idx;
+					http.setRequestHeader("User-Agent", that.UAList[idx].ua, false);
+				}
+			}
+		}
+
+		if (!that.RfCState) return;
+		for (var s = http.URI.host; s != ""; s = s.replace(/^.*?(\.|$)/, "")) {
+			if (that.adjustRef(http, s))
+				return;
+		}
+		if (http.referrer && http.referrer.host != http.originalURI.host)
+			http.setRequestHeader('Referer', http.originalURI.spec.replace(/[^/]+$/, ''), false);
+	};
+
+	showFlagS.adjustRef = function(http, site) {
+		try {
+			var sRef;
+			var refAction = undefined;
+			for (var i in this.RefererChange) {
+				if (site.indexOf(i) != -1) {
+					refAction = this.RefererChange[i];
+					break;
+				}
+			}
+
+			if (refAction == undefined)
+				return true;
+			if (refAction.charAt(0) == '@') {
+				switch (refAction) {
+					case '@NORMAL':
+						return true;
+						break;
+					case '@FORGE':
+						sRef = http.URI.scheme + "://" + http.URI.hostPort + "/";
+						break;
+					case '@BLOCK':
+						sRef = "";
+						break;
+					case '@AUTO':
+						return false;
+					case '@ORIGINAL':
+						sRef = window.content.document.location.href;
+						break;
+					default:
+						break;
+				}
+			} else if (refAction.length == 0) {
+				return true;
+			} else {
+				sRef = refAction;
+			}
+			http.setRequestHeader("Referer", sRef, false);
+			if (http.referrer)
+				http.referrer.spec = sRef;
+			return true;
+		} catch (e) {}
+		return true;
+	};
+
+	showFlagS.onDocumentCreated = function(aSubject, aTopic, aData) {
+		var aChannel = aSubject.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIWebNavigation).QueryInterface(Ci.nsIDocShell).currentDocumentChannel;
+		if (aChannel instanceof Ci.nsIHttpChannel) {
+			var navigator = aSubject.navigator;
+			var userAgent = aChannel.getRequestHeader("User-Agent");
+			if (navigator.userAgent != userAgent) Object.defineProperty(XPCNativeWrapper.unwrap(navigator), "userAgent", {
+				value: userAgent,
+				enumerable: true
+			});
+			var platform = showFlagS.getPlatformString(userAgent);
+			if (platform != "") Object.defineProperty(XPCNativeWrapper.unwrap(navigator), "platform", {
+				value: platform,
+				enumerable: true
+			});
+		}
+	};
+
+	showFlagS.getPlatformString = function(userAgent) {
+		var platform = "";
+		var lowerUserAgent = userAgent.toLowerCase();
+		if (lowerUserAgent.indexOf("windows") > -1) platform = "Win32";
+		else if (lowerUserAgent.indexOf("android") > -1) platform = "Linux armv7l";
+		else if (lowerUserAgent.indexOf("linux") > -1) platform = "Linux i686";
+		else if (lowerUserAgent.indexOf("iphone") > -1) platform = "iPhone";
+		else if (lowerUserAgent.indexOf("ipad") > -1) platform = "iPad";
+		else if (lowerUserAgent.indexOf("mac os x") > -1) platform = "MacIntel";
+		return platform;
 	};
 
 	/*****************************************************************************************/
 	showFlagS.onLocationChange = function(forceRefresh) {
+		var isUAChange;
+		for (var i = 0; i < this.UASites.length; i++) {
+			if ((new RegExp(this.UASites[i].url)).test(this.ContentBrowser.currentURI.spec)) {
+				var idx = this.UASites[i].idx;
+				isUAChange = idx;
+				this.uaMenuStates(idx);
+			}
+		}
+		if (!isUAChange) this.uaMenuStates(this.def_uaIdx);
+
 		if (forceRefresh) {
 			this.forceRefresh = true;
 		}
@@ -408,6 +662,7 @@ location == "chrome://browser/content/browser.xul" && (function() {
 			$('page-proxy-favicon').style.visibility = 'visible';
 		}
 	};
+
 	/*****************************************************************************************/
 	showFlagS.lookupIP = function(ip, host) {
 		var self = showFlagS;
@@ -602,7 +857,7 @@ location == "chrome://browser/content/browser.xul" && (function() {
 
 		this.icon.tooltipText = tooltipArr.join('\n');
 	};
-	/************************************/
+	/*****************************************************************************************/
 	showFlagS.lookup_Myinfo = function(api, host, callback) {
 		var self = showFlagS;
 		var myinfo;
@@ -738,7 +993,7 @@ location == "chrome://browser/content/browser.xul" && (function() {
 		}
 		callback(sTip.join('\n'));
 	};
-	/************************************/
+	/*****************************************************************************************/
 	showFlagS.getServInformation = function(words) {
 		var word;
 		try {
@@ -982,6 +1237,33 @@ location == "chrome://browser/content/browser.xul" && (function() {
 		};
 	};
 
+	showFlagS.buildUserAgentMenu = function(UAList) {
+		var menu = $("showFlagS-UserAgent-popup"),
+			menuitem;
+		for (var i = 0; i < UAList.length; i++) {
+			if (UAList[i].label === "separator" || (!UAList[i].label && !UAList[i].id && !UAList[i].ua))
+				menuitem = menu.appendChild($C("menuseparator", {
+					id: "showFlagS-UserAgent-" + i,
+					class: "showFlagS-UserAgent-menuseparator",
+				}));
+			else {
+				menuitem = menu.appendChild($C("menuitem", {
+					label: UAList[i].label,
+					id: "showFlagS-UserAgent-" + i,
+					class: "showFlagS-UserAgent-item",
+					image: UAList[i].image,
+					tooltiptext: UAList[i].ua,
+					oncommand: "showFlagS.setPerfs('UA','" + i + "');"
+				}));
+
+				var cls = menuitem.classList;
+				cls.add("showFlagS");
+				cls.add("menuitem-iconic");
+			}
+			menu.insertBefore(menuitem, $("showFlagS-sepalator3"));
+		};
+	};
+
 	showFlagS.buildFreedomMenu = function(menu) {
 		var popup = $("showFlagS-popup");
 		var obj, menuitem;
@@ -1029,11 +1311,10 @@ location == "chrome://browser/content/browser.xul" && (function() {
 			menuitem = document.createElement("menuitem");
 
 		if (!obj.label)
-			obj.label = obj.exec || obj.text;
+			obj.label = obj.exec || obj.text || "NoName" + i;
 
-		if (obj.exec) {
+		if (obj.exec)
 			obj.exec = this.handleRelativePath(obj.exec);
-		}
 
 		for (let [key, val] in Iterator(obj)) {
 			if (typeof val == "function") obj[key] = val = "(" + val.toSource() + ").call(this, event);";
@@ -1143,6 +1424,10 @@ location == "chrome://browser/content/browser.xul" && (function() {
 		fstream.close();
 		return data;
 	};
+
+	function logs(str) {
+		if (showFlagS.debug) Application.console.log("[showFlagS] " + Array.slice(arguments));
+	}
 
 	function log(str) {
 		if (showFlagS.debug) Application.console.log("[showFlagS] " + Array.slice(arguments));
