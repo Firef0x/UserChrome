@@ -121,8 +121,8 @@ rules = [
 	},
 	{
 		name: "百度搜索禁止劫持",
-		from: /^https?:\/\/(www\.baidu\.com\/s\?).*(wd=.*?)&(tn|rs|oq).*/i,
-		to: "https://$1$2",
+		from: /^https?:\/\/(www\.baidu\.com\/)(s|baidu)\?.*(wd=.*)&(ie|oq|rs|tn).*/i,
+		to: "http://$1s?$3",
 		regex: true
 	},
 	{
