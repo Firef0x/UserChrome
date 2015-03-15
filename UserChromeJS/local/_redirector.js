@@ -25,6 +25,7 @@ rules = [
 	// },
 	// ]]]
 	//  原创 [[[1
+	// userscripts.org 和 userscripts.org:8080 都跳转到 userscripts-mirror.org
 	{
 		name: "Userscripts 重定向",
 		from: /^https?:\/\/userscripts\.org(?:\:8080|)\/(.*)/i,
@@ -39,9 +40,9 @@ rules = [
 	},
 	{
 		name: "Google 搜索跳转到 glgoo.com",
-		from: /^https?:\/\/(www\.)?google\.[^\/]+\/(search\?.*)$/i,
+		from: /^https?:\/\/(www\.)?google\.[^\/]+\/(s\?|search\?|webhp\?)(.*)$/i,
 		exclude: /google\.cn/i,
-		to: "https://e.glgoo.com/$2",
+		to: "https://e.glgoo.com/$2$3",
 		regex: true
 		// state: false
 	},
@@ -52,25 +53,27 @@ rules = [
 		regex: true
 		// state: false
 	},
-	{
-		// 部分参考自 https://github.com/goagent/goagent/blob/3.0/local/proxy.ini
-		name: "解决 wen.lu 无法重定向图片地址",
-		from: /^https?:\/\/wen\.lu\/(?:imgres|url)\?.*url=([^&]+).*/i,
-		to: "$1",
-		regex: true,
-		state: false
-	},
-	{
-		name: "解决 awk.so 无法重定向图片地址",
-		from: /^https?:\/\/awk\.so\/(?:imgres|url)\?.*url=([^&]+).*/i,
-		to: "$1",
-		regex: true,
-		state: false
-	},
+	// {
+	// 	// 部分参考自 https://github.com/goagent/goagent/blob/3.0/local/proxy.ini
+	// 	name: "解决 wen.lu 无法重定向图片地址",
+	// 	from: /^https?:\/\/wen\.lu\/(?:imgres|url)\?.*url=([^&]+).*/i,
+	// 	to: "$1",
+	// 	regex: true,
+	// 	state: false
+	// },
+	// {
+	// 	name: "解决 awk.so 无法重定向图片地址",
+	// 	from: /^https?:\/\/awk\.so\/(?:imgres|url)\?.*url=([^&]+).*/i,
+	// 	to: "$1",
+	// 	regex: true,
+	// 	state: false
+	// },
+	// Google 搜索时，中键点击图片，跳转到原始链接。
+	// 详细说明：http://bbs.kafan.cn/thread-1799098-1-1.html
 	{
 		name: "解决 glgoo.com 无法重定向图片地址",
-		from: /^https?:\/\/.*\.glgoo\.com\/(?:imgres|url)\?.*url=([^&]+).*/i,
-		to: "$1",
+		from: /^https?:\/\/.*\.glgoo\.com\/(.*)imgurl=(.*)&imgrefurl=(.*)\&h=(.*)/i,
+		to: "$3",
 		regex: true
 	},
 	// ]]]
@@ -101,6 +104,8 @@ rules = [
 		to: "://fonts-gstatic.lug.ustc.edu.cn/$1",
 		regex: true
 	},
+	// 在这样的页面点击，就直接弹下载窗口
+	// 测试：http://sourceforge.net/projects/pcxfirefox/files/Release/Firefox/36.x/36.0.1/x86/sse2/
 	{
 		name: "重定向 SourceForge 到镜像站点",
 		from: /^https?:\/\/sourceforge\.net\/projects\/(\w)([a-z0-9A-Z_\-\.])([a-z0-9A-Z_\-\.]*)(\/files(\/.*))?/i,
@@ -161,26 +166,52 @@ rules = [
 	},
 	// ]]]
 	//  取自 https://github.com/dupontjoy/userChromeJS/blob/master/Local/_redirector.js [[[1
+	// 有时 Google 会要求填验证码，此规则用以跳过
 	{
 		name: "反 Google 搜索验证码",
 		from: /^https?:\/\/ipv4\.google\.com\/sorry\/IndexRedirect\?continue=https?:\/\/(www\.)?google\.[^\/]+\/search\?(.*q=.*)&q=.*/i,
 		to: "https://www.google.com/ncr#$1",
 		regex: true
 	},
+	//    百度系 [[[2
+	// 参照“反Google搜索验证码”改的，很少遇到
 	{
 		name: "反百度搜索验证码",
 		from: /^https?:\/\/verify\.baidu\.com\/vcode\?http:\/\/www\.baidu\.com\/s\?wd=(.*)&(.*=.*)/i,
 		to: "http://www.baidu.com/s?wd=$1",
 		regex: true
 	},
+	// 百度云盘分享页，手机版 重定向至 电脑版
+	// 详细说明：http://bbs.kafan.cn/thread-1814510-1-1.html
 	{
-		//http://bbs.kafan.cn/thread-1801036-1-1.html
+		name: "百度盘 wap/link >> share/link",
+		from: /^https?:\/\/\pan\.baidu\.com\/wap\/(link\?|shareview\?\&)(.*)/i,
+		to: 'http://yun.baidu.com/share/link?$2',
+		regex: true
+	},
+	{
+		name: "百度盘 wap/album/file >> pcloud/album/file",
+		from: /^https?:\/\/\pan\.baidu\.com\/wap\/album\/file(.*)/i,
+		to: 'http://yun.baidu.com/pcloud/album/file$1',
+		regex: true
+	},
+	{
+		// 取自 http://bbs.kafan.cn/thread-1804863-1-1.html
+		name: "百度盘 lx.cdn >> qd",
+		from:/^http:\/\/lx\.cdn\.baidupcs\.com\/file\/(.*)$/,
+		to: "http://qd.baidupcs.com/file/$1",
+		regex: true
+	},
+	// ]]]
+	{
+		// http://bbs.kafan.cn/thread-1801036-1-1.html
 		name: "flickr 显示原始大图",
 		from: /^(https?:\/\/c\d\.staticflickr\.com\/\d\/\d+\/\d+_[^\._]+)(_[a-z])?(\.jpg)$/,
 		exclude: /^(https?:\/\/c\d\.staticflickr\.com\/\d\/\d+\/\d+_\w+)_o(\.jpg)$/,
 		to: "$1_o$3",
 		regex: true
 	},
+	// 在 Google 搜索时会出现某一种页面，这个重定向用来直接跳到目标链接
 	{
 		name: "noMoreArchiver",
 		from: /(.*)\/archiver\/(.*)tid-(.*)\.html/,
@@ -198,7 +229,7 @@ rules = [
 	},
 	{
 		// 取自 https://github.com/ywzhaiqi/userChromeJS/blob/master/.修改版/_redirector.js
-		// 包含手机版界面
+		// 包含手机版界面，现在失效了
 		name: "百度随心听（音质改320）",
 		from: /^http:\/\/music\.baidu\.com\/data\/music\/fmlink(.*[&\?])rate=[^3]\d+(.*)/i,
 		to: "http://music.baidu.com/data/music/fmlink$1rate=320$2",
@@ -206,7 +237,7 @@ rules = [
 	},
 	{
 		// 取自 http://bbs.kafan.cn/thread-1778201-1-1.html
-		//斗鱼TV卡的话，网址(ID为数字的)后面加上?cdn=lx
+		// 斗鱼TV卡的话，网址(ID为数字的)后面加上?cdn=lx
 		name: "斗鱼TV(ID为数字的) >> ?cdn=lx",
 		from: /^http:\/\/www\.douyutv\.com\/(\d+)/i,
 		exclude: /^http:\/\/www\.douyutv\.com\/.*\?cdn=lx/i,
