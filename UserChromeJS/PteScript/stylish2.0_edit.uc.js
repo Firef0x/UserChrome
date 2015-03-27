@@ -7,6 +7,7 @@
 // @author         Original Author: pile0nades
 // @modifier       Alice0775
 // @modifier       Firef0x
+// @version        2015/03/21 fix rich text mode issue #27
 // @version        2014/12/13 add note
 // @version        2014/12/13 for update buttons
 // @version        2014/12/13 for Stylish2.0
