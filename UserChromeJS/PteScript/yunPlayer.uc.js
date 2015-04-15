@@ -24,6 +24,7 @@
         // "如意云点播": "http://www.ruyiba.cn/index.php#!u=",
         // "云播": "http://vod.yundianbo.info/?u=",
         // "CloudPlayer": "http://zdfans.com/cloudplayer/vod.html?url="
+        "Dybeta": "http://yun.dybeta.com/playapi.php?method=high&u=",
         "大云播": "http://www.dayunbo.com/api/api.php#!u=",
     };
 
