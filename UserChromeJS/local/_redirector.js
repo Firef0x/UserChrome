@@ -39,10 +39,18 @@ rules = [
 		regex: true
 	},
 	{
+		name: "Google 图片搜索跳转到 glgoo.com",
+		from: /^https?:\/\/(www\.)?google\.[^\/]+\/(s\?|search\?|webhp\?)tbs=(isch\&|sbi)(.*)$/i,
+		exclude: /google\.cn/i,
+		to: "https://image.glgoo.com/$2tbs=$3$4",
+		regex: true
+		// state: false
+	},
+	{
 		name: "Google 搜索跳转到 glgoo.com",
 		from: /^https?:\/\/(www\.)?google\.[^\/]+\/(s\?|search\?|webhp\?)(.*)$/i,
 		exclude: /google\.cn/i,
-		to: "https://e.glgoo.com/$2$3",
+		to: "https://www.glgoo.com/$2$3",
 		regex: true
 		// state: false
 	},
@@ -75,6 +83,7 @@ rules = [
 		from: /^https?:\/\/.*\.glgoo\.com\/(.*)imgurl=(.*)&imgrefurl=(.*)\&h=(.*)/i,
 		to: "$3",
 		regex: true
+		// state: false
 	},
 	// ]]]
 	//  取自 https://github.com/523860169/list/blob/master/_redirector.js [[[1
@@ -108,8 +117,10 @@ rules = [
 	// 测试：http://sourceforge.net/projects/pcxfirefox/files/Release/Firefox/36.x/36.0.1/x86/sse2/
 	{
 		name: "重定向 SourceForge 到镜像站点",
-		from: /^https?:\/\/sourceforge\.net\/projects\/(\w)([a-z0-9A-Z_\-\.])([a-z0-9A-Z_\-\.]*)(\/files(\/.*))?/i,
-		to: "http://ftp.jaist.ac.jp/pub/sourceforge/$1/$1$2/$1$2$3$5",
+		// from: /^https?:\/\/sourceforge\.net\/projects\/(\w)([a-z0-9A-Z_\-\.])([a-z0-9A-Z_\-\.]*)(\/files(\/.*))?/i,
+		// to: "http://ftp.jaist.ac.jp/pub/sourceforge/$1/$1$2/$1$2$3$5",
+		from: /^https?:\/\/sourceforge\.net\/projects\/(((\w)\w).*)\/files\/(.*)\/download/i,
+		to: "http://liquidtelecom.dl.sourceforge.net/project/$1/$4",
 		regex: true
 	},
 	{
@@ -125,9 +136,9 @@ rules = [
 		regex: true
 	},
 	{
-		name: "百度搜索禁止劫持",
-		from: /^https?:\/\/(www\.baidu\.com\/)(s|baidu)\?.*(wd=.*)&(ie|oq|rs|tn).*/i,
-		to: "http://$1s?$3",
+		name: "百度搜索无劫持",
+		from: /^(https?):\/\/(www\.baidu\.com\/.*)([\?&]tn=[\w]+(.*))+/i,
+		to: "$1://$2$4",
 		regex: true
 	},
 	{
@@ -166,11 +177,25 @@ rules = [
 	},
 	// ]]]
 	//  取自 https://github.com/dupontjoy/userChromeJS/blob/master/Local/_redirector.js [[[1
-	// 有时 Google 会要求填验证码，此规则用以跳过
 	{
+		// 有时 Google 会要求填验证码，此规则用以跳过
 		name: "反 Google 搜索验证码",
 		from: /^https?:\/\/ipv4\.google\.com\/sorry\/IndexRedirect\?continue=https?:\/\/(www\.)?google\.[^\/]+\/search\?(.*q=.*)&q=.*/i,
 		to: "https://www.google.com/ncr#$1",
+		regex: true
+	},
+	{
+		// 方法来源：http://tieba.baidu.com/p/3699558655
+		name: "凤凰网 只显示首图修正",
+		from: /^https?:\/\/(.*)\.ifeng\.com\/a\/(ydzx|)\/(.*)/i,
+		to: "http://$1.ifeng.com/a/$3",
+		regex: true
+	},
+	{
+		// 方法来源：http://tieba.baidu.com/p/3708648047
+		name: "凤凰网 图片修正",
+		from: /^https?:\/\/(.*)\.ifeng\.com\/(.+)?shtml.+?(#p=.)/,
+		to: "http://$1.ifeng.com/$2shtml",
 		regex: true
 	},
 	//    百度系 [[[2
@@ -185,24 +210,22 @@ rules = [
 	// 详细说明：http://bbs.kafan.cn/thread-1814510-1-1.html
 	{
 		name: "百度盘 wap/link >> share/link",
-		from: /^https?:\/\/\pan\.baidu\.com\/wap\/(link\?|shareview\?\&)(.*)/i,
-		to: 'http://yun.baidu.com/share/link?$2',
+		from: /^https?:\/\/(pan|yun)\.baidu\.com\/(wap\/link)(.*)/i,
+		to: 'http://pan.baidu.com/share/link$3',
 		regex: true
 	},
 	{
 		name: "百度盘 wap/album/file >> pcloud/album/file",
-		from: /^https?:\/\/\pan\.baidu\.com\/wap\/album\/file(.*)/i,
-		to: 'http://yun.baidu.com/pcloud/album/file$1',
+		from: /^https?:\/\/(pan|yun)\.baidu\.com\/wap\/album\/file(.*)/i,
+		to: 'http://pan.baidu.com/pcloud/album/file$2',
 		regex: true
 	},
 	{
-		// 取自 http://bbs.kafan.cn/thread-1804863-1-1.html
-		name: "百度盘 lx.cdn >> qd",
-		from:/^http:\/\/lx\.cdn\.baidupcs\.com\/file\/(.*)$/,
-		to: "http://qd.baidupcs.com/file/$1",
+		name: "百度盘 wap/share/home >> share/home",
+		from: /^https?:\/\/(pan|yun)\.baidu\.com\/wap\/share\/(home\?|)(.*)/i,
+		to: 'http://pan.baidu.com/share/home?$3',
 		regex: true
 	},
-	// ]]]
 	{
 		// http://bbs.kafan.cn/thread-1801036-1-1.html
 		name: "flickr 显示原始大图",
