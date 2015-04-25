@@ -1,2 +1,10 @@
 uSuper_preloader.db.js
 userChromejs_mix.json
+
+node_modules
+bower_components
+tmp/
+*.sublime-workspace
+*.cache
+
+test
