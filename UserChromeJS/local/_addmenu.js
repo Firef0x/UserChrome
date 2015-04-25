@@ -143,7 +143,7 @@ new function () {
 			var title = addMenu.convertText("%RLT_OR_UT%"),
 			url = addMenu.convertText("%RLINK_OR_URL%");
 			// 简化下标题
-			// [/\s(·|::|-|\|)\s.*/i, /_[^\[\]【】]+$/].forEach(function(r){title = title.replace(r, "");});
+			[/\s(·|::|-|\|)\s.*/i, /_[^\[\]【】]+$/].forEach(function(r){title = title.replace(r, "");});
 
 			var formats = [
 				"[" + title + "](" + url + ")",
