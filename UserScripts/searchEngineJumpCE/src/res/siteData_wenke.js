@@ -5,7 +5,7 @@
     Google, https://www.google.com/search?hl=zh-CN&q=%s
     必应, http://www.bing.com/search?q=%s
     百度, https://www.baidu.com/s?wd=%s
-    360搜索, http://www.so.com/s?q=%s
+    360搜索, http://www.haosou.com/s?ie=utf-8&q=%s
     搜狗, http://www.sogou.com/web?query=%s
     SimilarSite, http://www.similarsitesearch.com/q.php?URL=%s
     DuckDuckGo, https://duckduckgo.com/?q=%s

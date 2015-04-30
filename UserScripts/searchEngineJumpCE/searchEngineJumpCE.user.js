@@ -2,12 +2,12 @@
 // ==UserScript==
 // @name           searchEngineJump 简化改进版
 // @author         NLF && ywzhaiqi
-// @contributor    ted423
+// @contributor    ted423 && Firef0x
 // @description    方便的在各个引擎之间跳转。可自定义搜索列表的 NLF 修改版。
-// @version        4.2.1.4
+// @version        4.2.2
 // @namespace      http://userscripts.org/users/NLF
-// @homepage       https://github.com/ywzhaiqi/userscript
-// homepage       http://userscripts.org/scripts/show/84970
+// @homepage       https://github.com/Firef0x/UserChrome
+// homepage        http://userscripts.org/scripts/show/84970
 
 // @grant          GM_getValue
 // @grant          GM_setValue
@@ -15,17 +15,18 @@
 // @grant          GM_xmlhttpRequest
 // @grant          GM_getResourceText
 // @run-at         document-end
-// @resource iconData.json https://raw.githubusercontent.com/ywzhaiqi/userscript/master/searchEngineJumpCE/src/res/iconData.json?version=1418126146000
+// @resource       iconData.json https://raw.githubusercontent.com/Firef0x/UserChrome/master/UserScripts/searchEngineJumpCE/src/res/iconData.json?version=1430406931000
 
 // @include        /^https?:\/\/(?:www|encrypted)\.google(?:stable)?\..{2,9}\/(?:webhp|search|#|$|\?)(?:.(?!tbm=))*$/
-// @include        /^https?:\/\/wen\.lu\//
-// @include        /^https?:\/\/awk\.so\//
+// @include        /^https?:\/\/www\.glgoo\.com\/(?:webhp|search|#|$|\?)/
 // @include        /^https?:\/\/www\.baidu\.com\/(?:s|baidu|)/
 // @include        /^https?:\/\/[^.]*\.bing\.com\/search/
-// @include        /^https?:\/\/www\.so\.com\/s\?/
-// @include        /^https?:\/\/www\.sogou\.com\/(?:web|sogou)/
+// @include        /^https?:\/\/www\.haosou\.com\/s\?/
+// @include        /^https?:\/\/www\.sogou\.com\/(?:web|s)/
+// @include        /^https?:\/\/search\.yahoo\.com\/search/
 // @include        /^https?:\/\/scholar\.google(?:\.\D{1,3}){1,2}\/scholar\?/
-// @include        /^https?:\/\/baike\.baidu\.com\/(?:sub)?view\//
+// @include        /^https?:\/\/baike\.baidu\.com\/(search|view|subview)/
+// @include        /^https?:\/\/(?:www|encrypted)\.google(?:\.\D{1,3}){1,2}\/search\?.*(&btnG=%E6)|(tbm=bks)/
 // @include        /^https?:\/\/[a-z]{2,3}\.baike\.com\/[a-z]/
 // @include        /^https?:\/\/..\.wikipedia\.org\/w\/index\.php(?!.*\?search=)/
 // @include        /^https?:\/\/zh\.wikipedia\.org\/(?:zh-|wiki\/|w\/index.php\?search=)/
@@ -41,7 +42,7 @@
 // @include        /^https?:\/\/www\.youtube\.com\/results/
 // @include        /^https?:\/\/www\.nicovideo\.jp\/search\//
 // @include        /^https?:\/\/v\.baidu\.com\/(v|#)/
-// @include        /^https?:\/\/video\.so\.com\//
+// @include        /^https?:\/\/video\.haosou\.com\//
 // @include        /^https?:\/\/v\.qq\.com\/search\.html\?/
 // @include        /^https?:\/\/.*\.bing\.com\/video/
 // @include        /^https?:\/\/so\.iqiyi\.com\/so\/q/
@@ -59,7 +60,7 @@
 // @include        /^https?:\/\/www\.xiami\.com\/search/
 // @include        /^https?:\/\/\w{2,10}\.google(?:\.\D{1,3}){1,2}\/search\?(.*tbs=sbi)|(.*tbm=isch)/
 // @include        /^https?:\/\/image\.baidu\.c(om|n)\/i/
-// @include        /^https?:\/\/\image\.so\.com\/i\?/
+// @include        /^https?:\/\/\image\.haosou\.com\/i\?/
 // @include        /^https?:\/\/.*\.bing\.com\/images\/search/
 // @include        /^https?:\/\/pic\.sogou\.com\/pic/
 // @include        /^https?:\/\/image\.youdao\.com\/search/
@@ -80,8 +81,10 @@
 // @include        /^https?:\/\/www\.btspread\.com\/search\//
 // @include        /^https?:\/\/(www\.)?torrentkitty\.(com|org)\/search\//
 // @include        /^https?:\/\/btdigg\.org\/search\?/
+// @include        /^https?:\/\/www\.subom\.net\/search/
+// @include        /^https?:\/\/subhd\.com\/search/
 // @include        /^https?:\/\/s8?\.etao\.com\/search/
-// @include        /^https?:\/\/search\.jd\.com\/Search\?/
+// @include        /^https?:\/\/search\.jd\.com\/search\?/
 // @include        /^https?:\/\/s\.taobao\.com\/search/
 // @include        /^https?:\/\/searchex\.yixun\.com\/html\?/
 // @include        /^https?:\/\/(search)\.suning\.com\//
@@ -105,8 +108,11 @@
 // @include        /^https?:\/\/fy\.iciba\.com/
 // @include        /^https?:\/\/search\.t\.qq\.com\/index|user\.php\?(?!.*QQ%E6%97)/
 // @include        /^https?:\/\/s\.weibo\.com\/weibo|user\//
-// @include        /^https?:\/\/shooter\.cn\/search/
-// @include        /^https?:\/\/www\.subom\.net\/search/
+// @include        /^https?:\/\/startpage\.com\/do\/search/
+// @include        /^https?:\/\/www\.archlinux\.org\/packages\/\?.*?&?q=/
+// @include        /^https?:\/\/wiki\.archlinux\.org\/index\.php\?.*?&?search=/
+// @include        /^https?:\/\/aur\.archlinux\.org\/packages\/\?.*?&?K=/
+// @include        /^https?:\/\/addons\.mozilla\.org\/.*?search/
 // @exclude        http*://services.addons.mozilla.org/*
 
 // ==/UserScript==
@@ -130,13 +136,14 @@ var prefs = {
 
 var engineListData = {
     custom: '',
-    my: '网页\n    Google, https://www.google.com.hk/search?q=%s&ie=utf-8&safe=off\n    // Google, https://www.google.com/ncr#num=30&newwindow=1&safe=off&hl=zh-CN&q=%s\n    // wen.lu, https://wen.lu/search?q=%s&hl=zh-CN&safe=off&ie=utf-8, www.google.com.hk\n    // awk.so, https://awk.so/#num=30&newwindow=1&q=%s&hl=zh-CN&safe=off&ie=utf-8, www.google.com.hk\n    百度, https://www.baidu.com/s?wd=%s&ie=utf-8\n    必应, https://cn.bing.com/search?q=%s\n    360, http://www.so.com/s?ie=utf-8&q=%s\n    搜狗, http://www.sogou.com/web?query=%s\n    // 搜搜, http://www.soso.com/q?query=%s&utf-8=ie\n    // 有道, http://www.youdao.com/search?q=%s&ue=utf8\n    // DuckDuckGo, https://duckduckgo.com/?q=%s&kl=cn-zh\n    // Wolfram, http://www.wolframalpha.com/input/?i=%s\n\n图片-pixiv\n    Google, https://www.google.com.hk/search?q=%s&tbm=isch\n    百度, http://image.baidu.cn/i?ie=utf-8&word=%s\n    // 360, http://image.so.com/i?ie=utf-8&q=%s&src=tab_web\n    // 必应, http://cn.bing.com/images/search?q=%s\n    花瓣, http://huaban.com/search/?q=%s\n    有道, http://image.youdao.com/search?q=%s\n    pixiv, http://www.pixiv.net/search.php?word=%s\n    flickr, http://www.flickr.com/search/?q=%s\n    picsearch, http://cn.picsearch.com/index.cgi?q=%s\n    deviantART, http://www.deviantart.com/?q=%s, ASCII\n    jpg4, http://img.jpg4.info/index.php?feed=%s\n\n音乐-音悦Tai\n    Songtaste, http://www.songtaste.com/search.php?keyword=%s, gbk\n    百度音乐, http://music.baidu.com/search?ie=utf-8&oe=utf-8&key=%s\n    360音乐, http://s.music.so.com/s?ie=utf-8&q=%s, http://www.so.com/favicon.ico\n    // 搜狗音乐, http://mp3.sogou.com/music.so?query=%s, gbk\n    天天动听, http://www.dongting.com/#a=searchlist&q=%s\n    一听, http://so.1ting.com/all.do?q=%s\n    音悦Tai, http://so.yinyuetai.com/mv?keyword=%s\n    虾米音乐, http://www.xiami.com/search?key=%s\n    酷我音乐, http://sou.kuwo.cn/ws/NSearch?key=%s\n    雷电音乐, http://www.leidian.com/s?q=%s&ie=utf-8&t=music\n    网易云音乐, http://music.163.com/#/search/m/?s=%s\n    百度歌词, http://music.baidu.com/search/lrc?key=%s\n\n视频-搜库\n    豆瓣电影, http://movie.douban.com/subject_search?search_text=%s&cat=1002, www.douban.com\n    搜库, http://www.soku.com/v?keyword=%s\n    // google视频, https://www.google.com/search?q=%s&safe=off&hl=zh-CN&tbm=vid\n    百度视频, http://v.baidu.com/v?word=%s&ie=utf-8\n    bilibili, http://www.bilibili.tv/search?keyword=%s\n    acfan, http://www.acfun.tv/search.aspx#query=%s\n    人人影视, http://www.yyets.com/search/index?keyword=%s\n    youtube, http://www.youtube.com/results?search_query=%s\n    vimeo, http://vimeo.com/search?q=%s\n    时光网, http://search.mtime.com/search/?q=%s\n    视频站--豆瓣电影\n        优酷, http://www.soku.com/search_video/q_%s, www.youku.com\n        奇艺, http://so.iqiyi.com/so/q_%s\n        乐视, http://so.letv.com/s?wd=%s\n        腾讯, http://v.qq.com/search.html?ms_key=%s\n        搜狐, http://so.tv.sohu.com/mts?wd=%s\n        网易, http://so.v.163.com/search/000-0-0000-1-1-0-%s/\n        新浪, http://video.sina.com.cn/search/noresult.php?k=%s\n        56 视频, http://so.56.com/video/%s/?\n        ku6 视频, http://so.ku6.com/search?q=%s&ie=utf-8&oe=utf-8\n        迅雷看看, http://search.kankan.com/search.php?keyword=%s\n        niconico, http://www.nicovideo.jp/search/%s\n\n知识-2\n    百度百科, http://baike.baidu.com/search/word?pic=1&sug=1&word=%s\n    维基(zh), http://zh.wikipedia.org/wiki/%s\n    维基(en), http://en.wikipedia.org/wiki/%s\n    知乎, http://www.zhihu.com/search?q=%s\n    互动百科, http://so.baike.com/s/doc/%s\n    // 萌娘百科, http://zh.moegirl.org/index.php?search=%s\n    文库-豆丁文档-百度百科\n        百度文库, http://wenku.baidu.com/search?word=%s&ie=utf-8\n        豆丁文档, http://www.docin.com/search.do?searchcat=2&searchType_banner=p&nkey=%s\n        // 爱问共享, http://ishare.iask.sina.com.cn/search.php?key=%s, gbk\n        百度知道, http://zhidao.baidu.com/search?word=%s\n        网易公开课, http://c.open.163.com/search/search.htm?query=%s#/search/all\n        Google 学术, https://scholar.google.com/scholar?hl=zh-CN&q=%s&btnG=&lr=%s\n        维普，http://lib.cqvip.com/zk/search.aspx\n            - E: (Keyword_C=%s+Title_C=%s), H: 题名或关键词=%s 与 范围=全部期刊\n    开发--百度百科\n        stackoverflow, http://stackoverflow.com/search?q=%s\n        MDN, https://developer.mozilla.org/en-US/search?q=%s\n        MDN（Google）, https://www.google.com/search?num=30&hl=zh-CN&newwindow=1&q=%s&sitesearch=developer.mozilla.org, developer.mozilla.org\n        github, https://github.com/search?q=%s\n        krugle, http://opensearch.krugle.org/document/search/#query=%s\n        npm, https://www.npmjs.org/search?q=%s\n\n社交\n    新浪微博, http://s.weibo.com/weibo/%s\n    豆瓣, http://www.douban.com/search?source=suggest&q=%s\n    百度贴吧, http://tieba.baidu.com/f?kw=%s&ie=utf-8\n    腾讯微博, http://search.t.qq.com/index.php?k=%s\n    Twitter, https://twitter.com/search/%s\n    Facebook, https://www.facebook.com/search/results.php?q=%s\n    Google+, https://plus.google.com/s/%s\n\n购物\n    一淘, http://s.etao.com/search?q=%s\n    惠惠, http://www.huihui.cn/search?q=%s\n    易迅, http://searchex.yixun.com/html?charset=utf-8&as=1&key=%s\n    360购物, http://s.mall.360.cn/search.html?query=%s\n    淘宝, http://s.taobao.com/search?q=%s\n    天猫, http://list.tmall.com/search_product.htm?q=%s&type=p, gbk\n    京东, http://search.jd.com/Search?keyword=%s&enc=utf-8\n    苏宁, http://search.suning.com/%s/\n    国美, http://www.gome.com.cn/search?question=%s\n    当当, http://search.dangdang.com/search.php?key=%s, gbk\n    亚马逊, http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s\n    其它--购物\n        ebay, http://www.ebay.com/sch/i.html?_nkw=%s\n        QQ网购, http://se.wanggou.com/comm_search?KeyWord=%s, gbk\n\n下载-种子快搜\n    下载搜索, https://www.google.com/cse?q=%s&newwindow=1&cx=006100883259189159113%3Atwgohm0sz8q\n    网盘搜索, http://so.baiduyun.me/search.php?wd=%s\n    我乐盘, http://www.56pan.com/s.php?q=%s&wp=0\n    种子快搜, http://www.searchbt.net/btsearch.php?query=%s\n    bt 天堂, http://www.bttiantang.com/s.php?q=%s\n    我爱P2P, http://www.byhh.org/?topic_title=%s\n    VeryCD, http://www.verycd.com/search/folders/%s\n    // 射手字幕, http://www.shooter.cn/search/%s\n    字幕, http://www.subom.net/search/%s\n    影视--下载搜索\n        丫丫下载站, http://www.yayaxz.com/search/%s\n        天天美剧, http://www.ttmeiju.com/search.php?keyword=%s&range=0&mozcharset=gbk\n        极影动漫, http://bt.ktxp.com/search.php?keyword=%s\n        动漫花园, http://share.dmhy.org/topics/list?keyword=%s\n    BT-ed2000-下载搜索\n        simpledCD, http://simplecd.me/search/entry/?query=%s\n        ed2000, http://www.ed2000.com/FileList.asp?SearchWord=%s\n        海盗湾, https://thepiratebay.se/search/%s\n        kickass, https://kickass.to/usearch/%s/\n        btspread, http://www.btspread.com/search/%s\n        torrentkitty, http://www.torrentkitty.org/search/%s\n        BTDigg, https://btdigg.org/search?q=%s\n\n软件\n    Firefox 附加组件, https://addons.mozilla.org/zh-cn/firefox/search/?q=%s\n    Chrome 应用商店, https://chrome.google.com/webstore/search-extensions/%s?hl=zh-CN\n    greasyfork, https://greasyfork.org/scripts/search?q=%s\n    userscripts, https://www.google.com.hk/search?q=site:userscripts-mirror.org+inurl:scripts+inurl:show+%s, userscripts.org\n    jz5u 绿色, http://www.jz5u.com/soft/search.asp?act=topic&keyword=%s, gbk\n    华彩软件, http://www.huacolor.com/search.asp?word=%s, gbk\n    绿软联盟, http://www.xdowns.com/i.asp?q=%s, gbk\n    绿软家园, http://www.downg.com/search.asp?action=s&sType=ResName&catalog=&keyword=%s, gbk\n    创e下载园, http://www.7edown.com/query.asp?q=%s, gbk\n    西西软件, http://so.cr173.com/?keyword=%s, gbk\n    pc6下载站, http://so.pc6.com/?keyword=%s, gbk\n    卡饭论坛, http://bds.kafan.cn/cse/search?q=%s&s=15563968344970452529\n\n翻译\n    google翻译, https://translate.google.com.hk/?q=%s\n    百度翻译, http://fanyi.baidu.com/#auto/zh/%s\n    有道翻译, http://fanyi.youdao.com/translate?i=%s\n    bing 翻译, http://www.bing.com/translator/?&text=%s&from=&to=zh-chs\n    抓鸟翻译, http://dict.zhuaniao.com/collab/translate.php?translation_query=%s\n    词典--google翻译\n        有道词典, http://dict.youdao.com/search?q=%s\n        爱词霸, http://www.iciba.com/%s\n        海词, http://dict.cn/%s\n        沪江EN, http://dict.hjenglish.com/w/%s\n        必应词典, http://www.bing.com/dict/search?q=%s&go=&qs=bs&form=CM\n        大耳朵, http://dict.bigear.cn/w/%s/\n        汉典, http://www.zdic.net/sousuo/?q=%s\n        nciku, http://www.nciku.com/search/all/%s\n\n地图\n   Google 地图, http://ditu.google.cn/maps?q=%s\n   Google 地图（新）, https://maps.google.com/maps?q=%s, ditu.google.cn\n   百度地图, http://map.baidu.com/m?word=%s\n   搜狗地图, http://map.sogou.com/new/#lq=%s\n   必应地图, http://cn.bing.com/ditu/?q=%s&mkt=zh-CN\n   城市吧, http://www.city8.com/key_%s\n\n// 小说\n//     booklink, http://booklink.me/after_search.php\n//         - name: %s, search_type: book\n//     起点中文, http://sosu.qidian.com/searchresult.aspx?keyword=%s\n//     创世中文, http://chuangshi.qq.com/search/searchindex?type=all&value=%s\n//     纵横中文, http://search.zongheng.com/search/all/%s/1.html',
-    simple: '网页\n    Google, https://www.google.com.hk/search?q=%s&ie=utf-8\n    // wen.lu, https://wen.lu/search?q=%s&hl=zh-CN&safe=off&ie=utf-8, www.google.com.hk\n    // awk.so, https://awk.so/#num=30&newwindow=1&q=%s&hl=zh-CN&safe=off&ie=utf-8, www.google.com.hk\n    百度, https://www.baidu.com/s?wd=%s&ie=utf-8\n    必应, https://cn.bing.com/search?q=%s\n    360搜索, http://www.so.com/s?ie=utf-8&q=%s\n\n视频-youtube\n    搜库, http://www.soku.com/v?keyword=%s\n    豆瓣电影, http://movie.douban.com/subject_search?search_text=%s&cat=1002, www.douban.com\n    搜狐, http://so.tv.sohu.com/mts?wd=%s\n    腾讯, http://v.qq.com/search.html?ms_key=%s\n    奇艺, http://so.iqiyi.com/so/q_%s\n    // 乐视, http://so.letv.com/s?wd=%s\n    acfan, http://www.acfun.tv/search.aspx#query=%s\n    bilibili, http://www.bilibili.tv/search?keyword=%s\n    youtube, https://www.youtube.com/results?search_query=%s\n\n音乐-5\n    百度音乐, http://music.baidu.com/search?ie=utf-8&oe=utf-8&key=%s\n    天天动听, http://www.dongting.com/#a=searchlist&q=%s\n    一听, http://so.1ting.com/all.do?q=%s\n    虾米音乐, http://www.xiami.com/search?key=%s\n    音悦Tai, http://so.yinyuetai.com/mv?keyword=%s\n    酷我音乐, http://sou.kuwo.cn/ws/NSearch?key=%s\n    网易云音乐, http://music.163.com/#/search/m/?s=%s\n    歌词, http://music.baidu.com/search/lrc?key=%s\n\n图片-flickr\n    google图片, https://www.google.com/search?q=%s&safe=off&hl=zh-CN&tbm=isch\n    百度图片, http://image.baidu.com/i?ie=utf-8&word=%s\n    pixiv, http://www.pixiv.net/search.php?word=%s\n    flickr, http://www.flickr.com/search/?q=%s\n    picsearch, http://cn.picsearch.com/index.cgi?q=%s\n    deviantART, http://www.deviantart.com/?q=%s, ASCII\n    jpg4, http://img.jpg4.info/index.php?feed=%s\n    easyicon, http://www.easyicon.net/iconsearch/%s/\n\n知识-3\n    百度百科, http://baike.baidu.com/search/word?pic=1&sug=1&word=%s\n    知乎, http://www.zhihu.com/search?q=%s\n    维基百科, http://zh.wikipedia.org/wiki/%s\n    互动百科, http://so.baike.com/s/doc/%s\n    百度文库, http://wenku.baidu.com/search?word=%s&ie=utf-8\n    豆丁文档, http://www.docin.com/search.do?searchcat=2&searchType_banner=p&nkey=%s\n\n社交\n    新浪微博, http://s.weibo.com/weibo/%s\n    豆瓣, http://www.douban.com/search?source=suggest&q=%s\n    百度贴吧, http://tieba.baidu.com/f?kw=%s&ie=utf-8\n    腾讯微博, http://search.t.qq.com/index.php?k=%s\n    Twitter, https://twitter.com/search/%s\n    Facebook, https://www.facebook.com/search/results.php?q=%s\n    Google+, https://plus.google.com/s/%s\n\n购物\n    一淘, http://s.etao.com/search?q=%s\n    淘宝, http://s.taobao.com/search?q=%s\n    天猫, http://list.tmall.com/search_product.htm?q=%s&type=p, gbk\n    京东, http://search.jd.com/Search?keyword=%s&enc=utf-8\n    苏宁, http://search.suning.com/%s/\n    当当, http://search.dangdang.com/search.php?key=%s, gbk\n    亚马逊, http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s\n    360购物, http://s.mall.360.cn/search.html?query=%s\n    惠惠, http://www.huihui.cn/search?q=%s\n    易迅, http://searchex.yixun.com/html?charset=utf-8&as=1&key=%s\n\n下载-1\n    搜索百度盘, https://www.google.com.hk/search?num=20&newwindow=1&hl=zh-CN&q=site:pan.baidu.com+%s, so.baiduyun.me\n    // 我乐盘, http://www.56pan.com/s.php?q=%s&wp=0\n    人人影视, http://www.yyets.com/search/index?keyword=%s\n    丫丫下载站, http://www.yayaxz.com/search/%s\n    我爱P2P, http://www.byhh.org/?topic_title=%s\n    种子快搜, http://www.searchbt.net/btsearch.php?query=%s\n    btspread, http://www.btspread.com/search/%s\n    下载搜索, https://www.google.com/cse?q=%s&newwindow=1&cx=006100883259189159113%3Atwgohm0sz8q\n    // simpledCD, http://simplecd.me/search/entry/?query=%s\n    // 射手字幕, http://www.shooter.cn/search/%s\n    字幕, http://www.subom.net/search/%s\n\n书籍\n    豆瓣读书, http://book.douban.com/subject_search?search_text=%s&cat=1001, www.douban.com\n    当当, http://search.dangdang.com/search.php?key=%s, gbk\n    亚马逊（中）, http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s\n    亚马逊（英）, http://www.amazon.com/s/ref=nb_sb_noss?field-keywords=%s, www.amazon.cn\n    Google 书籍, http://books.google.com/books?q=%s, www.google.com\n    多看, http://www.duokan.com/search/%s/1\n    百度盘（主页）, https://pan.baidu.com/disk/home?adapt=pc#dir/key=%s\n\n翻译-爱词霸\n    google翻译, https://translate.google.com/?q=%s\n    百度翻译, http://fanyi.baidu.com/#auto/zh/%s\n    有道词典, http://dict.youdao.com/search?q=%s\n    爱词霸, http://www.iciba.com/%s\n    海词, http://dict.cn/%s\n    百度词典, http://dict.baidu.com/s?wd=%s&ie=utf-8&oe=utf-8\n    汉典, http://www.zdic.net/search/?q=%s',
-    wenke: '网页\n    disconnect, https://search.disconnect.me/searchTerms/search?location_option=US&option=&from_homepage=&lang=&ses=Google&query=%s\n    谷搜客, http://gusouk.com/search?q=%s\n    谷歌镜像, https://www.sssis.com/search?q=%s\n    Google, https://www.google.com/search?hl=zh-CN&q=%s\n    必应, http://www.bing.com/search?q=%s\n    百度, https://www.baidu.com/s?wd=%s\n    360搜索, http://www.so.com/s?q=%s\n    搜狗, http://www.sogou.com/web?query=%s\n    SimilarSite, http://www.similarsitesearch.com/q.php?URL=%s\n    DuckDuckGo, https://duckduckgo.com/?q=%s\n\n视频\n    A站, http://www.acfun.tv/search.aspx#query=%s\n    B站, http://www.bilibili.tv/search?keyword=%s\n    优酷, http://www.soku.com/search_video/q_%s\n    土豆, http://so.tudou.com/nisearch/%s\n    56, http://so.56.com/video/%s/?\n    酷6, http://so.ku6.com/search?q=%s\n    youtube, https://www.youtube.com/results?search_query=%s\n    nicovideo, http://www.nicovideo.jp/search/%s\n    爱奇艺, http://so.iqiyi.com/so/q_%s\n    乐视, http://so.letv.com/s?wd=%s\n    搜狐, http://so.tv.sohu.com/mts?wd=%s\n    pps, http://so.iqiyi.com/pps/?q=%s\n\n音乐\n    网易云音乐, http://music.163.com/#/search/m/?s=%s\n    百度, http://music.baidu.com/search?key=%s&ie=utf-8&oe=utf-8\n    虾米, http://www.xiami.com/search?key=%s\n    Songtaste, http://www.songtaste.com/search.php?type=&keyword=%s, gbk\n    一听, http://so.1ting.com/song?q=%s\n    酷我, http://sou.kuwo.cn/ws/NSearch?key=%s\n    搜狗, http://mp3.sogou.com/music.so?query=%s&ie=utf-8&oe=utf-8\n\n图片\n    谷歌, https://www.google.com/search?tbm=isch&q=%s\n    picsearch, http://cn.picsearch.com/index.cgi?q=%s\n    flickr, https://www.flickr.com/search/?w=all&q=%s\n    deviantart, http://www.deviantart.com/?qh=&section=&q=%s, ASCII\n    findicons, http://findicons.com/search/%s\n    easyicon, http://www.easyicon.net/iconsearch/%s\n    iconpng, http://www.iconpng.com/search/tag=%s\n    百度, http://image.baidu.com/i?word=%s&ie=utf-8&oe=utf-8\n    搜狗, http://pic.sogou.com/pics?query=%s, gbk\n    必应, http://cn.bing.com/images/search?q=%s\n    有道, http://image.youdao.com/search?q=%s\n\nACG\n    pixiv, http://www.pixiv.net/search.php?s_mode=s_tag&word=%s\n    Safebooru, http://safebooru.org/index.php?page=post&s=list&tags=%s\n    Gelbooru, http://gelbooru.com/index.php?page=post&s=list&tags=%s\n    nico静画, http://seiga.nicovideo.jp/search/%s\n    Danbooru, http://danbooru.donmai.us/posts?utf8=✓&tags=%s&commit=Go\n    sankaku, http://chan.sankakucomplex.com/post/index?tags=%s\n    yande, https://yande.re/post?tags=%s\n    konachan, http://konachan.com/post?page=2&tags=%s\n    Zerochan, http://www.zerochan.net/%s\n    anime-pictures, http://anime-pictures.net/pictures/view_posts/0?search_tag=%s\n    anime-girls, http://anime-girls.ru/qsearch.php?q=%s\n\n下载\n    极影动漫, http://bt.ktxp.com/search.php?keyword=%s\n    动漫花园, http://share.dmhy.org/topics/list?keyword=%s\n    VeryCD, http://www.verycd.com/search/entries/%s\n    人人影视, http://www.yyets.com/search/index?keyword=%s\n    // 射手字幕, http://www.shooter.cn/search/%s\n    字幕, http://www.subom.net/search/%s\n    idown, http://idown.org/search/search.php?ie=GB2312&q=%s, gbk\n    盘搜, http://www.pansou.com/s.php?wp=0&op=&ty=gn&op=gn&q=%s\n    我乐盘, http://www.56pan.com/s.php?q=%s\n    Download, https://www.google.com/cse?q=%s&cx=006100883259189159113%3Atwgohm0sz8q\n    电驴资源, http://www.google.com/cse?cx=006422944775554126616%3Agbrsbrjbfug&ie=UTF-8&q=%s\n    ED2000, http://www.ed2000.com/FileList.asp?PageIndex=2&SearchWord=%s&searchMethod=ED2000\n    笔下文学, http://www.baidu.com/s?wd=%s&ct=2097152&si=www.bxwx.org&sts=www.bxwx.org\n    txt下载, http://www.txtxiazai.org/s/%s\n\nBT\n    磁力搜索, http://www.btcherry.com/search?keyword=%s\n    kickass, http://kickass.to/usearch/?q=%s\n    tokyotosho, http://www.tokyotosho.info/search.php?terms=%s\n    BT资源, http://www.google.com/cse?cx=006422944775554126616%3Aw19ixdep_3o&ie=UTF-8&q=%s\n    BTDigg, https://btdigg.org/search?q=%s\n    Torrentz, http://torrentz.eu/search?f=%s\n    ViTorrent, http://www.vitorrent.org/%s.html\n    TorrentProject, http://torrentproject.se/?t=%s\n    torrentkitty, http://www.torrentkitty.org/search/%s\n    YourBittorrent, http://yourbittorrent.com/?q=%s\n    BitSnoop, http://bitsnoop.com/search/all/%s\n\n翻译\n    海词, http://dict.cn/%s\n    爱词霸, http://www.iciba.com/%s/\n    大耳朵, http://dict.bigear.cn/w/%s/\n    谷歌翻译, http://translate.google.cn/#auto/zh-CN/%s\n    百度翻译, http://fanyi.baidu.com/#auto/zh/%s\n    沪江日语, http://dict.hjenglish.com/jp/cj/%s\n    沪江英语, http://dict.hjenglish.com/w/%s\n    有道词典, http://dict.youdao.com/search?q=%s&ue=utf8\n    必应词典, http://cn.bing.com/dict/search?q=%s\n\n知识\n    MDN, https://developer.mozilla.org/en-US/search?q=%s\n    维基(zh), https://zh.wikipedia.org/wiki/%s\n    维基(en), https://en.wikipedia.org/wiki/%s\n    谷歌学术, https://scholar.google.com/scholar?hl=zh-CN&q=%s\n    互动百科, http://so.baike.com/s/doc/%s\n    萌娘百科, http://zh.moegirl.org/index.php?search=%s, gbk\n    百度文库, http://wenku.baidu.com/search?word=%s, gbk\n    百度百科, http://baike.baidu.com/searchword/?word=%s&pic=1&sug=1, gbk\n    github, https://github.com/search?utf8=✓&q=%s\n    krugle, http://opensearch.krugle.org/document/search/#query=%s\n    知乎, http://www.zhihu.com/search?q=%s\n\n火狐\n    mozillaZine, http://www.google.com/cse?cx=003258325049489668794%3Aru2dpahviq8&q=%s, kb.mozillazine.org\n    附件组件, https://addons.mozilla.org/zh-CN/firefox/search/?q=%s\n    火狐社区, http://mozilla.com.cn/search/?q=%s\n    userscripts镜像, http://webextender.net/scripts/search?q=%s\n    userstyles, https://userstyles.org/styles/browse/%s\n    greasyfork, https://greasyfork.org/zh-CN/scripts/search?q=%s\n    火狐贴吧, http://tieba.baidu.com/f/search/res?ie=utf-8&kw=firefox&qw=%s&rn=100&un=&sm=1s\n    卡饭, http://bds.kafan.cn/cse/search?q=%s&s=15563968344970452529\n    火狐官方帮助, https://support.mozilla.org/zh-CN/search?q=%s\n\n软件\n    华彩软件, http://www.huacolor.com/search.asp?word=%s, gbk\n    绿软联盟, http://zhannei.baidu.com/cse/search?s=1955694951866873337&q=%s\n    绿软家园, http://www.downg.com/search.asp?action=s&sType=ResName&catalog=&keyword=%s, gbk\n    创e下载园, http://www.7edown.com/query.asp?q=%s, gbk\n    西西软件园, http://so.cr173.com/?keyword=%s, gbk\n    绿茶软件园, http://www.33lc.com/index.php?m=search&c=index&a=init&typeid=2&siteid=1&q=%s, gbk\n    pc6下载站, http://so.pc6.com/?keyword=%s, gbk\n    快乐无极, http://www.oyksoft.com/search.asp?action=s&sType=ResName&keyword=%s, gbk\n\n购物\n    淘宝, http://s.taobao.com/search?q=%s\n    天猫, http://list.tmall.com/search_product.htm?q=%s, gbk\n    京东, http://search.jd.com/Search?keyword=%s&enc=utf-8\n    一号店, http://search.yhd.com/c0-0/k%s\n    亚马逊, http://www.amazon.cn/s/field-keywords=%s\n    当当, http://search.dangdang.com/?key=%s, gbk',
-    ted423: '网页\n    Google, https://www.google.com.hk/search?q=%s&ie=utf-8&oe=utf-8\n    百度, https://www.baidu.com/s?wd=%s&ie=utf-8\n    360, http://www.so.com/s?ie=utf-8&q=%s\n    bing, https://cn.bing.com/search?q=%s&pc=OPER\n    搜狗, http://www.sogou.com/web?query=%s\n\n资料\n    ZWIKI, http://zh.wikipedia.org/w/index.php?search=%s&button=&title=Special%3ASearch\n    EWIKI, http://en.wikipedia.org/w/index.php?search=%s&button=&title=Special%3ASearch\n    JWIKI, http://ja.wikipedia.org/w/index.php?search=%s&button=&title=Special%3ASearch\n    百科, http://baike.baidu.com/searchword/?word=%s&pic=1&sug=1&ie=utf-8\n    Scholar, http://scholar.google.com/scholar?hl=zh-CN&q=%s&btnG=&lr=\n    知乎, http://www.zhihu.com/search?q=%s\n    萌娘百科, http://zh.moegirl.org/index.php?search=%s\n\n视频\n    soku, http://www.soku.com/v?keyword=%s\n    bilibili, http://www.bilibili.tv/search?keyword=%s\n    acfun, http://www.acfun.tv/search.aspx#query=%s\n    乐视, http://so.letv.com/s?wd=%s\n    搜狐, http://so.tv.sohu.com/mts?wd=%s\n    youtube, https://www.youtube.com/results?search_query=%s\n    niconico, http://www.nicovideo.jp/search/%s\n    56, http://so.56.com/video/%s/?\n    ku6, http://so.ku6.com/search?q=%s&ie=utf-8&oe=utf-8\n    爱奇艺, http://so.iqiyi.com/so/q_%s\n    腾讯, http://v.qq.com/search.html?&ms_key=%s\n\n音乐\n    天天动听, http://www.dongting.com/#a=searchlist&q=%s\n    Music, http://music.baidu.com/search?key=%s&ie=utf-8&oe=utf-8\n    搜狗, http://mp3.sogou.com/music.so?query=%s\n    一听, http://so.1ting.com/all.do?q=%s\n    虾米, http://www.xiami.com/search?key=%s\n    piapro, http://piapro.jp/search/?view=audio&keyword=%s\n    Lyric, http://music.baidu.com/search/lrc?key=%s\n\n图片-Flickr\n    百度, http://image.baidu.com/i?ie=utf-8&word=%s\n    Google, https://www.google.com.hk/search?tbm=isch&q=%s\n    花瓣, http://huaban.com/search/?q=%s\n    Picsearch, http://cn.picsearch.com/index.cgi?q=%s\n    Flickr, http://www.flickr.com/search/?w=all&q=%s\n    Pixiv, http://www.pixiv.net/search.php?s_mode=s_tag&word=%s\n    dA, http://www.deviantart.com/?q=%s, ASCII\n    , http://img.jpg4.info/index.php?feed=%s\n\n下载\n    ktxp, http://bt.ktxp.com/search.php?keyword=%s\n    dmhy, http://share.dmhy.org/topics/list?keyword=%s\n    nyaa, http://www.nyaa.se/?page=search&term=%s\n    kickass, https://kickass.to/usearch/%s/\n    bs, http://www.btspread.com/search/%s\n    BTDigg, https://btdigg.org/search?q=%s\n    ed2000, http://www.baidu.com/s?wd=%s+site:ed2000.com&ie=utf-8\n\n网购\n    一淘, http://s.etao.com/search?q=%s\n    京东, http://search.jd.com/Search?keyword=%s&enc=utf-8\n    淘宝, http://s.taobao.com/search?q=%s\n    亚马逊, http://www.amazon.cn/s/ref=nb_ss?keywords=%s\n\n译&词典-3\n    翻译, http://translate.google.com/translate_t?q=%s&oe=utf-8&ie=UTF-8\n    百度译, http://fanyi.baidu.com/#auto2auto|%s\n    翻译, http://fanyi.youdao.com/translate?i=%s\n    词典, http://dict.youdao.com/search?q=%s&ue=utf8\n    词典, http://www.bing.com/dict/search?q=%s&go=&qs=bs&form=CM\n    ICIBA, http://www.iciba.com/%s/\n    海词, http://dict.cn/%s\n    沪江EN, http://dict.hjenglish.com/w/%s\n    中日, http://dict.hjenglish.com/jp/cj/%s\n    汉典, http://www.zdic.net/sousuo/?q=%s&tp=tp3\n\netc\n    AMO, https://addons.mozilla.org/zh-CN/firefox/search/?q=%s\n    // 射手字幕, http://www.shooter.cn/search/%s\n    字幕, http://www.subom.net/search/%s',
+    my: '网页\n    Google, https://www.google.com.hk/search?q=%s&ie=utf-8&safe=off\n    // Google, https://www.google.com/ncr#num=30&newwindow=1&safe=off&hl=zh-CN&q=%s\n    百度, https://www.baidu.com/s?wd=%s&ie=utf-8\n    必应, https://cn.bing.com/search?q=%s\n    360, http://www.haosou.com/s?ie=utf-8&q=%s\n    搜狗, http://www.sogou.com/web?query=%s\n    // 搜搜, http://www.soso.com/q?query=%s&utf-8=ie\n    // 有道, http://www.youdao.com/search?q=%s&ue=utf8\n    // DuckDuckGo, https://duckduckgo.com/?q=%s&kl=cn-zh\n    // Wolfram, http://www.wolframalpha.com/input/?i=%s\n\n图片-pixiv\n    Google, https://www.google.com.hk/search?q=%s&tbm=isch\n    百度, http://image.baidu.cn/i?ie=utf-8&word=%s\n    // 360, http://image.haosou.com/i?ie=utf-8&q=%s&src=tab_web, www.haosou.com\n    // 必应, http://cn.bing.com/images/search?q=%s\n    花瓣, http://huaban.com/search/?q=%s\n    有道, http://image.youdao.com/search?q=%s\n    pixiv, http://www.pixiv.net/search.php?word=%s\n    flickr, http://www.flickr.com/search/?q=%s\n    picsearch, http://cn.picsearch.com/index.cgi?q=%s\n    deviantART, http://www.deviantart.com/?q=%s, ASCII\n    jpg4, http://img.jpg4.info/index.php?feed=%s\n\n音乐-音悦Tai\n    Songtaste, http://www.songtaste.com/search.php?keyword=%s, gbk\n    百度音乐, http://music.baidu.com/search?ie=utf-8&oe=utf-8&key=%s\n    360音乐, http://s.music.haosou.com/s?ie=utf-8&q=%s, www.haosou.com\n    // 搜狗音乐, http://mp3.sogou.com/music.so?query=%s, gbk\n    天天动听, http://www.dongting.com/#a=searchlist&q=%s\n    一听, http://so.1ting.com/all.do?q=%s\n    音悦Tai, http://so.yinyuetai.com/mv?keyword=%s\n    虾米音乐, http://www.xiami.com/search?key=%s\n    酷我音乐, http://sou.kuwo.cn/ws/NSearch?key=%s\n    雷电音乐, http://www.leidian.com/s?q=%s&ie=utf-8&t=music\n    网易云音乐, http://music.163.com/#/search/m/?s=%s\n    百度歌词, http://music.baidu.com/search/lrc?key=%s\n\n视频-搜库\n    豆瓣电影, http://movie.douban.com/subject_search?search_text=%s&cat=1002, www.douban.com\n    搜库, http://www.soku.com/v?keyword=%s\n    // google视频, https://www.google.com/search?q=%s&safe=off&hl=zh-CN&tbm=vid\n    百度视频, http://v.baidu.com/v?word=%s&ie=utf-8\n    bilibili, http://www.bilibili.tv/search?keyword=%s\n    acfan, http://www.acfun.tv/search.aspx#query=%s\n    人人影视, http://www.yyets.com/search/index?keyword=%s\n    youtube, http://www.youtube.com/results?search_query=%s\n    vimeo, http://vimeo.com/search?q=%s\n    时光网, http://search.mtime.com/search/?q=%s\n    视频站--豆瓣电影\n        优酷, http://www.soku.com/search_video/q_%s, www.youku.com\n        奇艺, http://so.iqiyi.com/so/q_%s\n        乐视, http://so.letv.com/s?wd=%s\n        腾讯, http://v.qq.com/search.html?ms_key=%s\n        搜狐, http://so.tv.sohu.com/mts?wd=%s\n        网易, http://so.v.163.com/search/000-0-0000-1-1-0-%s/\n        新浪, http://video.sina.com.cn/search/noresult.php?k=%s\n        56 视频, http://so.56.com/video/%s/?\n        ku6 视频, http://so.ku6.com/search?q=%s&ie=utf-8&oe=utf-8\n        迅雷看看, http://search.kankan.com/search.php?keyword=%s\n        niconico, http://www.nicovideo.jp/search/%s\n\n知识-2\n    百度百科, http://baike.baidu.com/search/word?pic=1&sug=1&word=%s\n    维基(zh), http://zh.wikipedia.org/wiki/%s\n    维基(en), http://en.wikipedia.org/wiki/%s\n    知乎, http://www.zhihu.com/search?q=%s\n    互动百科, http://so.baike.com/s/doc/%s\n    // 萌娘百科, http://zh.moegirl.org/index.php?search=%s\n    文库-豆丁文档-百度百科\n        百度文库, http://wenku.baidu.com/search?word=%s&ie=utf-8\n        豆丁文档, http://www.docin.com/search.do?searchcat=2&searchType_banner=p&nkey=%s\n        // 爱问共享, http://ishare.iask.sina.com.cn/search.php?key=%s, gbk\n        百度知道, http://zhidao.baidu.com/search?word=%s\n        网易公开课, http://c.open.163.com/search/search.htm?query=%s#/search/all\n        Google 学术, https://scholar.google.com/scholar?hl=zh-CN&q=%s&btnG=&lr=%s\n        维普，http://lib.cqvip.com/zk/search.aspx\n            - E: (Keyword_C=%s+Title_C=%s), H: 题名或关键词=%s 与 范围=全部期刊\n    开发--百度百科\n        stackoverflow, http://stackoverflow.com/search?q=%s\n        MDN, https://developer.mozilla.org/en-US/search?q=%s\n        MDN（Google）, https://www.google.com/search?num=30&hl=zh-CN&newwindow=1&q=%s&sitesearch=developer.mozilla.org, developer.mozilla.org\n        github, https://github.com/search?q=%s\n        krugle, http://opensearch.krugle.org/document/search/#query=%s\n        npm, https://www.npmjs.org/search?q=%s\n\n社交\n    新浪微博, http://s.weibo.com/weibo/%s\n    豆瓣, http://www.douban.com/search?source=suggest&q=%s\n    百度贴吧, http://tieba.baidu.com/f?kw=%s&ie=utf-8\n    腾讯微博, http://search.t.qq.com/index.php?k=%s\n    Twitter, https://twitter.com/search/%s\n    Facebook, https://www.facebook.com/search/results.php?q=%s\n    Google+, https://plus.google.com/s/%s\n\n购物\n    一淘, http://s.etao.com/search?q=%s\n    惠惠, http://www.huihui.cn/search?q=%s\n    易迅, http://searchex.yixun.com/html?charset=utf-8&as=1&key=%s\n    360购物, http://s.mall.360.cn/search.html?query=%s\n    淘宝, http://s.taobao.com/search?q=%s\n    天猫, http://list.tmall.com/search_product.htm?q=%s&type=p, gbk\n    京东, http://search.jd.com/Search?keyword=%s&enc=utf-8\n    苏宁, http://search.suning.com/%s/\n    国美, http://www.gome.com.cn/search?question=%s\n    当当, http://search.dangdang.com/search.php?key=%s, gbk\n    亚马逊, http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s\n    其它--购物\n        ebay, http://www.ebay.com/sch/i.html?_nkw=%s\n        QQ网购, http://se.wanggou.com/comm_search?KeyWord=%s, gbk\n\n下载-种子快搜\n    下载搜索, https://www.google.com/cse?q=%s&newwindow=1&cx=006100883259189159113%3Atwgohm0sz8q\n    网盘搜索, http://so.baiduyun.me/search.php?wd=%s\n    我乐盘, http://www.56pan.com/s.php?q=%s&wp=0\n    种子快搜, http://www.searchbt.net/btsearch.php?query=%s\n    bt 天堂, http://www.bttiantang.com/s.php?q=%s\n    我爱P2P, http://www.byhh.org/?topic_title=%s\n    VeryCD, http://www.verycd.com/search/folders/%s\n    // 射手字幕, http://www.shooter.cn/search/%s\n    字幕, http://www.subom.net/search/%s\n    影视--下载搜索\n        丫丫下载站, http://www.yayaxz.com/search/%s\n        天天美剧, http://www.ttmeiju.com/search.php?keyword=%s&range=0&mozcharset=gbk\n        极影动漫, http://bt.ktxp.com/search.php?keyword=%s\n        动漫花园, http://share.dmhy.org/topics/list?keyword=%s\n    BT-ed2000-下载搜索\n        simpledCD, http://simplecd.me/search/entry/?query=%s\n        ed2000, http://www.ed2000.com/FileList.asp?SearchWord=%s\n        海盗湾, https://thepiratebay.se/search/%s\n        kickass, https://kickass.to/usearch/%s/\n        btspread, http://www.btspread.com/search/%s\n        torrentkitty, http://www.torrentkitty.org/search/%s\n        BTDigg, https://btdigg.org/search?q=%s\n\n软件\n    Firefox 附加组件, https://addons.mozilla.org/zh-cn/firefox/search/?q=%s\n    Chrome 应用商店, https://chrome.google.com/webstore/search-extensions/%s?hl=zh-CN\n    greasyfork, https://greasyfork.org/scripts/search?q=%s\n    userscripts, https://www.google.com.hk/search?q=site:userscripts-mirror.org+inurl:scripts+inurl:show+%s, userscripts.org\n    jz5u 绿色, http://www.jz5u.com/soft/search.asp?act=topic&keyword=%s, gbk\n    华彩软件, http://www.huacolor.com/search.asp?word=%s, gbk\n    绿软联盟, http://www.xdowns.com/i.asp?q=%s, gbk\n    绿软家园, http://www.downg.com/search.asp?action=s&sType=ResName&catalog=&keyword=%s, gbk\n    创e下载园, http://www.7edown.com/query.asp?q=%s, gbk\n    西西软件, http://so.cr173.com/?keyword=%s, gbk\n    pc6下载站, http://so.pc6.com/?keyword=%s, gbk\n    卡饭论坛, http://bds.kafan.cn/cse/search?q=%s&s=15563968344970452529\n\n翻译\n    google翻译, https://translate.google.com.hk/?q=%s\n    百度翻译, http://fanyi.baidu.com/#auto/zh/%s\n    有道翻译, http://fanyi.youdao.com/translate?i=%s\n    bing 翻译, http://www.bing.com/translator/?&text=%s&from=&to=zh-chs\n    抓鸟翻译, http://dict.zhuaniao.com/collab/translate.php?translation_query=%s\n    词典--google翻译\n        有道词典, http://dict.youdao.com/search?q=%s\n        爱词霸, http://www.iciba.com/%s\n        海词, http://dict.cn/%s\n        沪江EN, http://dict.hjenglish.com/w/%s\n        必应词典, http://www.bing.com/dict/search?q=%s&go=&qs=bs&form=CM\n        大耳朵, http://dict.bigear.cn/w/%s/\n        汉典, http://www.zdic.net/sousuo/?q=%s\n        nciku, http://www.nciku.com/search/all/%s\n\n地图\n   Google 地图, http://ditu.google.cn/maps?q=%s\n   Google 地图（新）, https://maps.google.com/maps?q=%s, ditu.google.cn\n   百度地图, http://map.baidu.com/m?word=%s\n   搜狗地图, http://map.sogou.com/new/#lq=%s\n   必应地图, http://cn.bing.com/ditu/?q=%s&mkt=zh-CN\n   城市吧, http://www.city8.com/key_%s\n\n// 小说\n//     booklink, http://booklink.me/after_search.php\n//         - name: %s, search_type: book\n//     起点中文, http://sosu.qidian.com/searchresult.aspx?keyword=%s\n//     创世中文, http://chuangshi.qq.com/search/searchindex?type=all&value=%s\n//     纵横中文, http://search.zongheng.com/search/all/%s/1.html',
+    firef0x: '网页\n    Google, https://www.google.com.hk/search?hl=en-US&newwindow=1&nfpr=1&safe=off&ie=utf-8&oe=utf-8&q=%s\n    // Google, https://www.google.com/ncr#num=30&newwindow=1&safe=off&hl=zh-CN&q=%s\n    // glgoo.com, https://e.glgoo.com/search?q=%s&hl=en-US&nfpr=1&safe=off&ie=utf-8&oe=utf-8, www.google.com.hk\n    百度, https://www.baidu.com/s?wd=%s&ie=utf-8\n    必应, https://cn.bing.com/search?q=%s\n    360, http://www.haosou.com/s?ie=utf-8&q=%s\n    // 搜狗, http://www.sogou.com/web?query=%s\n    // DuckDuckGo, https://duckduckgo.com/?q=%s&kl=cn-zh\n\n图片-pixiv\n    Google, https://www.google.com.hk/search?q=%s&tbm=isch&hl=en-US&nfpr=1&safe=off\n    百度, http://image.baidu.cn/i?ie=utf-8&word=%s\n    // 360, http://image.haosou.com/i?ie=utf-8&q=%s&src=tab_web, www.haosou.com\n    必应, http://cn.bing.com/images/search?q=%s\n    // 花瓣, http://huaban.com/search/?q=%s\n    pixiv, http://www.pixiv.net/search.php?word=%s\n    flickr, http://www.flickr.com/search/?q=%s\n    picsearch, http://cn.picsearch.com/index.cgi?q=%s\n    deviantART, http://www.deviantart.com/?q=%s, ASCII\n    // jpg4, http://img.jpg4.info/index.php?feed=%s\n\n音乐-音悦Tai\n    Songtaste, http://www.songtaste.com/search.php?keyword=%s, gbk\n    百度音乐, http://music.baidu.com/search?ie=utf-8&oe=utf-8&key=%s\n    音悦Tai, http://so.yinyuetai.com/mv?keyword=%s\n    虾米音乐, http://www.xiami.com/search?key=%s\n    // 酷我音乐, http://sou.kuwo.cn/ws/NSearch?key=%s\n    网易云音乐, http://music.163.com/#/search/m/?s=%s\n    百度歌词, http://music.baidu.com/search/lrc?key=%s\n\n视频-搜库\n    豆瓣电影, http://movie.douban.com/subject_search?search_text=%s&cat=1002, www.douban.com\n    搜库, http://www.soku.com/v?keyword=%s\n    // google视频, https://www.google.com/search?q=%s&safe=off&hl=zh-CN&tbm=vid\n    百度视频, http://v.baidu.com/v?word=%s&ie=utf-8\n    // 人人影视, http://www.yyets.com/search/index?keyword=%s\n    Youtube, http://www.youtube.com/results?search_query=%s\n    视频站--豆瓣电影\n        优酷, http://www.soku.com/search_video/q_%s, www.youku.com\n        奇艺, http://so.iqiyi.com/so/q_%s\n        乐视, http://so.letv.com/s?wd=%s\n        腾讯, http://v.qq.com/search.html?ms_key=%s\n        搜狐, http://so.tv.sohu.com/mts?wd=%s\n        新浪, http://video.sina.com.cn/search/noresult.php?k=%s\n        迅雷看看, http://search.kankan.com/search.php?keyword=%s\n\n知识-2\n    百度百科, http://baike.baidu.com/search/word?pic=1&sug=1&word=%s\n    维基(zh), http://zh.wikipedia.org/wiki/%s\n    维基(en), http://en.wikipedia.org/wiki/%s\n    知乎, http://www.zhihu.com/search?q=%s\n    互动百科, http://so.baike.com/s/doc/%s\n    // 萌娘百科, http://zh.moegirl.org/index.php?search=%s\n    Arch维基, https://wiki.archlinux.org/index.php?title=Special:Search&search=%s, www.archlinux.org\n    文库-豆丁文档-百度百科\n        百度文库, http://wenku.baidu.com/search?word=%s&ie=utf-8\n        豆丁文档, http://www.docin.com/search.do?searchcat=2&searchType_banner=p&nkey=%s\n        百度知道, http://zhidao.baidu.com/search?word=%s\n        Google 学术, https://scholar.google.com/scholar?hl=zh-CN&q=%s&btnG=&lr=%s\n        维普，http://lib.cqvip.com/zk/search.aspx\n            - E: (Keyword_C=%s+Title_C=%s), H: 题名或关键词=%s 与 范围=全部期刊\n    开发--百度百科\n        StackOverflow, http://stackoverflow.com/search?q=%s\n        MDN, https://developer.mozilla.org/en-US/search?q=%s\n        // MDN（Google）, https://www.google.com/search?num=30&hl=zh-CN&newwindow=1&q=%s&sitesearch=developer.mozilla.org, developer.mozilla.org\n        GitHub, https://github.com/search?q=%s\n        Krugle, http://opensearch.krugle.org/document/search/#query=%s\n        // npm, https://www.npmjs.org/search?q=%s\n\n购物\n    一淘, http://s.etao.com/search?q=%s\n    惠惠, http://www.huihui.cn/search?q=%s\n    淘宝, http://s.taobao.com/search?q=%s\n    // 天猫, http://list.tmall.com/search_product.htm?q=%s&type=p, gbk\n    京东, http://search.jd.com/Search?keyword=%s&enc=utf-8\n    // 苏宁, http://search.suning.com/%s/\n    // 国美, http://www.gome.com.cn/search?question=%s\n    // 亚马逊, http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s\n\n下载-种子快搜\n    下载搜索, https://www.google.com/cse?q=%s&newwindow=1&cx=006100883259189159113%3Atwgohm0sz8q\n    网盘搜索, http://so.baiduyun.me/search.php?wd=%s\n    我乐盘, http://www.56pan.com/s.php?q=%s&wp=0\n    种子快搜, http://www.searchbt.net/btsearch.php?query=%s\n    BT 天堂, http://www.bttiantang.com/s.php?q=%s\n    我爱P2P, http://www.byhh.org/?topic_title=%s\n    VeryCD, http://www.verycd.com/search/folders/%s\n    字幕-Subom-下载\n        Subom, http://www.subom.net/search/%s\n        Subhd, http://subhd.com/search/%s, https://i.imgur.com/kC8RATC.png\n    BT-ed2000-下载搜索\n        simpledCD, http://simplecd.me/search/entry/?query=%s\n        ed2000, http://www.ed2000.com/FileList.asp?SearchWord=%s\n        海盗湾, https://thepiratebay.se/search/%s\n        kickass, https://kickass.to/usearch/%s/\n        btspread, http://www.btspread.com/search/%s\n        torrentkitty, http://www.torrentkitty.org/search/%s\n        BTDigg, http://btdigg.info/s/%s\n        手撕包菜, http://bt.shousibaocai.com/list/%s/1\n\n软件\n    Firefox 附加组件, https://addons.mozilla.org/zh-cn/firefox/search/?q=%s\n    // Chrome 应用商店, https://chrome.google.com/webstore/search-extensions/%s?hl=zh-CN\n    greasyfork, https://greasyfork.org/scripts/search?q=%s\n    userscripts, https://www.google.com.hk/search?q=site:userscripts-mirror.org+inurl:scripts+inurl:show+%s, userscripts.org\n    卡饭论坛, http://bds.kafan.cn/cse/search?q=%s&s=15563968344970452529\n    Arch包, https://www.archlinux.org/packages/?q=%s\n    AUR, https://aur.archlinux.org/packages/?O=0&K=%s, www.archlinux.org\n\n翻译\n    Google翻译, http://translate.google.cn/?q=%s\n    百度翻译, http://fanyi.baidu.com/#auto/zh/%s\n    有道翻译, http://fanyi.youdao.com/translate?i=%s\n    Bing 翻译, http://www.bing.com/translator/?&text=%s&from=&to=zh-chs\n    抓鸟翻译, http://dict.zhuaniao.com/collab/translate.php?translation_query=%s\n    词典--Google翻译\n        有道词典, http://dict.youdao.com/search?q=%s\n        爱词霸, http://www.iciba.com/%s\n        海词, http://dict.cn/%s\n        沪江EN, http://dict.hjenglish.com/w/%s\n        必应词典, http://www.bing.com/dict/search?q=%s&go=&qs=bs&form=CM\n        大耳朵, http://dict.bigear.cn/w/%s/\n        汉典, http://www.zdic.net/sousuo/?q=%s&tp=tp3\n        nciku, http://www.nciku.com/search/all/%s\n\n地图\n   // Google 地图, http://ditu.google.cn/maps?q=%s\n   Google 地图（新）, https://maps.google.com/maps?q=%s, ditu.google.cn\n   百度地图, http://map.baidu.com/m?word=%s\n   // 搜狗地图, http://map.sogou.com/new/#lq=%s\n   城市吧, http://www.city8.com/key_%s',
+    simple: '网页\n    Google, https://www.google.com.hk/search?q=%s&ie=utf-8\n    // wen.lu, https://wen.lu/search?q=%s&hl=zh-CN&safe=off&ie=utf-8, www.google.com.hk\n    // awk.so, https://awk.so/#num=30&newwindow=1&q=%s&hl=zh-CN&safe=off&ie=utf-8, www.google.com.hk\n    百度, https://www.baidu.com/s?wd=%s&ie=utf-8\n    必应, https://cn.bing.com/search?q=%s\n    360搜索, http://www.haosou.com/s?ie=utf-8&q=%s\n\n视频-youtube\n    搜库, http://www.soku.com/v?keyword=%s\n    豆瓣电影, http://movie.douban.com/subject_search?search_text=%s&cat=1002, www.douban.com\n    搜狐, http://so.tv.sohu.com/mts?wd=%s\n    腾讯, http://v.qq.com/search.html?ms_key=%s\n    奇艺, http://so.iqiyi.com/so/q_%s\n    // 乐视, http://so.letv.com/s?wd=%s\n    acfan, http://www.acfun.tv/search.aspx#query=%s\n    bilibili, http://www.bilibili.tv/search?keyword=%s\n    youtube, https://www.youtube.com/results?search_query=%s\n\n音乐-5\n    百度音乐, http://music.baidu.com/search?ie=utf-8&oe=utf-8&key=%s\n    天天动听, http://www.dongting.com/#a=searchlist&q=%s\n    一听, http://so.1ting.com/all.do?q=%s\n    虾米音乐, http://www.xiami.com/search?key=%s\n    音悦Tai, http://so.yinyuetai.com/mv?keyword=%s\n    酷我音乐, http://sou.kuwo.cn/ws/NSearch?key=%s\n    网易云音乐, http://music.163.com/#/search/m/?s=%s\n    歌词, http://music.baidu.com/search/lrc?key=%s\n\n图片-flickr\n    google图片, https://www.google.com/search?q=%s&safe=off&hl=zh-CN&tbm=isch\n    百度图片, http://image.baidu.com/i?ie=utf-8&word=%s\n    pixiv, http://www.pixiv.net/search.php?word=%s\n    flickr, http://www.flickr.com/search/?q=%s\n    picsearch, http://cn.picsearch.com/index.cgi?q=%s\n    deviantART, http://www.deviantart.com/?q=%s, ASCII\n    jpg4, http://img.jpg4.info/index.php?feed=%s\n    easyicon, http://www.easyicon.net/iconsearch/%s/\n\n知识-3\n    百度百科, http://baike.baidu.com/search/word?pic=1&sug=1&word=%s\n    知乎, http://www.zhihu.com/search?q=%s\n    维基百科, http://zh.wikipedia.org/wiki/%s\n    互动百科, http://so.baike.com/s/doc/%s\n    百度文库, http://wenku.baidu.com/search?word=%s&ie=utf-8\n    豆丁文档, http://www.docin.com/search.do?searchcat=2&searchType_banner=p&nkey=%s\n\n社交\n    新浪微博, http://s.weibo.com/weibo/%s\n    豆瓣, http://www.douban.com/search?source=suggest&q=%s\n    百度贴吧, http://tieba.baidu.com/f?kw=%s&ie=utf-8\n    腾讯微博, http://search.t.qq.com/index.php?k=%s\n    Twitter, https://twitter.com/search/%s\n    Facebook, https://www.facebook.com/search/results.php?q=%s\n    Google+, https://plus.google.com/s/%s\n\n购物\n    一淘, http://s.etao.com/search?q=%s\n    淘宝, http://s.taobao.com/search?q=%s\n    天猫, http://list.tmall.com/search_product.htm?q=%s&type=p, gbk\n    京东, http://search.jd.com/Search?keyword=%s&enc=utf-8\n    苏宁, http://search.suning.com/%s/\n    当当, http://search.dangdang.com/search.php?key=%s, gbk\n    亚马逊, http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s\n    360购物, http://s.mall.360.cn/search.html?query=%s\n    惠惠, http://www.huihui.cn/search?q=%s\n    易迅, http://searchex.yixun.com/html?charset=utf-8&as=1&key=%s\n\n下载-1\n    搜索百度盘, https://www.google.com.hk/search?num=20&newwindow=1&hl=zh-CN&q=site:pan.baidu.com+%s, so.baiduyun.me\n    // 我乐盘, http://www.56pan.com/s.php?q=%s&wp=0\n    人人影视, http://www.yyets.com/search/index?keyword=%s\n    丫丫下载站, http://www.yayaxz.com/search/%s\n    我爱P2P, http://www.byhh.org/?topic_title=%s\n    种子快搜, http://www.searchbt.net/btsearch.php?query=%s\n    btspread, http://www.btspread.com/search/%s\n    下载搜索, https://www.google.com/cse?q=%s&newwindow=1&cx=006100883259189159113%3Atwgohm0sz8q\n    // simpledCD, http://simplecd.me/search/entry/?query=%s\n    // 射手字幕, http://www.shooter.cn/search/%s\n    字幕, http://www.subom.net/search/%s\n\n书籍\n    豆瓣读书, http://book.douban.com/subject_search?search_text=%s&cat=1001, www.douban.com\n    当当, http://search.dangdang.com/search.php?key=%s, gbk\n    亚马逊（中）, http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s\n    亚马逊（英）, http://www.amazon.com/s/ref=nb_sb_noss?field-keywords=%s, www.amazon.cn\n    Google 书籍, http://books.google.com/books?q=%s, www.google.com\n    多看, http://www.duokan.com/search/%s/1\n    百度盘（主页）, https://pan.baidu.com/disk/home?adapt=pc#dir/key=%s\n\n翻译-爱词霸\n    google翻译, https://translate.google.com/?q=%s\n    百度翻译, http://fanyi.baidu.com/#auto/zh/%s\n    有道词典, http://dict.youdao.com/search?q=%s\n    爱词霸, http://www.iciba.com/%s\n    海词, http://dict.cn/%s\n    百度词典, http://dict.baidu.com/s?wd=%s&ie=utf-8&oe=utf-8\n    汉典, http://www.zdic.net/search/?q=%s',
+    wenke: '网页\n    disconnect, https://search.disconnect.me/searchTerms/search?location_option=US&option=&from_homepage=&lang=&ses=Google&query=%s\n    谷搜客, http://gusouk.com/search?q=%s\n    谷歌镜像, https://www.sssis.com/search?q=%s\n    Google, https://www.google.com/search?hl=zh-CN&q=%s\n    必应, http://www.bing.com/search?q=%s\n    百度, https://www.baidu.com/s?wd=%s\n    360搜索, http://www.haosou.com/s?ie=utf-8&q=%s\n    搜狗, http://www.sogou.com/web?query=%s\n    SimilarSite, http://www.similarsitesearch.com/q.php?URL=%s\n    DuckDuckGo, https://duckduckgo.com/?q=%s\n\n视频\n    A站, http://www.acfun.tv/search.aspx#query=%s\n    B站, http://www.bilibili.tv/search?keyword=%s\n    优酷, http://www.soku.com/search_video/q_%s\n    土豆, http://so.tudou.com/nisearch/%s\n    56, http://so.56.com/video/%s/?\n    酷6, http://so.ku6.com/search?q=%s\n    youtube, https://www.youtube.com/results?search_query=%s\n    nicovideo, http://www.nicovideo.jp/search/%s\n    爱奇艺, http://so.iqiyi.com/so/q_%s\n    乐视, http://so.letv.com/s?wd=%s\n    搜狐, http://so.tv.sohu.com/mts?wd=%s\n    pps, http://so.iqiyi.com/pps/?q=%s\n\n音乐\n    网易云音乐, http://music.163.com/#/search/m/?s=%s\n    百度, http://music.baidu.com/search?key=%s&ie=utf-8&oe=utf-8\n    虾米, http://www.xiami.com/search?key=%s\n    Songtaste, http://www.songtaste.com/search.php?type=&keyword=%s, gbk\n    一听, http://so.1ting.com/song?q=%s\n    酷我, http://sou.kuwo.cn/ws/NSearch?key=%s\n    搜狗, http://mp3.sogou.com/music.so?query=%s&ie=utf-8&oe=utf-8\n\n图片\n    谷歌, https://www.google.com/search?tbm=isch&q=%s\n    picsearch, http://cn.picsearch.com/index.cgi?q=%s\n    flickr, https://www.flickr.com/search/?w=all&q=%s\n    deviantart, http://www.deviantart.com/?qh=&section=&q=%s, ASCII\n    findicons, http://findicons.com/search/%s\n    easyicon, http://www.easyicon.net/iconsearch/%s\n    iconpng, http://www.iconpng.com/search/tag=%s\n    百度, http://image.baidu.com/i?word=%s&ie=utf-8&oe=utf-8\n    搜狗, http://pic.sogou.com/pics?query=%s, gbk\n    必应, http://cn.bing.com/images/search?q=%s\n    有道, http://image.youdao.com/search?q=%s\n\nACG\n    pixiv, http://www.pixiv.net/search.php?s_mode=s_tag&word=%s\n    Safebooru, http://safebooru.org/index.php?page=post&s=list&tags=%s\n    Gelbooru, http://gelbooru.com/index.php?page=post&s=list&tags=%s\n    nico静画, http://seiga.nicovideo.jp/search/%s\n    Danbooru, http://danbooru.donmai.us/posts?utf8=✓&tags=%s&commit=Go\n    sankaku, http://chan.sankakucomplex.com/post/index?tags=%s\n    yande, https://yande.re/post?tags=%s\n    konachan, http://konachan.com/post?page=2&tags=%s\n    Zerochan, http://www.zerochan.net/%s\n    anime-pictures, http://anime-pictures.net/pictures/view_posts/0?search_tag=%s\n    anime-girls, http://anime-girls.ru/qsearch.php?q=%s\n\n下载\n    极影动漫, http://bt.ktxp.com/search.php?keyword=%s\n    动漫花园, http://share.dmhy.org/topics/list?keyword=%s\n    VeryCD, http://www.verycd.com/search/entries/%s\n    人人影视, http://www.yyets.com/search/index?keyword=%s\n    // 射手字幕, http://www.shooter.cn/search/%s\n    字幕, http://www.subom.net/search/%s\n    idown, http://idown.org/search/search.php?ie=GB2312&q=%s, gbk\n    盘搜, http://www.pansou.com/s.php?wp=0&op=&ty=gn&op=gn&q=%s\n    我乐盘, http://www.56pan.com/s.php?q=%s\n    Download, https://www.google.com/cse?q=%s&cx=006100883259189159113%3Atwgohm0sz8q\n    电驴资源, http://www.google.com/cse?cx=006422944775554126616%3Agbrsbrjbfug&ie=UTF-8&q=%s\n    ED2000, http://www.ed2000.com/FileList.asp?PageIndex=2&SearchWord=%s&searchMethod=ED2000\n    笔下文学, http://www.baidu.com/s?wd=%s&ct=2097152&si=www.bxwx.org&sts=www.bxwx.org\n    txt下载, http://www.txtxiazai.org/s/%s\n\nBT\n    磁力搜索, http://www.btcherry.com/search?keyword=%s\n    kickass, http://kickass.to/usearch/?q=%s\n    tokyotosho, http://www.tokyotosho.info/search.php?terms=%s\n    BT资源, http://www.google.com/cse?cx=006422944775554126616%3Aw19ixdep_3o&ie=UTF-8&q=%s\n    BTDigg, https://btdigg.org/search?q=%s\n    Torrentz, http://torrentz.eu/search?f=%s\n    ViTorrent, http://www.vitorrent.org/%s.html\n    TorrentProject, http://torrentproject.se/?t=%s\n    torrentkitty, http://www.torrentkitty.org/search/%s\n    YourBittorrent, http://yourbittorrent.com/?q=%s\n    BitSnoop, http://bitsnoop.com/search/all/%s\n\n翻译\n    海词, http://dict.cn/%s\n    爱词霸, http://www.iciba.com/%s/\n    大耳朵, http://dict.bigear.cn/w/%s/\n    谷歌翻译, http://translate.google.cn/#auto/zh-CN/%s\n    百度翻译, http://fanyi.baidu.com/#auto/zh/%s\n    沪江日语, http://dict.hjenglish.com/jp/cj/%s\n    沪江英语, http://dict.hjenglish.com/w/%s\n    有道词典, http://dict.youdao.com/search?q=%s&ue=utf8\n    必应词典, http://cn.bing.com/dict/search?q=%s\n\n知识\n    MDN, https://developer.mozilla.org/en-US/search?q=%s\n    维基(zh), https://zh.wikipedia.org/wiki/%s\n    维基(en), https://en.wikipedia.org/wiki/%s\n    谷歌学术, https://scholar.google.com/scholar?hl=zh-CN&q=%s\n    互动百科, http://so.baike.com/s/doc/%s\n    萌娘百科, http://zh.moegirl.org/index.php?search=%s, gbk\n    百度文库, http://wenku.baidu.com/search?word=%s, gbk\n    百度百科, http://baike.baidu.com/searchword/?word=%s&pic=1&sug=1, gbk\n    github, https://github.com/search?utf8=✓&q=%s\n    krugle, http://opensearch.krugle.org/document/search/#query=%s\n    知乎, http://www.zhihu.com/search?q=%s\n\n火狐\n    mozillaZine, http://www.google.com/cse?cx=003258325049489668794%3Aru2dpahviq8&q=%s, kb.mozillazine.org\n    附件组件, https://addons.mozilla.org/zh-CN/firefox/search/?q=%s\n    火狐社区, http://mozilla.com.cn/search/?q=%s\n    userscripts镜像, http://webextender.net/scripts/search?q=%s\n    userstyles, https://userstyles.org/styles/browse/%s\n    greasyfork, https://greasyfork.org/zh-CN/scripts/search?q=%s\n    火狐贴吧, http://tieba.baidu.com/f/search/res?ie=utf-8&kw=firefox&qw=%s&rn=100&un=&sm=1s\n    卡饭, http://bds.kafan.cn/cse/search?q=%s&s=15563968344970452529\n    火狐官方帮助, https://support.mozilla.org/zh-CN/search?q=%s\n\n软件\n    华彩软件, http://www.huacolor.com/search.asp?word=%s, gbk\n    绿软联盟, http://zhannei.baidu.com/cse/search?s=1955694951866873337&q=%s\n    绿软家园, http://www.downg.com/search.asp?action=s&sType=ResName&catalog=&keyword=%s, gbk\n    创e下载园, http://www.7edown.com/query.asp?q=%s, gbk\n    西西软件园, http://so.cr173.com/?keyword=%s, gbk\n    绿茶软件园, http://www.33lc.com/index.php?m=search&c=index&a=init&typeid=2&siteid=1&q=%s, gbk\n    pc6下载站, http://so.pc6.com/?keyword=%s, gbk\n    快乐无极, http://www.oyksoft.com/search.asp?action=s&sType=ResName&keyword=%s, gbk\n\n购物\n    淘宝, http://s.taobao.com/search?q=%s\n    天猫, http://list.tmall.com/search_product.htm?q=%s, gbk\n    京东, http://search.jd.com/Search?keyword=%s&enc=utf-8\n    一号店, http://search.yhd.com/c0-0/k%s\n    亚马逊, http://www.amazon.cn/s/field-keywords=%s\n    当当, http://search.dangdang.com/?key=%s, gbk',
+    ted423: '网页\n    百度, https://www.baidu.com/s?wd=%s&ie=utf-8\n    360, http://www.haosou.com/s?ie=utf-8&q=%s\n    bing, https://cn.bing.com/search?q=%s&pc=OPER\n    搜狗, http://www.sogou.com/web?query=%s\n    DuckDuckGo, https://duckduckgo.com/?q=%s\n    Google--百度\n        Google.hk, https://www.google.com.hk/search?q=%s&ie=utf-8&safe=off, https://i.imgur.com/TGyMKvy.png\n        Google.co.jp，https://www.google.co.jp/search?q=%s&ie=utf-8&safe=off, https://i.imgur.com/TGyMKvy.png\n        JP--网页\n        yahoo.co.jp, http://search.yahoo.co.jp/search?p=%s&aq=-1&oq=&ei=UTF-8&fr=top_ga1_sa&x=wrt\n        baidu.jp, http://www.baidu.jp/s?tn=baidujp&ie=utf-8&cl=3&ct=0&wd=%s, https://www.baidu.com/favicon.ico\n\n知识-Scholar\n    百科, http://baike.baidu.com/searchword/?word=%s&pic=1&sug=1&ie=utf-8\n    Scholar, http://scholar.google.com/scholar?hl=zh-CN&q=%s&btnG=&lr=, https://i.imgur.com/hJVSUU5.png\n    知乎, http://www.zhihu.com/search?q=%s\n    萌娘百科, http://zh.moegirl.org/index.php?search=%s\n    Google Book, https://www.google.com/search?q=%s&btnG=%E6%90%9C%E7%B4%A2%E5%9B%BE%E4%B9%A6&tbm=bks&tbo=1&hl=zh-CN&gws_rd=ssl, https://i.imgur.com/TGyMKvy.png\n    WIKI--百科\n        ZWIKI, http://zh.wikipedia.org/w/index.php?search=%s&button=&title=Special%3ASearch\n        EWIKI, http://en.wikipedia.org/w/index.php?search=%s&button=&title=Special%3ASearch\n        JWIKI, http://ja.wikipedia.org/w/index.php?search=%s&button=&title=Special%3ASearch\n    开发--百科\n        stackoverflow, http://stackoverflow.com/search?q=%s, http://cdn.sstatic.net/stackoverflow/img/favicon.ico\n        MDN, https://developer.mozilla.org/en-US/search?q=%s，https://developer.cdn.mozilla.net/media/redesign/img/favicon32.png\n        github, https://github.com/search?q=%s\n        krugle, http://opensearch.krugle.org/document/search/#query=%s，http://opensearch.krugle.org/media/images/favicon.ico\n        npm, https://www.npmjs.org/search?q=%s, http://i.imgur.com/Ec0WrY8.png\n\n音乐\n    天天动听, http://www.dongting.com/#a=searchlist&q=%s\n    Music, http://music.baidu.com/search?key=%s&ie=utf-8&oe=utf-8\n    搜狗, http://mp3.sogou.com/music.so?query=%s\n    一听, http://so.1ting.com/all.do?q=%s\n    虾米, http://www.xiami.com/search?key=%s\n    piapro, http://piapro.jp/search/?view=audio&keyword=%s\n    Lyric, http://music.baidu.com/search/lrc?key=%s\n\n图片-Flickr\n    百度, http://image.baidu.com/i?ie=utf-8&word=%s\n    Google, https://www.google.com.hk/search?tbm=isch&q=%s, http://temp-ted423.qiniudn.com/google.ico\n    花瓣, http://huaban.com/search/?q=%s\n    Picsearch, http://cn.picsearch.com/index.cgi?q=%s\n    Flickr, http://www.flickr.com/search/?w=all&q=%s\n    Pixiv, http://www.pixiv.net/search.php?s_mode=s_tag&word=%s\n    dA, http://www.deviantart.com/?q=%s，ASCII\n    jpg4, http://img.jpg4.info/index.php?feed=%s, https://i.imgur.com/qkOEi8O.png\n\n下载-nyaa\n    dmhy, http://share.dmhy.org/topics/list?keyword=%s\n    nyaa, http://www.nyaa.se/?page=search&term=%s, https://i.imgur.com/lfuirgg.png\n    kickass, https://kickass.to/usearch/%s/, http://i.imgur.com/uz2GaPN.png\n    bs, http://www.btspread.com/search/%s, http://www.btspread.com/app/btspread/View/images/favicon.ico\n    BTDigg, https://btdigg.org/search?q=%s\n    ed2000, https://www.baidu.com/s?wd=%s+site:ed2000.com&ie=utf-8, http://www.ed2000.com/favicon.ico\n    字幕--下载\n        subom, http://www.subom.net/search/%s\n        subhd, http://subhd.com/search/%s, https://i.imgur.com/kC8RATC.png\n\n购物\n    一淘, http://s.etao.com/search?q=%s\n    京东, http://search.jd.com/Search?keyword=%s&enc=utf-8\n    淘宝, http://s.taobao.com/search?q=%s, http://www.taobao.com/favicon.ico\n    亚马逊, http://www.amazon.cn/s/ref=nb_ss?keywords=%s\n\netc\n    AMO, https://addons.mozilla.org/zh-CN/firefox/search/?q=%s, https://addons.cdn.mozilla.net/favicon.ico\n    汉典, http://www.zdic.net/sousuo/?q=%s&tp=tp3',
 };
 
-var MAIN_CSS = '#sej-container {\n    display: block;\n    position: relative;\n    z-index: auto;\n    padding: 1px 0 1px 10px;\n    line-height: 1.5;\n    font-size: 13px;\n}\n\n\n#sej-expanded-category {\n    font-weight: bold;\n    cursor: pointer;\n}\n#sej-expanded-category::after {\n    content:"：";\n}\n\n\n.sej-engine {\n    line-height: 2;\n    display: inline-block;\n    margin: 0;\n    border: none;\n    padding: 0 4px;\n    text-decoration: none;\n    color: #120886 !important;\n    transition: background-color 0.15s ease-in-out;\n}\na.sej-engine.only-icon {\n    margin-left: 3px;\n    margin-right: 3px;\n}\na.sej-engine.only-icon > span {\n	display: none;\n}\na.sej-engine:link, a.sej-engine:visited{\n    text-decoration: none;\n}\na.sej-engine:visited, a.sej-engine:visited *, a.sej-engine:active, a.sej-engine:active *{\n    color: #120886 !important;\n}\n.sej-drop-list-trigger {\n\n}\n.sej-drop-list-trigger-shown {\n    background-color: #DEEDFF !important;\n}\n.sej-drop-list-trigger::after {\n    content: \'\';\n    display: inline-block;\n    margin: 0 0 0 3px;\n    padding: 0;\n    width: 0;\n    height: 0;\n    border-top: 6px solid #BCBCBC;\n    border-right: 5px solid transparent;\n    border-left: 5px solid transparent;\n    border-bottom: 0px solid transparent;\n    vertical-align: middle;\n    transition: -webkit-transform 0.3s ease-in-out;\n    transition: transform 0.3s ease-in-out;\n}\n.sej-drop-list-trigger-shown::after {\n    -webkit-transform: rotate(180deg);\n    transform: rotate(180deg);\n}\n.sej-engine:hover {\n    background-color: #EAEAEA;\n}\n.sej-drop-list > .sej-engine {\n    display: block;\n    padding-top: 4px;\n    padding-bottom: 4px;\n}\n.sej-drop-list > .sej-engine:hover {\n    background-color: #DEEDFF;\n}\n\n.sej-engine-icon {\n    display: inline-block;\n    width: 16px;\n    height: 16px;\n    border: none;\n    padding: 0;\n    margin: 0 3px 0 0;\n    vertical-align: text-bottom;\n}\n\n\n.sej-drop-list {\n    position: absolute;\n    display: none;\n    opacity: 0.3;\n    top: -10000px;\n    left: 0;\n    min-width: 120px;\n    border: 1px solid #FAFAFA;\n    padding: 5px 0;\n    text-align: left;\n    font-size: 13px;\n    -moz-box-shadow: 2px 2px 5px #ccc;\n    -webkit-box-shadow: 2px 2px 5px #ccc;\n    box-shadow: 2px 2px 5px #ccc;\n    background-color: white;\n    transition: opacity 0.2s ease-in-out,\n        top 0.2s ease-in-out;\n}';
+var MAIN_CSS = '#sej-container {\n    display: block;\n    position: relative;\n    z-index: auto;\n    padding: 1px 0 1px 10px;\n    line-height: 1.5;\n    font-size: 13px;\n}\n\n\n#sej-expanded-category {\n    font-weight: bold;\n    cursor: pointer;\n}\n#sej-expanded-category::after {\n    content:"：";\n}\n\n\n.sej-engine {\n    line-height: 2;\n    display: inline-block;\n    margin: 0;\n    border: none;\n    padding: 0 4px;\n    text-decoration: none;\n    color: #120886 !important;\n    transition: background-color 0.15s ease-in-out;\n}\na.sej-engine.only-icon {\n    margin-left: 3px;\n    margin-right: 3px;\n}\na.sej-engine.only-icon > span {\n	display: none;\n}\na.sej-engine:link, a.sej-engine:visited{\n    text-decoration: none;\n}\na.sej-engine:visited, a.sej-engine:visited *, a.sej-engine:active, a.sej-engine:active *{\n    color: #120886 !important;\n}\n.sej-drop-list-trigger {\n\n}\n.sej-drop-list-trigger-shown {\n    background-color: #DEEDFF !important;\n}\n.sej-drop-list-trigger::after {\n    content: \'\';\n    display: inline-block;\n    margin: 0 0 0 3px;\n    padding: 0;\n    width: 0;\n    height: 0;\n    border-top: 6px solid #BCBCBC;\n    border-right: 5px solid transparent;\n    border-left: 5px solid transparent;\n    border-bottom: 0px solid transparent;\n    vertical-align: middle;\n    transition: -webkit-transform 0.3s ease-in-out;\n    transition: transform 0.3s ease-in-out;\n}\n.sej-drop-list-trigger-shown::after {\n    -webkit-transform: rotate(180deg);\n    transform: rotate(180deg);\n}\n.sej-engine:hover {\n    background-color: #EAEAEA;\n}\n.sej-drop-list > .sej-engine {\n    display: block;\n    padding-top: 4px;\n    padding-bottom: 4px;\n}\n.sej-drop-list > .sej-engine:hover {\n    background-color: #DEEDFF;\n}\n\n.sej-engine-icon {\n    display: inline-block;\n    width: 16px;\n    height: 16px;\n    border: none;\n    padding: 0;\n    margin: 0 3px 0 0;\n    vertical-align: text-bottom;\n}\n\n\n.sej-drop-list {\n    position: absolute;\n    display: none;\n    opacity: 0.3;\n    top: -10000px;\n    left: 0;\n    min-width: 120px;\n    border: 1px solid #FAFAFA;\n    padding: 5px 0;\n    text-align: center;\n    font-size: 13px;\n    -moz-box-shadow: 2px 2px 5px #ccc;\n    -webkit-box-shadow: 2px 2px 5px #ccc;\n    box-shadow: 2px 2px 5px #ccc;\n    background-color: white;\n    transition: opacity 0.2s ease-in-out,\n        top 0.2s ease-in-out;\n}';
 
 var ICON_DATA = JSON.parse(GM_getResourceText('iconData.json'));
 
@@ -202,7 +209,8 @@ function loadIconData() {
 var rules = [
     // 网页
     // /////////////第一个可以当模板看
-    {name: "google网页搜索",// 你要加载的网站的名字(方便自己查找)
+    {
+        name: "google 网页搜索",// 你要加载的网站的名字(方便自己查找)
         // 是否启用.
         enabled: true,
         // 在哪个网站上加载,正则.
@@ -215,8 +223,11 @@ var rules = [
         engineList: 'web',
         // 给引擎列表的样式
         style: '\
-           padding-left: 135px;\
-        ',
+            border-bottom: 1px solid #E5E5E5;\
+            border-top: 1px solid #E5E5E5;\
+            width:100%;\
+            padding-left: 15px;\
+            ',
 
         // 插入文档,相关
         // target 将引擎跳转工具栏插入到文档的某个元素
@@ -228,27 +239,29 @@ var rules = [
            // 'beforeEnd' (作为给定元素的最后一个子元素) ;
            // 'afterEnd'(插入到给定元素的后面);.
         insertIntoDoc: {
-               /*keyword: function () {
-               var input = document.getElementById('lst-ib');
-               if (input) return input.value;
-           }, */
-           keyword: '//input[@name="q"]',
-           // target: 'css;#rcnt',
-           // where: 'beforeBegin',
-           target: 'css;#top_nav',
-           where: 'afterEnd',
+            /*keyword: function () {
+            var input = document.getElementById('lst-ib');
+            if (input) return input.value;
+            }, */
+            keyword: '//input[@name="q"]',
+            // target: 'css;#rcnt',
+            // where: 'beforeBegin',
+            target: 'css;#top_nav',
+            where: 'beforeBegin',
         },
         // 自定义样式
         stylish: '',
     },
-    {name: "wen.lu网页搜索",
+    {
+        name: "glgoo 网页搜索",
         enabled: true,
-        url: /^https?:\/\/wen\.lu\//i,
+        url: /^https?:\/\/www\.glgoo\.com\/(?:webhp|search|#|$|\?)/i,
         engineList: 'web',
         style: '\
             border-bottom: 1px solid #E5E5E5;\
             border-top: 1px solid #E5E5E5;\
-            padding-left: 135px;\
+            width:100%;\
+            padding-left: 15px;\
             ',
         insertIntoDoc: {
             keyword: '//input[@name="q"]',
@@ -256,31 +269,18 @@ var rules = [
             where: 'beforeBegin',
         },
     },
-    {name: "awk.so网页搜索",
-        enabled: true,
-        url: /^https?:\/\/awk\.so\//i,
-        engineList: 'web',
-        style: '\
-            border-bottom: 1px solid #E5E5E5;\
-            border-top: 1px solid #E5E5E5;\
-            padding-left: 135px;\
-            ',
-        insertIntoDoc: {
-            keyword: '//input[@name="q"]',
-            target: 'css;#rcnt',
-            where: 'beforeBegin',
-        },
-    },
-    {name: "baidu 网页搜索",
+    {
+        name: "百度网页搜索",
         // 新增了百度简洁搜索：http://www.baidu.com/s?wd=firefox&ie=utf-8&tn=baidulocal
         url: /^https?:\/\/www\.baidu\.com\/(?:s|baidu|)/,
         mutationTitle: true,
         enabled: true,
         engineList: 'web',
         style: '\
-           border-top:1px solid #D9E1F7;\
-           padding-left: 138px;\
-        ',
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            padding-left: 122px;\
+            ',
         insertIntoDoc: {
            keyword: function() {
                var input = document.querySelector('input#kw') || document.querySelector('input[name="wd"]');
@@ -290,42 +290,45 @@ var rules = [
            where: 'beforeBegin',
         },
     },
-    {name: "必应网页搜索",
+    {
+        name: "必应网页搜索",
         url: /^https?:\/\/[^.]*\.bing\.com\/search/,
         enabled: true,
         engineList: 'web',
         style: '\
-           border-top: 1px solid #E6E6E6;\
-           border-bottom: 1px solid #E6E6E6;\
-           margin-top:5px;\
-           margin-left: 100px;\
-        ',
+            border-collapse:separate;\
+            border-top: 1px solid #E6E6E6;\
+            border-bottom: 1px solid #E6E6E6;\
+            margin-top:15px;\
+            margin-left: 10px;\
+            ',
         insertIntoDoc: {
            keyword: 'css;#sb_form_q',
            target: 'css;#b_header',
            where: 'beforeEnd',
         },
+        stylish: '#b_content{ padding: 10px 0px 20px 100px !important; } .b_underSearchbox{margin:5px 20px 0px;}'
     },
-    {name: "360搜索",
-        url: /^https?:\/\/www\.so\.com\/s\?/,
+    {
+        name: "360 好搜搜索",
+        url: /^https?:\/\/www\.haosou\.com\/s\?/,
         engineList: 'web',
         enabled: true,
         style: '\
            border-bottom: 1px solid #E0E0E0;\
            border-top: 1px solid #E0E0E0;\
-           margin-bottom: 10px;\
-           padding-left: 20px;\
+           margin-left: 20px;\
         ',
         insertIntoDoc: {
            keyword: 'css;#keyword',
-           target: 'css;#container',
-           where: 'beforeBegin',
+           target: 'css;#head',
+           where: 'afterEnd',
         },
-        stylish: '#head{ margin-bottom: 0; }',
-        left: false
+        stylish: '#header .inner{height: 116px !important;}'
     },
-    {name: "搜狗网页搜索",
-        url: /^https?:\/\/www\.sogou\.com\/(?:web|sogou)/,
+    {
+        name: "搜狗网页搜索",
+        url: /^https?:\/\/www\.sogou\.com\/(?:web|s)/,
         enabled: true,
         engineList: 'web',
         style: "\
@@ -341,21 +344,22 @@ var rules = [
         },
         stylish: '.header{ margin-bottom: 5px; }'
     },
-    // {name: "雅虎网页搜索",
-    //     url: /^https?:\/\/search\.yahoo\.com\/search/,
-    //     engineList: '网页',
-    //     enabled: true,
-    //     style: "\
-    //     text-align:left;\
-    //     border-top:1px solid #D4E9F7;\
-    //     border-bottom:1px solid #D4E9F7;\
-    //     ",
-    //     insertIntoDoc: {
-    //     keyword: 'css;#yschsp',
-    //     target: 'css;#hd',
-    //     where: 'afterEnd'
-    //     }
-    // },
+    {
+        name: "雅虎网页搜索",
+        url: /^https?:\/\/search\.yahoo\.com\/search/,
+        engineList: '网页',
+        enabled: true,
+        style: "\
+        text-align:left;\
+        border-top:1px solid #D4E9F7;\
+        border-bottom:1px solid #D4E9F7;\
+        ",
+        insertIntoDoc: {
+        keyword: 'css;#yschsp',
+        target: 'css;#hd',
+        where: 'afterEnd'
+        }
+    },
 
     // 知识
     {name: "谷歌学术",
@@ -374,30 +378,54 @@ var rules = [
            where: 'beforeBegin'
         }
     },
-    {name: "百度百科",
-        url: /^https?:\/\/baike\.baidu\.com\/(?:sub)?view\//,
+    {
+        name: "百度百科",
+        url: /^https?:\/\/baike\.baidu\.com\/(search|view|subview)/,
         engineList: "知识",
         enabled: true,
         style: "\
-            border-top: 1px solid #2B6DAE;\
-            text-align: center;\
+            top:-5px;\
+            margin-left:45px;\
             z-index: 999999;\
-        ",
+            ",
         insertIntoDoc: {
             keyword: 'css;input#word',
-            target: 'css;#nav',
-            // where: 'beforeBegin',
+            target: 'css;#search',
             where: 'afterEnd',
         },
     },
-    {name: "互知识",
+    {
+        name: "google book",
+        enabled: true,
+        url: /^https?:\/\/(?:www|encrypted)\.google(?:\.\D{1,3}){1,2}\/search\?.*(&btnG=%E6)|(tbm=bks)/,
+        mutationTitle: true,
+        engineList: '知识',
+        style: "\
+            border-bottom: 1px solid #E5E5E5;\
+            border-top: 1px solid #E5E5E5;\
+            width:100%;\
+            padding-left: 15px;\
+        ",
+        insertIntoDoc: {
+            keyword: '//input[@name="q"]',
+            target: 'css;#top_nav',
+            where: 'beforeBegin',
+        },
+        stylish: '',
+    },
+    {
+        name: "互知识",
         url: /^https?:\/\/[a-z]{2,3}\.baike\.com\/[a-z]/,
         enabled: true,
         engineList: "知识",
         style: '\
+            position:fixed;\
+            top:80px;\
+            right:2%;\
+            width:90px;\
             z-index:99;\
             margin:0 auto;\
-        ',
+            ',
         insertIntoDoc: {
             keyword: function() {
                 var input;
@@ -410,11 +438,12 @@ var rules = [
                 else input = document.evaluate("//h1", document, null, 9, null).singleNodeValue.innerHTML;
                 return input;
             },
-            target: 'css;.wraper',
-            where: 'beforeBegin'
+            target: 'css;body',
+            where: 'afterbegin'
         }
     },
-    {name: "wiki",
+    {
+        name: "wiki",
         url: /^https?:\/\/..\.wikipedia\.org\/w\/index\.php(?!.*\?search=)/,
         enabled: true,
         engineList: "知识",
@@ -429,15 +458,17 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "wiki（中文）",
+    {
+        name: "wiki（中文）",
         url: /^https?:\/\/zh\.wikipedia\.org\/(?:zh-|wiki\/|w\/index.php\?search=)/,
         enabled: true,
         engineList: "知识",
         style: '\
-              border-top:1px solid #D9E1F7;\
-              border-bottom:1px solid #D9E1F7;\
-              padding-left: 0;\
-        ',
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+            padding-left: 0;\
+            ',
         insertIntoDoc: {
             keyword: function() {
                 return document.evaluate("//span[@dir='auto']", document, null, 9, null).singleNodeValue.textContent;
@@ -446,15 +477,17 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "wiki",
+    {
+        name: "wiki",
         url: /^https?:\/(?:.(?!zh))*\.wikipedia\.org\/(?:zh-|wiki\/|w\/index.php\?search=)/,
         enabled: true,
         engineList: "知识",
         style: '\
-              border-top:1px solid #D9E1F7;\
-              border-bottom:1px solid #D9E1F7;\
-              padding-left: 0;\
-        ',
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+            padding-left: 0;\
+            ',
         insertIntoDoc: {
             keyword: function() {
                 return document.evaluate("//span[@dir='auto']", document, null, 9, null).singleNodeValue.textContent;
@@ -576,7 +609,7 @@ var rules = [
            where: 'beforeBegin',
         },
     },
-    {name: "acfan",
+    {name: "acfun",
         url: /^https?:\/\/www\.acfun\.tv\/search/,
         enabled: true,
         engineList: "视频",
@@ -635,7 +668,7 @@ var rules = [
         }
     },
     {name: "360视频",
-        url: /^https?:\/\/video\.so\.com\//,
+        url: /^https?:\/\/video\.haosou\.com\//,
         engineList: "video",
         enabled: true,
         style: "\
@@ -931,7 +964,7 @@ var rules = [
         }
     },
     {name: "360图片",
-        url: /^https?:\/\/\image\.so\.com\/i\?/,
+        url: /^https?:\/\/\image\.haosou\.com\/i\?/,
         enabled: true,
         engineList: "image",
         style: '\
@@ -1001,17 +1034,20 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "花瓣",
+    {
+        name: "花瓣",
         url: /^https?:\/\/huaban\.com\/search\/\?/,
         engineList: "image",
         enabled: true,
         style: "\
-            border-top:1px solid #EBF1FF;\
+            width:100%;\
+            background-color:#FFFFFF;\
+            text-align:center;\
             ",
         insertIntoDoc: {
             keyword: 'css;#query',
-            target: 'css;#search_switch',
-            where: 'afterEnd'
+            target: 'css;#header',
+            where: 'beforeEnd'
         }
     },
     {name: "flickr",
@@ -1170,11 +1206,10 @@ var rules = [
         engineList: "download",
         enabled: true,
         style: "\
-               margin:0 auto;\
                ",
         insertIntoDoc: {
-           keyword: 'css;#search_box',
-           target: 'css;.headmainpart',
+           keyword: 'css;#contentSearch',
+           target: 'css;#menu',
            where: 'afterEnd'
         }
     },
@@ -1236,16 +1271,17 @@ var rules = [
            where: 'afterEnd'
         }
     },
-    {name: "torrentkitty",
+    {
+        name: "torrentkitty",
         url: /^https?:\/\/(www\.)?torrentkitty\.(com|org)\/search\//,
         enabled: true,
         engineList: "download",
         style: '\
-               border-top:1px solid #FFFFFF;\
-               border-bottom:1px solid #FFFFFF;\
-               margin-top:50px;\
-               text-align: center;\
-               ',
+            border-top:1px solid #FFFFFF;\
+            border-bottom:1px solid #FFFFFF;\
+            margin:0 auto;\
+            margin-top:50px;\
+            ',
         insertIntoDoc: {
            keyword: function() {
                return document.getElementsByTagName("h2")[0].innerHTML.slice(19, -1);
@@ -1270,6 +1306,55 @@ var rules = [
         }
     },
 
+    //字幕
+    // {name: "射手字幕",
+    //     url: /^https?:\/\/shooter\.cn\/search/,
+    //     engineList: "下载",
+    //     enabled: true,
+    //     style: "\
+    //         margin:0 auto;\
+    //         word-break:keep-all;\
+    //         white-space:nowrap;\
+    //         ",
+    //     insertIntoDoc: {
+    //         keyword: 'css;#key',
+    //         target: 'css;#site_header',
+    //         where: 'afterEnd'
+    //     }
+    // },
+    {
+        name: "Subom字幕",
+        url: /^https?:\/\/www\.subom\.net\/search/,
+        engineList: "下载",
+        enabled: true,
+        style: "\
+            margin:0 auto;\
+            word-break:keep-all;\
+            white-space:nowrap;\
+            ",
+        insertIntoDoc: {
+            keyword: 'css;#search_box',
+            target: 'css;#container',
+            where: 'afterBegin'
+        }
+    },
+    {
+        name: "Subhd字幕",
+        url: /^https?:\/\/subhd\.com\/search/,
+        engineList: "下载",
+        enabled: true,
+        style: "\
+            text-align:center;\
+            display:block;\
+            top: -10px;\
+            ",
+        insertIntoDoc: {
+            keyword: 'css;#sn',
+            target: 'css;.container.list',
+            where: 'beforeBegin'
+        }
+    },
+
     // 购物
     {name: "一淘",
         url: /^https?:\/\/s8?\.etao\.com\/search/,
@@ -1289,7 +1374,7 @@ var rules = [
         }
     },
     {name: "京东",
-        url: /^https?:\/\/search\.jd\.com\/Search\?/,
+        url: /^https?:\/\/search\.jd\.com\/search\?/i,
         enabled: true,
         engineList: "shopping",
         style: "\
@@ -1357,16 +1442,18 @@ var rules = [
            where: 'afterEnd'
         }
     },
-    {name: "天猫",
+    {
+        name: "天猫",
         url: /^https?:\/\/list\.tmall\.com\/\/?search/,
         enabled: true,
         engineList: "shopping",
         style: "\
-           margin:0 auto;\
-           border-bottom:1px solid #E5E5E5;\
-           border-top:1px solid #E5E5E5;\
-           text-align: center;\
-        ",
+            margin:0 auto;\
+            border-bottom:1px solid #E5E5E5;\
+            border-top:1px solid #E5E5E5;\
+            margin-bottom:3px;\
+            text-align: center;\
+            ",
         insertIntoDoc: {
            keyword: 'css;#mq',
            target: 'css;#mallNav',
@@ -1554,7 +1641,8 @@ var rules = [
     },
 
     // 翻译
-    {name: "google翻译",
+    {
+        name: "google 翻译",
         url: /^https?:\/\/translate\.google\./,
         enabled: true,
         engineList: "translate",
@@ -1569,7 +1657,8 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "百度翻译",
+    {
+        name: "百度翻译",
         url: /^https?:\/\/fanyi\.baidu\.com/,
         enabled: true,
         engineList: "translate",
@@ -1586,12 +1675,13 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "有道翻译",
+    {
+        name: "有道翻译",
         url: /^https?:\/\/fanyi\.youdao\.com/,
         enabled: true,
         engineList: "translate",
         style: "\
-            text-align: center;\
+            margin:0 auto;\
             ",
         insertIntoDoc: {
             keyword: 'css;#inputText',
@@ -1599,7 +1689,8 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "bing词典",
+    {
+        name: "bing词典",
         url: /^https?:\/\/(cn|www)\.bing\.com\/dict\/search\?/,
         enabled: true,
         engineList: "translate",
@@ -1616,7 +1707,8 @@ var rules = [
             where: 'afterEnd'
         }
     },
-    {name: "bing翻译",
+    {
+        name: "bing翻译",
         url: /^https?:\/\/www\.bing\.com\/translator/,
         enabled: true,
         engineList: "translate",
@@ -1629,11 +1721,10 @@ var rules = [
             keyword: 'css;#InputText',
             target: 'css;#Wrapper',
             where: 'afterBegin'
-            // target: 'css;body',
-            // where: 'beforeBegin'
         }
     },
-    {name: "爱词霸翻译",
+    {
+        name: "爱词霸翻译",
         url: /^https?:\/\/fy\.iciba\.com/,
         enabled: true,
         engineList: "translate",
@@ -1679,37 +1770,95 @@ var rules = [
             where: 'afterEnd'
         }
     },
-    {name: "射手字幕",
-        url: /^https?:\/\/shooter\.cn\/search/,
-        engineList: "下载",
-        enabled: true,
-        style: "\
-            margin:0 auto;\
-            word-break:keep-all;\
-            white-space:nowrap;\
-            ",
-        insertIntoDoc: {
-            keyword: 'css;#key',
-            target: 'css;#site_header',
-            where: 'afterEnd'
-        }
-    },
-    {name: "Subom字幕",
-        url: /^https?:\/\/www\.subom\.net\/search/,
-        engineList: "下载",
-        enabled: true,
-        style: "\
-            margin:0 auto;\
-            word-break:keep-all;\
-            white-space:nowrap;\
-            ",
-        insertIntoDoc: {
-            keyword: 'css;#search_box',
-            target: 'css;#container_bd',
-            where: 'beforeBegin'
-        }
-    },
 
+    //其它（我添加的） BEGIN
+    {
+        name: "StartPage 网页搜索",
+        url: /^https?:\/\/startpage\.com\/do\/search/,
+        enabled: true,
+        engineList: "web",
+        style: '\
+            padding-left:5px;\
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+        ',
+        insertIntoDoc: {
+            keyword: 'css;input#query_top',
+            target: 'css;#tod_wrap',
+            where: 'beforeEnd',
+        },
+    },
+    {
+        name:"ArchPkgs",
+        url:/^https?:\/\/www\.archlinux\.org\/packages\/\?.*?&?q=/i,
+        enabled:true,
+        engineList:"软件",
+        style:'\
+            padding-left:5px;\
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+        ',
+        insertIntoDoc:{
+            keyword:'//input[@name="q"]',
+            target:'css;#pkglist-search',
+            where:'afterEnd',
+        },
+    },
+    {
+        name:"ArchWiki",
+        url:/^https?:\/\/wiki\.archlinux\.org\/index\.php\?.*?&?search=/i,
+        enabled:true,
+        engineList:"知识",
+        style:'\
+            padding-left:5px;\
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+        ',
+        insertIntoDoc:{
+            keyword:'//input[@name="search"]',
+            target:'css;.searchresults',
+            where:'beforeBegin',
+        },
+    },
+    {
+        name:"AUR",
+        url:/^https?:\/\/aur\.archlinux\.org\/packages\/\?.*?&?K=/i,
+        enabled:true,
+        engineList:"软件",
+        style:'\
+            padding-left:5px;\
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+        ',
+        insertIntoDoc:{
+            keyword:'//input[@name="K"]',
+            target:'css;#pkglist-results',
+            where:'beforeBegin',
+        },
+    },
+    {
+        name:"火狐扩展",
+        url:/^https?:\/\/addons\.mozilla\.org\/.*?search/i,
+        enabled:true,
+        engineList:"软件",
+        style:'\
+            padding-left:5px;\
+            color:#D9E1F7;\
+            border-top:1px solid #191919;\
+            border-bottom:1px solid #191919;\
+            margin-top:5px;\
+        ',
+        insertIntoDoc:{
+            keyword:'css;input#search-q',
+            target:'//div[@class="amo-header"]',
+            where:'afterEnd',
+        },
+    },
+    //其它（我添加的） END
 ];
 
 rules.default = {
@@ -1822,6 +1971,7 @@ function openPrefs(){
                     <option value="custom">用户版本</option>\
                     <option value="simple">简单版本</option>\
                     <option value="my">详细版本</option>\
+                    <option value="firef0x">Firef0x版本</option>\
                     <option value="wenke">文科版本</option>\
                     <option value="ted423">ted423版本</option>\
                 </select>\
@@ -2443,6 +2593,7 @@ DropDownList.prototype = {
             left = scrolled.x + aBCRect.left;
         }
 
+        left=left-25;//使用居中样式的调整
         style.top = top + 6 + 'px';
         style.left = left + 'px';
         style.zIndex = DropDownList.zIndex ++;
@@ -2522,7 +2673,7 @@ function addContainer(iTarget, iInput) {
         var engineList = allEngineList[categoryStr];
         engineList.forEach(function (engine) {
             if (matchedRule.engineList && !isMatched && toRE(matchedRule.url).test(engine.url)) { // 去掉跳转到当前引擎的引擎
-                isMatched = true;
+                isMatched = true;  // 去除当前搜索只匹配一次
                 return;
             }
 

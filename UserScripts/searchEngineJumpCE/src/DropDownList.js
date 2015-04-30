@@ -80,6 +80,7 @@ DropDownList.prototype = {
             left = scrolled.x + aBCRect.left;
         }
 
+        left=left-25;//使用居中样式的调整
         style.top = top + 6 + 'px';
         style.left = left + 'px';
         style.zIndex = DropDownList.zIndex ++;

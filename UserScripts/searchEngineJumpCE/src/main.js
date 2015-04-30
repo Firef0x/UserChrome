@@ -51,7 +51,7 @@ function addContainer(iTarget, iInput) {
         var engineList = allEngineList[categoryStr];
         engineList.forEach(function (engine) {
             if (matchedRule.engineList && !isMatched && toRE(matchedRule.url).test(engine.url)) { // 去掉跳转到当前引擎的引擎
-                isMatched = true;
+                isMatched = true;  // 去除当前搜索只匹配一次
                 return;
             }
 

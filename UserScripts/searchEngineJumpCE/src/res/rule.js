@@ -3,7 +3,8 @@
 var rules = [
     // 网页
     // /////////////第一个可以当模板看
-    {name: "google网页搜索",// 你要加载的网站的名字(方便自己查找)
+    {
+        name: "google 网页搜索",// 你要加载的网站的名字(方便自己查找)
         // 是否启用.
         enabled: true,
         // 在哪个网站上加载,正则.
@@ -16,8 +17,11 @@ var rules = [
         engineList: 'web',
         // 给引擎列表的样式
         style: '\
-           padding-left: 135px;\
-        ',
+            border-bottom: 1px solid #E5E5E5;\
+            border-top: 1px solid #E5E5E5;\
+            width:100%;\
+            padding-left: 15px;\
+            ',
 
         // 插入文档,相关
         // target 将引擎跳转工具栏插入到文档的某个元素
@@ -29,27 +33,29 @@ var rules = [
            // 'beforeEnd' (作为给定元素的最后一个子元素) ;
            // 'afterEnd'(插入到给定元素的后面);.
         insertIntoDoc: {
-               /*keyword: function () {
-               var input = document.getElementById('lst-ib');
-               if (input) return input.value;
-           }, */
-           keyword: '//input[@name="q"]',
-           // target: 'css;#rcnt',
-           // where: 'beforeBegin',
-           target: 'css;#top_nav',
-           where: 'afterEnd',
+            /*keyword: function () {
+            var input = document.getElementById('lst-ib');
+            if (input) return input.value;
+            }, */
+            keyword: '//input[@name="q"]',
+            // target: 'css;#rcnt',
+            // where: 'beforeBegin',
+            target: 'css;#top_nav',
+            where: 'beforeBegin',
         },
         // 自定义样式
         stylish: '',
     },
-    {name: "wen.lu网页搜索",
+    {
+        name: "glgoo 网页搜索",
         enabled: true,
-        url: /^https?:\/\/wen\.lu\//i,
+        url: /^https?:\/\/www\.glgoo\.com\/(?:webhp|search|#|$|\?)/i,
         engineList: 'web',
         style: '\
             border-bottom: 1px solid #E5E5E5;\
             border-top: 1px solid #E5E5E5;\
-            padding-left: 135px;\
+            width:100%;\
+            padding-left: 15px;\
             ',
         insertIntoDoc: {
             keyword: '//input[@name="q"]',
@@ -57,31 +63,18 @@ var rules = [
             where: 'beforeBegin',
         },
     },
-    {name: "awk.so网页搜索",
-        enabled: true,
-        url: /^https?:\/\/awk\.so\//i,
-        engineList: 'web',
-        style: '\
-            border-bottom: 1px solid #E5E5E5;\
-            border-top: 1px solid #E5E5E5;\
-            padding-left: 135px;\
-            ',
-        insertIntoDoc: {
-            keyword: '//input[@name="q"]',
-            target: 'css;#rcnt',
-            where: 'beforeBegin',
-        },
-    },
-    {name: "baidu 网页搜索",
+    {
+        name: "百度网页搜索",
         // 新增了百度简洁搜索：http://www.baidu.com/s?wd=firefox&ie=utf-8&tn=baidulocal
         url: /^https?:\/\/www\.baidu\.com\/(?:s|baidu|)/,
         mutationTitle: true,
         enabled: true,
         engineList: 'web',
         style: '\
-           border-top:1px solid #D9E1F7;\
-           padding-left: 138px;\
-        ',
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            padding-left: 122px;\
+            ',
         insertIntoDoc: {
            keyword: function() {
                var input = document.querySelector('input#kw') || document.querySelector('input[name="wd"]');
@@ -91,42 +84,45 @@ var rules = [
            where: 'beforeBegin',
         },
     },
-    {name: "必应网页搜索",
+    {
+        name: "必应网页搜索",
         url: /^https?:\/\/[^.]*\.bing\.com\/search/,
         enabled: true,
         engineList: 'web',
         style: '\
-           border-top: 1px solid #E6E6E6;\
-           border-bottom: 1px solid #E6E6E6;\
-           margin-top:5px;\
-           margin-left: 100px;\
-        ',
+            border-collapse:separate;\
+            border-top: 1px solid #E6E6E6;\
+            border-bottom: 1px solid #E6E6E6;\
+            margin-top:15px;\
+            margin-left: 10px;\
+            ',
         insertIntoDoc: {
            keyword: 'css;#sb_form_q',
            target: 'css;#b_header',
            where: 'beforeEnd',
         },
+        stylish: '#b_content{ padding: 10px 0px 20px 100px !important; } .b_underSearchbox{margin:5px 20px 0px;}'
     },
-    {name: "360搜索",
-        url: /^https?:\/\/www\.so\.com\/s\?/,
+    {
+        name: "360 好搜搜索",
+        url: /^https?:\/\/www\.haosou\.com\/s\?/,
         engineList: 'web',
         enabled: true,
         style: '\
            border-bottom: 1px solid #E0E0E0;\
            border-top: 1px solid #E0E0E0;\
-           margin-bottom: 10px;\
-           padding-left: 20px;\
+           margin-left: 20px;\
         ',
         insertIntoDoc: {
            keyword: 'css;#keyword',
-           target: 'css;#container',
-           where: 'beforeBegin',
+           target: 'css;#head',
+           where: 'afterEnd',
         },
-        stylish: '#head{ margin-bottom: 0; }',
-        left: false
+        stylish: '#header .inner{height: 116px !important;}'
     },
-    {name: "搜狗网页搜索",
-        url: /^https?:\/\/www\.sogou\.com\/(?:web|sogou)/,
+    {
+        name: "搜狗网页搜索",
+        url: /^https?:\/\/www\.sogou\.com\/(?:web|s)/,
         enabled: true,
         engineList: 'web',
         style: "\
@@ -142,21 +138,22 @@ var rules = [
         },
         stylish: '.header{ margin-bottom: 5px; }'
     },
-    // {name: "雅虎网页搜索",
-    //     url: /^https?:\/\/search\.yahoo\.com\/search/,
-    //     engineList: '网页',
-    //     enabled: true,
-    //     style: "\
-    //     text-align:left;\
-    //     border-top:1px solid #D4E9F7;\
-    //     border-bottom:1px solid #D4E9F7;\
-    //     ",
-    //     insertIntoDoc: {
-    //     keyword: 'css;#yschsp',
-    //     target: 'css;#hd',
-    //     where: 'afterEnd'
-    //     }
-    // },
+    {
+        name: "雅虎网页搜索",
+        url: /^https?:\/\/search\.yahoo\.com\/search/,
+        engineList: '网页',
+        enabled: true,
+        style: "\
+        text-align:left;\
+        border-top:1px solid #D4E9F7;\
+        border-bottom:1px solid #D4E9F7;\
+        ",
+        insertIntoDoc: {
+        keyword: 'css;#yschsp',
+        target: 'css;#hd',
+        where: 'afterEnd'
+        }
+    },
 
     // 知识
     {name: "谷歌学术",
@@ -175,30 +172,54 @@ var rules = [
            where: 'beforeBegin'
         }
     },
-    {name: "百度百科",
-        url: /^https?:\/\/baike\.baidu\.com\/(?:sub)?view\//,
+    {
+        name: "百度百科",
+        url: /^https?:\/\/baike\.baidu\.com\/(search|view|subview)/,
         engineList: "知识",
         enabled: true,
         style: "\
-            border-top: 1px solid #2B6DAE;\
-            text-align: center;\
+            top:-5px;\
+            margin-left:45px;\
             z-index: 999999;\
-        ",
+            ",
         insertIntoDoc: {
             keyword: 'css;input#word',
-            target: 'css;#nav',
-            // where: 'beforeBegin',
+            target: 'css;#search',
             where: 'afterEnd',
         },
     },
-    {name: "互知识",
+    {
+        name: "google book",
+        enabled: true,
+        url: /^https?:\/\/(?:www|encrypted)\.google(?:\.\D{1,3}){1,2}\/search\?.*(&btnG=%E6)|(tbm=bks)/,
+        mutationTitle: true,
+        engineList: '知识',
+        style: "\
+            border-bottom: 1px solid #E5E5E5;\
+            border-top: 1px solid #E5E5E5;\
+            width:100%;\
+            padding-left: 15px;\
+        ",
+        insertIntoDoc: {
+            keyword: '//input[@name="q"]',
+            target: 'css;#top_nav',
+            where: 'beforeBegin',
+        },
+        stylish: '',
+    },
+    {
+        name: "互知识",
         url: /^https?:\/\/[a-z]{2,3}\.baike\.com\/[a-z]/,
         enabled: true,
         engineList: "知识",
         style: '\
+            position:fixed;\
+            top:80px;\
+            right:2%;\
+            width:90px;\
             z-index:99;\
             margin:0 auto;\
-        ',
+            ',
         insertIntoDoc: {
             keyword: function() {
                 var input;
@@ -211,11 +232,12 @@ var rules = [
                 else input = document.evaluate("//h1", document, null, 9, null).singleNodeValue.innerHTML;
                 return input;
             },
-            target: 'css;.wraper',
-            where: 'beforeBegin'
+            target: 'css;body',
+            where: 'afterbegin'
         }
     },
-    {name: "wiki",
+    {
+        name: "wiki",
         url: /^https?:\/\/..\.wikipedia\.org\/w\/index\.php(?!.*\?search=)/,
         enabled: true,
         engineList: "知识",
@@ -230,15 +252,17 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "wiki（中文）",
+    {
+        name: "wiki（中文）",
         url: /^https?:\/\/zh\.wikipedia\.org\/(?:zh-|wiki\/|w\/index.php\?search=)/,
         enabled: true,
         engineList: "知识",
         style: '\
-              border-top:1px solid #D9E1F7;\
-              border-bottom:1px solid #D9E1F7;\
-              padding-left: 0;\
-        ',
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+            padding-left: 0;\
+            ',
         insertIntoDoc: {
             keyword: function() {
                 return document.evaluate("//span[@dir='auto']", document, null, 9, null).singleNodeValue.textContent;
@@ -247,15 +271,17 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "wiki",
+    {
+        name: "wiki",
         url: /^https?:\/(?:.(?!zh))*\.wikipedia\.org\/(?:zh-|wiki\/|w\/index.php\?search=)/,
         enabled: true,
         engineList: "知识",
         style: '\
-              border-top:1px solid #D9E1F7;\
-              border-bottom:1px solid #D9E1F7;\
-              padding-left: 0;\
-        ',
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+            padding-left: 0;\
+            ',
         insertIntoDoc: {
             keyword: function() {
                 return document.evaluate("//span[@dir='auto']", document, null, 9, null).singleNodeValue.textContent;
@@ -377,7 +403,7 @@ var rules = [
            where: 'beforeBegin',
         },
     },
-    {name: "acfan",
+    {name: "acfun",
         url: /^https?:\/\/www\.acfun\.tv\/search/,
         enabled: true,
         engineList: "视频",
@@ -436,7 +462,7 @@ var rules = [
         }
     },
     {name: "360视频",
-        url: /^https?:\/\/video\.so\.com\//,
+        url: /^https?:\/\/video\.haosou\.com\//,
         engineList: "video",
         enabled: true,
         style: "\
@@ -732,7 +758,7 @@ var rules = [
         }
     },
     {name: "360图片",
-        url: /^https?:\/\/\image\.so\.com\/i\?/,
+        url: /^https?:\/\/\image\.haosou\.com\/i\?/,
         enabled: true,
         engineList: "image",
         style: '\
@@ -802,17 +828,20 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "花瓣",
+    {
+        name: "花瓣",
         url: /^https?:\/\/huaban\.com\/search\/\?/,
         engineList: "image",
         enabled: true,
         style: "\
-            border-top:1px solid #EBF1FF;\
+            width:100%;\
+            background-color:#FFFFFF;\
+            text-align:center;\
             ",
         insertIntoDoc: {
             keyword: 'css;#query',
-            target: 'css;#search_switch',
-            where: 'afterEnd'
+            target: 'css;#header',
+            where: 'beforeEnd'
         }
     },
     {name: "flickr",
@@ -971,11 +1000,10 @@ var rules = [
         engineList: "download",
         enabled: true,
         style: "\
-               margin:0 auto;\
                ",
         insertIntoDoc: {
-           keyword: 'css;#search_box',
-           target: 'css;.headmainpart',
+           keyword: 'css;#contentSearch',
+           target: 'css;#menu',
            where: 'afterEnd'
         }
     },
@@ -1037,16 +1065,17 @@ var rules = [
            where: 'afterEnd'
         }
     },
-    {name: "torrentkitty",
+    {
+        name: "torrentkitty",
         url: /^https?:\/\/(www\.)?torrentkitty\.(com|org)\/search\//,
         enabled: true,
         engineList: "download",
         style: '\
-               border-top:1px solid #FFFFFF;\
-               border-bottom:1px solid #FFFFFF;\
-               margin-top:50px;\
-               text-align: center;\
-               ',
+            border-top:1px solid #FFFFFF;\
+            border-bottom:1px solid #FFFFFF;\
+            margin:0 auto;\
+            margin-top:50px;\
+            ',
         insertIntoDoc: {
            keyword: function() {
                return document.getElementsByTagName("h2")[0].innerHTML.slice(19, -1);
@@ -1071,6 +1100,55 @@ var rules = [
         }
     },
 
+    //字幕
+    // {name: "射手字幕",
+    //     url: /^https?:\/\/shooter\.cn\/search/,
+    //     engineList: "下载",
+    //     enabled: true,
+    //     style: "\
+    //         margin:0 auto;\
+    //         word-break:keep-all;\
+    //         white-space:nowrap;\
+    //         ",
+    //     insertIntoDoc: {
+    //         keyword: 'css;#key',
+    //         target: 'css;#site_header',
+    //         where: 'afterEnd'
+    //     }
+    // },
+    {
+        name: "Subom字幕",
+        url: /^https?:\/\/www\.subom\.net\/search/,
+        engineList: "下载",
+        enabled: true,
+        style: "\
+            margin:0 auto;\
+            word-break:keep-all;\
+            white-space:nowrap;\
+            ",
+        insertIntoDoc: {
+            keyword: 'css;#search_box',
+            target: 'css;#container',
+            where: 'afterBegin'
+        }
+    },
+    {
+        name: "Subhd字幕",
+        url: /^https?:\/\/subhd\.com\/search/,
+        engineList: "下载",
+        enabled: true,
+        style: "\
+            text-align:center;\
+            display:block;\
+            top: -10px;\
+            ",
+        insertIntoDoc: {
+            keyword: 'css;#sn',
+            target: 'css;.container.list',
+            where: 'beforeBegin'
+        }
+    },
+
     // 购物
     {name: "一淘",
         url: /^https?:\/\/s8?\.etao\.com\/search/,
@@ -1090,7 +1168,7 @@ var rules = [
         }
     },
     {name: "京东",
-        url: /^https?:\/\/search\.jd\.com\/Search\?/,
+        url: /^https?:\/\/search\.jd\.com\/search\?/i,
         enabled: true,
         engineList: "shopping",
         style: "\
@@ -1158,16 +1236,18 @@ var rules = [
            where: 'afterEnd'
         }
     },
-    {name: "天猫",
+    {
+        name: "天猫",
         url: /^https?:\/\/list\.tmall\.com\/\/?search/,
         enabled: true,
         engineList: "shopping",
         style: "\
-           margin:0 auto;\
-           border-bottom:1px solid #E5E5E5;\
-           border-top:1px solid #E5E5E5;\
-           text-align: center;\
-        ",
+            margin:0 auto;\
+            border-bottom:1px solid #E5E5E5;\
+            border-top:1px solid #E5E5E5;\
+            margin-bottom:3px;\
+            text-align: center;\
+            ",
         insertIntoDoc: {
            keyword: 'css;#mq',
            target: 'css;#mallNav',
@@ -1355,7 +1435,8 @@ var rules = [
     },
 
     // 翻译
-    {name: "google翻译",
+    {
+        name: "google 翻译",
         url: /^https?:\/\/translate\.google\./,
         enabled: true,
         engineList: "translate",
@@ -1370,7 +1451,8 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "百度翻译",
+    {
+        name: "百度翻译",
         url: /^https?:\/\/fanyi\.baidu\.com/,
         enabled: true,
         engineList: "translate",
@@ -1387,12 +1469,13 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "有道翻译",
+    {
+        name: "有道翻译",
         url: /^https?:\/\/fanyi\.youdao\.com/,
         enabled: true,
         engineList: "translate",
         style: "\
-            text-align: center;\
+            margin:0 auto;\
             ",
         insertIntoDoc: {
             keyword: 'css;#inputText',
@@ -1400,7 +1483,8 @@ var rules = [
             where: 'beforeBegin'
         }
     },
-    {name: "bing词典",
+    {
+        name: "bing词典",
         url: /^https?:\/\/(cn|www)\.bing\.com\/dict\/search\?/,
         enabled: true,
         engineList: "translate",
@@ -1417,7 +1501,8 @@ var rules = [
             where: 'afterEnd'
         }
     },
-    {name: "bing翻译",
+    {
+        name: "bing翻译",
         url: /^https?:\/\/www\.bing\.com\/translator/,
         enabled: true,
         engineList: "translate",
@@ -1430,11 +1515,10 @@ var rules = [
             keyword: 'css;#InputText',
             target: 'css;#Wrapper',
             where: 'afterBegin'
-            // target: 'css;body',
-            // where: 'beforeBegin'
         }
     },
-    {name: "爱词霸翻译",
+    {
+        name: "爱词霸翻译",
         url: /^https?:\/\/fy\.iciba\.com/,
         enabled: true,
         engineList: "translate",
@@ -1480,37 +1564,95 @@ var rules = [
             where: 'afterEnd'
         }
     },
-    {name: "射手字幕",
-        url: /^https?:\/\/shooter\.cn\/search/,
-        engineList: "下载",
-        enabled: true,
-        style: "\
-            margin:0 auto;\
-            word-break:keep-all;\
-            white-space:nowrap;\
-            ",
-        insertIntoDoc: {
-            keyword: 'css;#key',
-            target: 'css;#site_header',
-            where: 'afterEnd'
-        }
-    },
-    {name: "Subom字幕",
-        url: /^https?:\/\/www\.subom\.net\/search/,
-        engineList: "下载",
-        enabled: true,
-        style: "\
-            margin:0 auto;\
-            word-break:keep-all;\
-            white-space:nowrap;\
-            ",
-        insertIntoDoc: {
-            keyword: 'css;#search_box',
-            target: 'css;#container_bd',
-            where: 'beforeBegin'
-        }
-    },
 
+    //其它（我添加的） BEGIN
+    {
+        name: "StartPage 网页搜索",
+        url: /^https?:\/\/startpage\.com\/do\/search/,
+        enabled: true,
+        engineList: "web",
+        style: '\
+            padding-left:5px;\
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+        ',
+        insertIntoDoc: {
+            keyword: 'css;input#query_top',
+            target: 'css;#tod_wrap',
+            where: 'beforeEnd',
+        },
+    },
+    {
+        name:"ArchPkgs",
+        url:/^https?:\/\/www\.archlinux\.org\/packages\/\?.*?&?q=/i,
+        enabled:true,
+        engineList:"软件",
+        style:'\
+            padding-left:5px;\
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+        ',
+        insertIntoDoc:{
+            keyword:'//input[@name="q"]',
+            target:'css;#pkglist-search',
+            where:'afterEnd',
+        },
+    },
+    {
+        name:"ArchWiki",
+        url:/^https?:\/\/wiki\.archlinux\.org\/index\.php\?.*?&?search=/i,
+        enabled:true,
+        engineList:"知识",
+        style:'\
+            padding-left:5px;\
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+        ',
+        insertIntoDoc:{
+            keyword:'//input[@name="search"]',
+            target:'css;.searchresults',
+            where:'beforeBegin',
+        },
+    },
+    {
+        name:"AUR",
+        url:/^https?:\/\/aur\.archlinux\.org\/packages\/\?.*?&?K=/i,
+        enabled:true,
+        engineList:"软件",
+        style:'\
+            padding-left:5px;\
+            border-top:1px solid #D9E1F7;\
+            border-bottom:1px solid #D9E1F7;\
+            margin-top:5px;\
+        ',
+        insertIntoDoc:{
+            keyword:'//input[@name="K"]',
+            target:'css;#pkglist-results',
+            where:'beforeBegin',
+        },
+    },
+    {
+        name:"火狐扩展",
+        url:/^https?:\/\/addons\.mozilla\.org\/.*?search/i,
+        enabled:true,
+        engineList:"软件",
+        style:'\
+            padding-left:5px;\
+            color:#D9E1F7;\
+            border-top:1px solid #191919;\
+            border-bottom:1px solid #191919;\
+            margin-top:5px;\
+        ',
+        insertIntoDoc:{
+            keyword:'css;input#search-q',
+            target:'//div[@class="amo-header"]',
+            where:'afterEnd',
+        },
+    },
+    //其它（我添加的） END
 ];
 
 rules.default = {

@@ -2,12 +2,12 @@
 // ==UserScript==
 // @name           searchEngineJump 简化改进版
 // @author         NLF && ywzhaiqi
-// @contributor    ted423
+// @contributor    ted423 && Firef0x
 // @description    <%= description %>
 // @version        <%= version %>
 // @namespace      http://userscripts.org/users/NLF
-// @homepage       https://github.com/ywzhaiqi/userscript
-// homepage       http://userscripts.org/scripts/show/84970
+// @homepage       https://github.com/Firef0x/UserChrome
+// homepage        http://userscripts.org/scripts/show/84970
 
 // @grant          GM_getValue
 // @grant          GM_setValue

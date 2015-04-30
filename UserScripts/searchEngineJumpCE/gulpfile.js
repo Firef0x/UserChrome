@@ -8,7 +8,7 @@ var FILE = {
     MAIN_CSS: './src/res/main.css',
     RULE: './src/res/rule.js',
     siteData_root: './src/res/siteData_',
-    siteDatas: ['my.js', 'simple.js', 'wenke.js', 'ted423.js'],
+    siteDatas: ['my.js', 'firef0x.js', 'simple.js', 'wenke.js', 'ted423.js'],
     ICON_DATA: './src/res/iconData.json',
 };
 
@@ -16,8 +16,8 @@ var FILE = {
 var getResourceURL = function(name) {
     var path = './src/res/' + name;
 
-    return '// @resource ' + name + ' ' +
-            'https://raw.githubusercontent.com/ywzhaiqi/userscript/master/searchEngineJumpCE/src/res/' +
+    return '// @resource       ' + name + ' ' +
+            'https://raw.githubusercontent.com/Firef0x/UserChrome/master/UserScripts/searchEngineJumpCE/src/res/' +
             name + '?version=' +
             fs.statSync(path).mtime.getTime();
 };

@@ -4,7 +4,7 @@
     // awk.so, https://awk.so/#num=30&newwindow=1&q=%s&hl=zh-CN&safe=off&ie=utf-8, www.google.com.hk
     百度, https://www.baidu.com/s?wd=%s&ie=utf-8
     必应, https://cn.bing.com/search?q=%s
-    360搜索, http://www.so.com/s?ie=utf-8&q=%s
+    360搜索, http://www.haosou.com/s?ie=utf-8&q=%s
 
 视频-youtube
     搜库, http://www.soku.com/v?keyword=%s
