@@ -1,9 +1,9 @@
 ﻿// ==UserScript==
 // @name           openM3U8InIPTV
-// @version        0.0.1
+// @version        0.0.2
 // @author         Firef0x
 // @description    Open M3U8 play list in IPTV page
-// @include        /^https?:\/\/[^.]*\.iptv444\.com/
+// @include        /^https?:\/\/[^.]*\.iptv[34]4[45]\.com/
 // @require        http://code.jquery.com/jquery-1.9.1.min.js
 // @run-at         document-idle
 // @namespace      https://greasyfork.org/users/999999
